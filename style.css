@@ -43,6 +43,7 @@ footer, header, hgroup, menu, nav, section {
 body {
 	line-height: 1;
 	font-weight: 500;
+	scroll-behavior: smooth;
 }
 ol, ul {
 	list-style: none;
@@ -72,6 +73,10 @@ img{
 	max-width: 100%;
 }
 
+/* .btn{
+
+} */
+
 
 
 /****Typography style*****/
@@ -83,6 +88,7 @@ h1,h2,h3,h4,h5,h6{
 
 textarea, input{
 	font-family: var(--body-font),sans-serif;
+	font-weight: 700;
 }
 
 label{
@@ -117,6 +123,26 @@ label{
   border: 1px solid blue;
 }
 
+/** buttons **/
+.app-btns{
+	border: 3px solid var(--border-color);
+	font-weight: 800;
+	background: linear-gradient(90deg,rgb(255, 234, 0) 45%,rgb(255, 255, 0));
+	border-radius: 0%;
+	transition: all 400ms ease-in-out;
+}
+
+.app-btns:hover{
+	color: #fff;
+	background: #000;
+}
+
+.create-note{
+	font-size: 150%;
+}
+
+
+
 /** cover image modal **/
 .cover-img-modal-bg{
 	width: 100vw;
@@ -148,14 +174,14 @@ label{
 
 .cover-img-label{
 	width: 50px;
-	border: 2px solid black;
+	border: 2px solid var(--border-color);
 	display: inline-block;
 	padding: 4px 12px;
 	cursor: pointer;
 	color: #000;
 	font-weight: 800;
 	font-size: 150%;
-	background-color: var(--btn-color);
+	background: linear-gradient(90deg,rgb(255, 234, 0) 45%,rgb(255, 255, 0));
 	border-radius: 4px;
 	transition: all ease-in-out 500ms;
 	animation: bounce 900ms 1s ease-in 2;
@@ -176,7 +202,6 @@ label{
 	flex-direction: column;
 	justify-content: space-evenly;
 	align-items: center;
-	
 	/* border: 2px solid red; */
 }
 
@@ -225,9 +250,8 @@ input[type="file"]{
 	width: 100%;
 	margin: 0 auto;
 	padding: 1em;
-	border: 2px solid black;
+	border: 3px solid var(--border-color);
 	border-radius: 0%;
-	
 	/* margin-top: .5em; */
 }
 

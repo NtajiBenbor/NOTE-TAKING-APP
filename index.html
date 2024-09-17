@@ -22,21 +22,23 @@
         <div class="container">
             <!-- form container -->
             <header >
-                <div class="title-container mt-5 d-flex justify-content-between">
+                <div class="title-container mt-4 d-flex justify-content-between">
                     <!-- title container -->
                     <div>
                         <h1 class="title display-6">Hi, Welcome to Mindfullness</h1>
                         <h2 class="sub-title display-6">Your personal note taking app!</h2>
                     </div>
-                    <!-- add note button -->
+                    <!-- create note button -->
                     <div class="btn-wrapper mt-auto">
-                        <button type="button" role="button" class="btn">
-                            <i class="fa-regular fa-square-plus"></i>
+                        <button type="button" role="button" class="btn app-btns create-note">
+                            <i class="fa-solid fa-plus"></i>
                         </button>
                     </div>
                 </div>
                 <!-- note input from -->
-                <form action="" id="form">
+                <form action="" id="form" class="mt-4">
+                    <!-- add cover photo button -->
+                    <button type="button " class="app-btns btn mt-2">Add cover photo</button>
                     <!-- MODAL -->
                     <div class="cover-img-modal-bg">
                         <!-- MODAL background -->
@@ -48,9 +50,12 @@
                                             <i class="fa-solid fa-xmark"></i>
                                         </button>
                                         <p>Click the button below to add a cover image to your note.</p>
-                                        <label for="cover-photo" class="cover-img-label"><i class="fa-solid fa-plus"></i></i></label>
+                                        <label for="cover-photo" class="cover-img-label">
+                                            <i class="fa-solid fa-plus"></i>
+                                        </label>
                                         <input type="file" name="cover-photo" id="cover-photo" size="100" value="upload">
                                         <div class="cover-img-wrapper">
+                                            <!-- place holder image -->
                                             <img src="/img/pngwing.com.png" alt="" class="cover-img">
                                         </div>
                                         <p class="caption">image preview</p>
@@ -61,15 +66,15 @@
                     </div>
                     <!-- MODAL -->
                     <!-- note input -->
-                    <div class="form-row mt-5">
+                    <div class="form-row mt-1">
                        <div class="form-group col">
                         <label for="note"></label>
                         <textarea name="note" id="note" cols="30" rows="5" placeholder="Add new note"></textarea>
                        </div>
                     </div>
                     <!--add note button  -->
-                    <div class="col">
-                        <button type="button btn">Add note</button>
+                    <div class="col mt-3 mb-3 d-flex justify-content-center">
+                        <button type="button" class="app-btns btn">Add note</button>
                     </div>
                 </form>
             </header>
