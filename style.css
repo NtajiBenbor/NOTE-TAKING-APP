@@ -5,7 +5,9 @@
 	--btn-color:#ffea00;
 	--body-bg: #fafdf6;
 	--border-color:#000000;
-	--notes-default-color:#fdf8e1;
+	--light-text:rgb(143, 143, 143);
+	--dark-text:#000000;
+	--notes-container-color:#fefae0; 
 }
 
 /* ======= CSS RESET======== */
@@ -68,9 +70,26 @@ table {
 
 /*****Utility Classes******/
 
+.light-txt{
+	color: var(--light-text) !important;
+}
+
+.dark-txt{
+	color: var(--dark-text) !important;
+}
+
+.word-spacing{
+	word-spacing: 7px;
+}
+
+.lh{
+	line-height: 1.1;
+}
+
 img{
 	display: block;
 	max-width: 100%;
+	min-height: 100%;
 }
 
 .blue{
@@ -111,8 +130,9 @@ label{
 
 .caption{
 	font-weight: 500;
+	font-family: sans-serif;
 	color: #363636;
-	font-size: 90%;
+	font-size: 80%;
 	padding: 0;
 	margin: 0;
 }
@@ -130,9 +150,9 @@ label{
 	width: 100%;
 }
 
-.container{
+/* .container{
   border: 1px solid blue;
-}
+} */
 
 /** buttons **/
 .app-btns{
@@ -262,7 +282,7 @@ input[type="file"]{
 
 
 /** Note input **/
-#note{
+#note-input{
 	width: 100%;
 	margin: 0 auto;
 	padding: 1em;
@@ -275,17 +295,39 @@ input[type="file"]{
 /* Notes styles */
 
 .note-image-wrapper{
-	border: 1px solid red;
+	border: 2px solid black;
+	border-left: 1px solid var(--border-color);
+	border-bottom: 1px solid var(--border-color);
+	border-top: 1px solid var(--border-color);
+	padding: 0;
+}
+
+.note-image-wrapper img{
+	object-fit: cover;
+	object-position: center center;
 }
 
 /* .notes-container{
 	padding: .5em ;
 } */
 
-/* .notes-card{
-	margin-left: .1em;
-	margin-right: .1em;
-	width:80%;
+.notes-card{
+	border: 2px solid var(--border-color);
+	border-right: 4px solid var(--border-color);
+	border-bottom: 4px solid var(--border-color);
+	box-shadow: 1px 1px 0px 0px rgba(0,0,0,1);
+	-webkit-box-shadow: 1px 1px 0px 0px rgba(0,0,0,1);
+	-moz-box-shadow: 1px 1px 0px 0px rgba(0,0,0,1);
+	height: 210px;
+}
+
+.card-center{
+	height: 100%;
+}
+
+/* .notes-card:hover{
+	outline: 0;
+	transform: translateY(-5px);
 } */
 
 
