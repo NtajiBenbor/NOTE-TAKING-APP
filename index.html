@@ -25,7 +25,7 @@
         <!-- container -->
         <div class="container">
             <!-- form container -->
-            <header >
+            <header  class="container">
                 <div class="title-container mt-4 d-flex justify-content-between">
                     <!-- title container -->
                     <div>
@@ -42,7 +42,7 @@
                 <!-- note input from -->
                 <form action="" id="form" class="mt-4">
                     <!-- add cover photo button -->
-                    <button type="button " class="app-btns btn mt-2">Add cover photo</button>
+                    <button type="button " class="app-btns btn mt-2 add-cover-btn">Add cover photo</button>
                     <!-- MODAL -->
                     <div class="cover-img-modal-bg">
                         <!-- MODAL background -->
@@ -78,12 +78,44 @@
                     </div>
                     <!--add note button  -->
                     <div class="col mt-3 mb-3 d-flex justify-content-center">
-                        <button type="button" class="app-btns btn">Add note</button>
+                        <button type="button" class="app-btns btn add-note-btn">Add note</button>
                     </div>
                 </form>
             </header>
+
+            <!-- note display -->
             <main class="container">
+                <div class="row justify-content-center justify-content-md-between p-1">
+                    <div class="notes-card col-11 col-lg-5 mb-2 mb-lg-2 border border-1">
+                        <div class="row">
+                            <div class="col-4 note-image-wrapper">
+                                <img src="/assets/img/img-2.jpeg" alt="note cover image" >
+                            </div>
+                            <div class="col-8 py-2 px-2">
+                                <div class="d-flex justify-content-between mb-0">
+                                    <h4>Design systems</h4>
+                                    <button type="button" class=" btn">
+                                        <i class="fa-solid fa-arrow-right"></i>
+                                    </button>
+                                </div>
+                                <div class="mb-1 mt-0">
+                                    <p class="caption">Edited on <span class="note-date">Sat</span><span class="note-time">12:05 AM</span></p>
+                                </div>
+                                <p>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Neque dolores iste ducimus hic quidem nobis reprehenderit quasi veritatis voluptate optio laborum iusto amet expedita nihil inventore, magnam aperiam dolorem explicabo.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="notes-card col-11 col-lg-5 mb-2 mb-lg-2 border border-1 red">2</div>
+                    <!-- <div class="notes-card col-11 col-lg-5 mb-2 mb-lg-2 border border-1  green">3</div>
+                    <div class="notes-card col-11 col-lg-5 mb-2 mb-lg-2 border border-1 yellow">6</div> -->
+                </div>
             </main>
+
+            <!-- clear all notes btn -->
+            <div class="col mt-3 mb-3 d-flex justify-content-center">
+                <button type="button" class="app-btns btn clear-btn">clear notes</button>
+            </div>
         </div>
     </div>
 
@@ -91,8 +123,6 @@
   
     <!-- bootstrap js script -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js" integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy" crossorigin="anonymous"></script>
-    <!-- font awesome links -->
-    <!-- <script src="https://kit.fontawesome.com/cbbf517174.js" crossorigin="anonymous"></script> -->
     <!-- custom js script -->
     <script src="app.js"></script>
 </body>
