@@ -26,7 +26,7 @@
     <title>NOTE TRACKER APP</title>
 </head>
 <body>
-    <div class="main-container">
+    <div class="container">
         <!-- container -->
         <div class="container">
             <!-- form container -->
@@ -65,7 +65,11 @@
                                         <input type="file" name="cover-photo" id="cover-photo" size="100" value="upload">
                                         <div class="cover-img-wrapper">
                                             <!-- place holder image -->
-                                            <img src="/assets/img/pngwing.com.png" alt="upload icon" class="cover-img">
+                                            <i>
+                                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" class="size-4">
+                                                    <path fill-rule="evenodd" d="M2 4a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V4Zm10.5 5.707a.5.5 0 0 0-.146-.353l-1-1a.5.5 0 0 0-.708 0L9.354 9.646a.5.5 0 0 1-.708 0L6.354 7.354a.5.5 0 0 0-.708 0l-2 2a.5.5 0 0 0-.146.353V12a.5.5 0 0 0 .5.5h8a.5.5 0 0 0 .5-.5V9.707ZM12 5a1 1 0 1 1-2 0 1 1 0 0 1 2 0Z" clip-rule="evenodd" />
+                                                  </svg>                                                  
+                                            </i>
                                         </div>
                                         <p class="caption">image preview</p>
                                     </div>
@@ -90,8 +94,8 @@
 
             <!-- note display -->
             <div class="container">
-                <div class="grid red py-lg-2 px-lg-5">
-                    <div class="notes-card g-col g-col-md-6 mb-2 mb-lg-2 bg-body-secondary">
+                <div class="row red py-lg-2 px-lg-5">
+                    <div class="notes-card col-12 col-md-6 mb-2 mb-lg-2 bg-body-secondary">
                         <div class="d-flex card-center">
                             <div class="col-4 note-image-wrapper">
                                 <img src="/assets/img/img-2.jpeg" alt="note cover image" class="card-image">
@@ -111,9 +115,9 @@
                         </div>
                     </div>
 
-                    <div class="notes-card g-col g-col-md-6 mb-2 mb-lg-2 bg-body-secondary red">2</div>
-                    <div class="notes-card g-col g-col-md-6 mb-2 mb-lg-2 bg-body-secondary  green">3</div>
-                    <div class="notes-card g-col g-col-md-6 mb-2 mb-lg-2 bg-body-secondary">4</div>
+                    <div class="notes-card col-12 col-md-6 mb-2 mb-lg-2 bg-body-secondary red">2</div>
+                    <div class="notes-card col-12 col-md-6 mb-2 mb-lg-2 bg-body-secondary  green">3</div>
+                    <div class="notes-card col-12 col-md-6 mb-2 mb-lg-2 bg-body-secondary">4</div>
                 </div>
             </div>
 
