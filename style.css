@@ -300,6 +300,7 @@ input[type="file"]{
 	border-bottom: 1px solid var(--border-color);
 	border-top: 1px solid var(--border-color);
 	padding: 0;
+	margin: 0;
 }
 
 .note-image-wrapper img{
@@ -312,17 +313,25 @@ input[type="file"]{
 } */
 
 .notes-card{
-	border: 2px solid var(--border-color);
+	border: 1px solid var(--border-color);
 	border-right: 4px solid var(--border-color);
 	border-bottom: 4px solid var(--border-color);
-	box-shadow: 1px 1px 0px 0px rgba(0,0,0,1);
-	-webkit-box-shadow: 1px 1px 0px 0px rgba(0,0,0,1);
-	-moz-box-shadow: 1px 1px 0px 0px rgba(0,0,0,1);
-	height: 210px;
+	box-shadow: 1px 1px 0px 1px rgba(0,0,0,1);
+	-webkit-box-shadow: 1px 1px 0px 1px rgba(0,0,0,1);
+	-moz-box-shadow: 1px 1px 0px 1px rgba(0,0,0,1);
+	
 }
 
 .card-center{
 	height: 100%;
+	/* border: 1px solid red; */
+	/* width: 100%; */
+
+}
+
+.card-center >* {
+	/* border: 1px solid blue; */
+	margin: 0;
 }
 
 /* .notes-card:hover{
@@ -339,6 +348,10 @@ input[type="file"]{
 	.cover-img-modal{
 		width: 500px;
 		height: 300px;
+	}
+
+	.notes-card{
+		height: 210px;
 	}
 }
 

@@ -1,5 +1,26 @@
+/***** VARIABLE ASSIGNMENT ******/
+// DOM variables
 const coverImageInput = document.getElementById('cover-photo');
 const coverImage = document.querySelector('.cover-img');
+
+
+// other variables
+
+/***** EVENT LISTENERS ******/
+
+
+
+/***** FUNCTIONS ******/
+
+
+
+
+
+/***** LOCAL STORAGE ******/
+
+
+
+/***** FUNCTIONS ******/
 
 // coverImageInput.addEventListener('change', () => {
 //   const file = coverImageInput.files[0]; // Get the selected file
