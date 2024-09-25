@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -13,150 +14,213 @@
     <!-- Google fonts links-->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@200..700&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Oswald:wght@200..700&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap"
+        rel="stylesheet">
     <!-- Bootstrap CSS link-->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <!-- Font Awesome Solid + Brands icon css link-->
     <link href="/assets/fontawesome/css/fontawesome.css" rel="stylesheet" />
     <link href="/assets/fontawesome/css/brands.css" rel="stylesheet" />
     <link href="/assets/fontawesome/css/solid.css" rel="stylesheet" />
+    <!-- Animate Css link -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
     <!-- Custom CSS link -->
     <link rel="stylesheet" href="style.css">
     <!-- site title -->
     <title>NOTE TRACKER APP</title>
 </head>
+
 <body>
+    <!-- container -->
     <div class="container">
-        <!-- container -->
-        <div class="container">
-            <!-- form container -->
-            <header  class="container">
-                <div class="title-container mt-4 d-flex justify-content-between">
-                    <!-- title container -->
-                    <div>
-                        <h1 class="title display-6">Hi, Welcome to Mindfullness</h1>
-                        <h2 class="sub-title display-6">Your personal note taking app!</h2>
-                    </div>
-                    <!-- create note button -->
-                    <div class="btn-wrapper mt-auto">
-                        <button type="button" role="button" class="btn app-btns create-note">
-                            <i class="fa-solid fa-plus"></i>
-                        </button>
-                    </div>
+        <!-- form container -->
+        <header class="container">
+            <div class="title-container mt-4 d-flex justify-content-between">
+                <!-- title container -->
+                <div>
+                    <h1 class="title display-6">Welcome to Mindfullness</h1>
+                    <h2 class="sub-title display-6">Your personalized note taking app!</h2>
                 </div>
-                <!-- note input from -->
-                <form action="" id="form" class="mt-4">
-                    <!-- add cover photo button -->
-                    <button type="button " class="app-btns btn mt-2 add-cover-btn">Add cover photo</button>
-                    <!-- MODAL -->
-                    <div class="cover-img-modal-bg">
-                        <!-- MODAL background -->
-                        <div class="cover-img-modal">
-                            <!-- MODAL CENTER  -->
-                                    <div class="modal-center">
-                                        <!-- close-modal btn -->
-                                        <button type="button" class="close-modal-btn">
-                                            <i class="fa-solid fa-xmark"></i>
-                                        </button>
-                                        <p>Click the button below to add a cover image to your note.</p>
-                                        <label for="cover-photo" class="cover-img-label">
-                                            <i class="fa-solid fa-plus"></i>
-                                        </label>
-                                        <input type="file" name="cover-photo" id="cover-photo" size="100" value="upload">
-                                        <div class="cover-img-wrapper">
-                                            <!-- place holder image -->
-                                            <i>
-                                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" class="size-4">
-                                                    <path fill-rule="evenodd" d="M2 4a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V4Zm10.5 5.707a.5.5 0 0 0-.146-.353l-1-1a.5.5 0 0 0-.708 0L9.354 9.646a.5.5 0 0 1-.708 0L6.354 7.354a.5.5 0 0 0-.708 0l-2 2a.5.5 0 0 0-.146.353V12a.5.5 0 0 0 .5.5h8a.5.5 0 0 0 .5-.5V9.707ZM12 5a1 1 0 1 1-2 0 1 1 0 0 1 2 0Z" clip-rule="evenodd" />
-                                                  </svg>                                                  
-                                            </i>
-                                        </div>
-                                        <p class="caption">image preview</p>
-                                    </div>
-        
-                             <!-- MODAL CENTER  end-->
+                <!-- create note button -->
+                <div class="btn-wrapper mt-auto">
+                    <button type="button" role="button" class="btn app-btns create-note">
+                        <i class="fa-solid fa-plus"></i>
+                    </button>
+                </div>
+            </div>
+            <!-- note input from -->
+            <form action="" id="form" class="mt-4">
+                <!-- add cover photo button -->
+                <button type="button " class="app-btns btn mt-2 add-cover-btn">Add cover photo</button>
+                <!-- MODAL -->
+                <div class="modal-bg">
+                    <!-- MODAL background -->
+                    <article class="cover-img-modal">
+                        <!-- MODAL CENTER  -->
+                        <div class="modal-center">
+                            <!-- close-modal btn -->
+                            <button type="button" class="close-modal-btn">
+                                <i class="fa-solid fa-xmark"></i>
+                            </button>
+                            <p>Click the button below to add a cover image to your note.</p>
+                            <label for="cover-photo"
+                                class="cover-img-label animate__animated animate__headShake animate__delay-2s animate__repeat-1">
+                                <i class="fa-solid fa-plus"></i>
+                            </label>
+                            <input type="file" name="cover-photo" id="cover-photo" size="100" value="upload">
+                            <div class="cover-img-wrapper">
+                                <!-- place holder image for preview image -->
+                                <i>
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor"
+                                        class="size-4">
+                                        <path fill-rule="evenodd"
+                                            d="M2 4a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V4Zm10.5 5.707a.5.5 0 0 0-.146-.353l-1-1a.5.5 0 0 0-.708 0L9.354 9.646a.5.5 0 0 1-.708 0L6.354 7.354a.5.5 0 0 0-.708 0l-2 2a.5.5 0 0 0-.146.353V12a.5.5 0 0 0 .5.5h8a.5.5 0 0 0 .5-.5V9.707ZM12 5a1 1 0 1 1-2 0 1 1 0 0 1 2 0Z"
+                                            clip-rule="evenodd" />
+                                    </svg>
+                                </i>
+                            </div>
+                            <p class="caption">image preview</p>
                         </div>
-                    </div>
-                    <!-- MODAL -->
-                    <!-- note input -->
-                    <div class="form-row mt-1">
-                       <div class="form-group col">
+                        <!-- MODAL CENTER  end-->
+                </div>
+                </article>
+                <!-- MODAL END-->
+
+                <!-- note input -->
+                <div class="form-row mt-1">
+                    <div class="form-group col">
                         <label for="note"></label>
                         <textarea name="note" id="note-input" cols="30" rows="5" placeholder="Add new note"></textarea>
-                       </div>
                     </div>
-                    <!--add note button  -->
-                    <div class="col mt-3 mb-3 d-flex justify-content-center">
-                        <button type="button" class="app-btns btn add-note-btn">Add note</button>
-                    </div>
-                </form>
-            </header>
+                </div>
+                <!--add note button  -->
+                <div class="col mt-3 mb-3 d-flex justify-content-center">
+                    <button type="button" class="app-btns btn add-note-btn">Add note</button>
+                </div>
+            </form>
+        </header>
 
-            <!-- note display -->
-            <div class="container">
-                <div class="row row-cols-1 row-cols-md-2 g-4">
-                    <!-- note card -->
-                    <div class="col">
-                      <div class="card notes-card bg-body-tertiary" style="max-width: 540px;" >
+        <!-- note cards section-->
+        <section class="container">
+            <div class="row row-cols-1 row-cols-md-2 g-4">
+                <!-- note card -->
+                <div class="col">
+                    <div class="card notes-card bg-body-tertiary" style="max-width: 540px;">
                         <div class="row g-0">
                             <div class="col-md-4 note-image-wrapper">
-                              <img src="/assets/img/img-2.jpeg" class="img-fluid" alt="note cover img">
+                                <img src="/assets/img/img-2.jpeg" class="img-fluid" alt="note cover img">
                             </div>
                             <div class="col-md-8">
-                              <div class="card-body">
-                                <div class="d-flex justify-content-between">
-                                    <h5 class="card-title">Card title</h5>
-                                    <button type="button" class="btn my-0 py-0">
-                                        <i class="fa-solid fa-arrow-right "></i>
-                                    </button>
-                                </div>
-                                <h6 class="card-subtitle mb-3 mt-1 text-body-secondary light-txt">
-                                    Edited on <span class="note-date">Sat</span> <span class="note-time">12:05</span> <span class="note-time-suffix">am.</span>
-                                </h6>
-                                <p class="card-text dark-txt line-h">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
-                              </div>
-                            </div>
-                          </div>
-                      </div>
-                    </div>
-
-                    <div class="col">
-                        <div class="card notes-card bg-body-tertiary" style="max-width: 540px;" >
-                          <div class="row g-0">
-                              <div class="col-md-4 note-image-wrapper">
-                                <img src="/assets/img/img-2.jpeg" class="img-fluid" alt="note cover img">
-                              </div>
-                              <div class="col-md-8">
                                 <div class="card-body">
-                                  <div class="d-flex justify-content-between">
-                                      <h5 class="card-title">Card title</h5>
-                                      <button type="button" class="btn my-0 py-0">
-                                          <i class="fa-solid fa-arrow-right "></i>
-                                      </button>
-                                  </div>
-                                  <h6 class="card-subtitle mb-3 mt-1 text-body-secondary light-txt">
-                                      Edited on<span class="note-date"> Sat</span> <span class="note-time">12:05</span> <span class="note-time-suffix">am.</span>
-                                  </h6>
-                                  <p class="card-text dark-txt line-h">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
+                                    <div class="d-flex justify-content-between">
+                                        <h5 class="card-title">Card title</h5>
+                                        <button type="button" class="btn my-0 py-0">
+                                            <i class="fa-solid fa-arrow-right "></i>
+                                        </button>
+                                    </div>
+                                    <h6 class="card-subtitle mb-3 mt-1 text-body-secondary light-txt">
+                                        Edited on <span class="note-date">Sat</span> <span
+                                            class="note-time">12:05</span> <span class="note-time-suffix">am.</span>
+                                    </h6>
+                                    <p class="card-text dark-txt line-h">This is a wider card with supporting text below
+                                        as a natural lead-in to additional content. This content is a little bit longer.
+                                    </p>
                                 </div>
-                              </div>
                             </div>
                         </div>
-                      </div>
-                     </div> 
-                 
+                    </div>
+                </div>
+
+                <div class="col">
+                    <div class="card notes-card bg-body-tertiary" style="max-width: 540px;">
+                        <div class="row g-0">
+                            <div class="col-md-4 note-image-wrapper">
+                                <img src="/assets/img/img-2.jpeg" class="img-fluid" alt="note cover img">
+                            </div>
+                            <div class="col-md-8">
+                                <div class="card-body">
+                                    <div class="d-flex justify-content-between">
+                                        <h5 class="card-title">Card title</h5>
+                                        <button type="button" class="btn my-0 py-0">
+                                            <i class="fa-solid fa-arrow-right "></i>
+                                        </button>
+                                    </div>
+                                    <h6 class="card-subtitle mb-3 mt-1 text-body-secondary light-txt">
+                                        Edited on<span class="note-date"> Sat</span> <span
+                                            class="note-time">12:05</span> <span class="note-time-suffix">am.</span>
+                                    </h6>
+                                    <p class="card-text dark-txt line-h">This is a wider card with supporting text below
+                                        as a natural lead-in to additional content. This content is a little bit longer.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <!-- clear all notes btn -->
             <div class="col mt-3 mb-3 d-flex justify-content-center">
-                <button type="button" class="app-btns btn clear-btn">clear notes</button>
+                <button type="button" class="app-btns btn clear-btn">Clear notes</button>
             </div>
-        </div>
+        </section>
+
+        <!-- note  display-->
+        <section>
+            <div class="modal-bg display-note-modal">
+                <article class="container note-modal-center">
+                    <div class="row px-3 pt-4">
+                        <!-- note controls -->
+                        <div class="col-12 row note-controls m-0 justify-content-between px-0">
+                            <div class="col-7">
+                                <!-- back btn -->
+                                <button type="button" class="btn my-0 py-1 app-btns">
+                                    <i class="fa-solid fa-arrow-left "></i>
+                                </button>
+                            </div>
+                            <!-- edit and delete btn -->
+                            <div class="col-4 d-flex justify-content-end">
+                                <!--edit btn  -->
+                                <button type="button" class="btn my-0 py-1 mx-2 app-btns">
+                                    <i class="fa-solid fa-pen-to-square"></i>
+                                </button>
+                                <!-- del btn -->
+                                <button type="button" class="btn my-0 py-1 app-btns">
+                                    <i class="fa-solid fa-trash-can del-icon"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <!-- note header -->
+                        <div class="col-12 mt-1 note-dp-header">
+                            <h5>Design system</h5>
+                            <h6 class="light-txt"> Edited on <span class="note-date">Sat</span> <span
+                                    class="note-time">12:05</span> <span class="note-time-suffix">am.</span>
+                            </h6>
+                        </div>
+                        <!-- note cover image -->
+                        <div class="col-12 note-dp-img-wrapper p-0">
+                            <img class="img-fluid h-100" src="/assets/img/img-2.jpeg" alt="note display img">
+                        </div>
+                        <!-- note body -->
+                        <div class="col-12 note-txt pt-0 pb-0 my-1 px-2 dark-txt">
+                           <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Inventore ad, deserunt vero aliquam iure tempore vel doloribus magnam ipsum, quae placeat accusantium, ex quos amet dicta commodi quo ut recusandae!
+                           Facilis maxime voluptatibus excepturi odit! Animi aut beatae eos, similique consectetur quisquam expedita labore, vel numquam dicta sequi aliquam ad, architecto nemo nihil! Iure vero nisi quos iusto eos eius!
+                            </p>
+                        </div>
+                    </div>
+                </article>
+            </div>
+        </section>
     </div>
 
-
-  
     <!-- bootstrap js script -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js" integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js"
+        integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy"
+        crossorigin="anonymous"></script>
     <!-- custom js script -->
     <script src="app.js"></script>
 </body>
+
 </html>

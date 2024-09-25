@@ -1,3 +1,4 @@
+
 /**** CSS variables ****/
 :root{
 	--heading-font:"Oswald";
@@ -10,66 +11,65 @@
 	--notes-container-color:#fefae0; 
 }
 
-/* ======= CSS RESET======== */
-/* http://meyerweb.com/eric/tools/css/reset/ 
-   v2.0 | 20110126
-   License: none (public domain)
-*/
 
-html, body, div, span, applet, object, iframe,
-h1, h2, h3, h4, h5, h6, p, blockquote, pre,
-a, abbr, acronym, address, big, cite, code,
-del, dfn, em, img, ins, kbd, q, s, samp,
-small, strike, strong, sub, sup, tt, var,
-b, u, i, center,
-dl, dt, dd, ol, ul, li,
-fieldset, form, label, legend,
-table, caption, tbody, tfoot, thead, tr, th, td,
-article, aside, canvas, details, embed, 
-figure, figcaption, footer, header, hgroup, 
-menu, nav, output, ruby, section, summary,
-time, mark, audio, video {
+
+/* ======= CSS RESET======== */
+/*
+  1. Use a more-intuitive box-sizing model.
+*/
+*, *::before, *::after {
+	box-sizing: border-box;
+  }
+  
+  /*
+	2. Remove default margin
+  */
+  * {
 	margin: 0;
-    font-family: var(--body-font), sans-serif;
-	padding: 0;
-	border: 0;
-	font-size: 100%;
-	/* font: inherit; */
-	vertical-align: baseline;
-}
-/* HTML5 display-role reset for older browsers */
-article, aside, details, figcaption, figure, 
-footer, header, hgroup, menu, nav, section {
+  }
+  
+  /*
+	Typographic tweaks!
+	3. Add accessible line-height
+	4. Improve text rendering
+  */
+  body {
+	line-height: 1.5;
+	-webkit-font-smoothing: antialiased;
+  }
+  
+  /*
+	5. Improve media defaults
+  */
+  img, picture, video, canvas, svg {
 	display: block;
-}
-body {
-	line-height: 1;
-	font-weight: 500;
-	scroll-behavior: smooth;
-}
-ol, ul {
-	list-style: none;
-}
-blockquote, q {
-	quotes: none;
-}
-blockquote:before, blockquote:after,
-q:before, q:after {
-	content: '';
-	content: none;
-}
-/* i{
-	font-size: inherit;
-} */
-table {
-	border-collapse: collapse;
-	border-spacing: 0;
-}
+	max-width: 100%;
+  }
+  
+  /*
+	6. Remove built-in form typography styles
+  */
+  input, button, textarea, select {
+	font: inherit;
+  }
+  
+  /*
+	7. Avoid text overflows
+  */
+  p, h1, h2, h3, h4, h5, h6 {
+	overflow-wrap: break-word;
+  }
+  
+  /*
+	8. Create a root stacking context
+  */
+  #root, #__next {
+	isolation: isolate;
+  }
 
 
 
 /*****Utility Classes******/
-
 .light-txt{
 	color: var(--light-text) !important;
 	font-size: 85%;
@@ -93,15 +93,15 @@ span{
 
 img{
 	display: block;
-	max-width: 100%;
+	min-width: 100%;
 	min-height: 100%;
+	object-fit: cover;
 }
 
 
 
 
 /****Typography style*****/
-
 h1,h2,h3,h4,h5,h6{
 	font-family: var(--heading-font),sans-serif;
 	font-weight:800;
@@ -138,16 +138,13 @@ label{
 
 
 
-
-
-
-
 /****LAYOUT STYLES****/
-
-
 /** buttons **/
 .app-btns{
 	border: 3px solid var(--border-color);
+	box-shadow: 1px 1px 0px 1px rgba(0,0,0,1);
+	-webkit-box-shadow: 1px 1px 0px 1px rgba(0,0,0,1);
+	-moz-box-shadow: 1px 1px 0px 1px rgba(0,0,0,1);
 	font-weight: 800;
 	background: linear-gradient(90deg,rgb(255, 234, 0) 45%,rgb(255, 255, 0));
 	border-radius: 0%;
@@ -166,19 +163,22 @@ label{
 
 .clear-btn{
 	background: linear-gradient(45deg,rgb(255, 47, 0) 50%,rgb(238, 132, 19));
+	color: var(--body-bg);
 }
 
 
 
+
+
 /** cover image modal **/
-.cover-img-modal-bg{
+.modal-bg{
 	width: 100vw;
 	height: 100vh;
 	height: 100dvh;
 	/* display: grid; */
 	display: none;
 	place-content: center;
-	background-color: color-mix(in srgb, rgba(0, 0, 0, 0.7) 80%, transparent 30%);
+	background-color: color-mix(in srgb, rgba(0, 0, 0, 0.7) 80%, transparent 20%);
 	backdrop-filter: blur(10px);
 	position: fixed;
 	top: 0;
@@ -199,6 +199,7 @@ label{
 	position: relative;
 }
 
+/* label that is styled like a button */
 .cover-img-label{
 	width: 50px;
 	border: 4px solid var(--border-color);
@@ -211,7 +212,7 @@ label{
 	background: linear-gradient(90deg,rgb(255, 234, 0) 45%,rgb(255, 255, 0));
 	transition: all ease-in-out 500ms;
 	border-radius: 2px;
-	animation: bounce 900ms 1s ease-in 2;
+	/* animation: bounce 900ms 1s ease-in 2; */
 }
 
 .cover-img-label:hover{
@@ -229,7 +230,6 @@ label{
 	flex-direction: column;
 	justify-content: space-evenly;
 	align-items: center;
-	/* border: 2px solid red; */
 }
 
 .close-modal-btn{
@@ -254,7 +254,6 @@ input[type="file"]{
 	display: none;
 }
 
-
 .cover-img-wrapper{
 	width: 120px;
 	min-height: 120px;
@@ -270,19 +269,20 @@ input[type="file"]{
 
 
 
-/** Note input **/
+
+/** Input box for typing notes styles **/
 #note-input{
 	width: 100%;
 	margin: 0 auto;
 	padding: 1em;
 	border: 3px solid var(--border-color);
 	border-radius: 0%;
-	/* margin-top: .5em; */
 }
 
 
-/* Notes styles */
 
+
+/** Notes card styles **/
 .notes-card{
 	border-radius: 0%;
 	border: 1px solid var(--border-color);
@@ -303,25 +303,36 @@ input[type="file"]{
 	margin: 0;
 }
 
-.note-image-wrapper img{
-	object-fit: cover;
-	object-position: center center;
-}
-
-/* .notes-container{
-	padding: .5em ;
-} */
 
 
-
-.card-center{
-	height: 100%;
-	/* border: 1px solid red; */
-	/* width: 100%; */
+/** display note modal style**/
+.display-note-modal{
+	background-color: color-mix(in srgb, rgb(0, 0, 0) 90%, transparent 10%);
+	backdrop-filter: blur(10px);
+	display: none;
+	/* display: grid;	 */
+	place-items: center;
+	z-index: -110;
 
 }
 
+.note-modal-center{
+	background-color: var(--body-bg);
+	width: 80%;
+	height: fit-content;
+	border: 4px solid var(--border-color);
+	overflow-y: hidden;
+}
 
+.note-dp-img-wrapper{
+	height: 200px;
+	border: 4px solid var(--border-color);
+}
+
+.note-txt{
+	overflow-y: auto;
+	height: 250px;
+}
 
 
 
@@ -334,24 +345,44 @@ input[type="file"]{
 		height: 300px;
 	}
 
+	/** display note modal styles**/
+	/*modal box for displaying note*/
+	.note-modal-center {
+		width: 50%;
+		max-height: 624px;
+	}
+
+
+	.note-txt{
+		height: 250px;
+	}
+	
 }
 
 /** large and X-large screens size **/
 @media screen and (min-width: 992px) {
-	
+	/* modal box for adding cover img */
 	.cover-img-modal{
 		width: 450px;
 		min-width: 300px;
 		min-height: 300px;
 		height: 50%;
 	}
+
+
 }
 
 
 
 /****JS STYLES *****/
+/* for animations */
+.slide-in-bck-top {
+	animation: slide-in-bck-top 0.6s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
+}
 
-
+.shake-bottom {
+	animation: shake-bottom 0.8s cubic-bezier(0.455, 0.030, 0.515, 0.955) both;
+}
 
 /**** ANIMATIONS *****/
 /** rotate animation **/
@@ -368,22 +399,62 @@ input[type="file"]{
 	}
 }
 
-/** bounce animation **/
-@keyframes bounce {
-	0%{
-		transform: scale(0.8);
-	 }
-	 25%{
-		 transform: scale(0.9);
-	 }
-	 50%{
-		transform: scale(1);
-	 }
-	 75%{
-		transform: scale(0.9);
-	 }
-	 100%{
-		transform: scale(0.8);
-	 }
-}
+
+/* ----------------------------------------------
+ * Generated by Animista on 2024-9-25 6:7:15
+ * Licensed under FreeBSD License.
+ * See http://animista.net/license for more info. 
+ * w: http://animista.net, t: @cssanimista
+ * ---------------------------------------------- */
+
+/**
+ * ----------------------------------------
+ * animation slide-in-bck-top
+ * ----------------------------------------
+ */
+ @keyframes slide-in-bck-top {
+	0% {
+	  transform: translateZ(700px) translateY(-300px);
+	  opacity: 0;
+	}
+	100% {
+	  transform: translateZ(0) translateY(0);
+	  opacity: 1;
+	}
+  }
+
+
+/**
+ * ----------------------------------------
+ * animation shake-bottom
+ * ----------------------------------------
+ */
+@keyframes shake-bottom {
+	0%,
+	100% {
+	  transform: rotate(0deg);
+	  transform-origin: 50% 100%;
+	}
+	10% {
+	  transform: rotate(2deg);
+	}
+	20%,
+	40%,
+	60% {
+	  transform: rotate(-4deg);
+	}
+	30%,
+	50%,
+	70% {
+	  transform: rotate(4deg);
+	}
+	80% {
+	  transform: rotate(-2deg);
+	}
+	90% {
+	  transform: rotate(2deg);
+	}
+  }
+  
+  
 

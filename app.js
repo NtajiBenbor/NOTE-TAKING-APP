@@ -2,11 +2,26 @@
 // DOM variables
 const coverImageInput = document.getElementById('cover-photo');
 const coverImage = document.querySelector('.cover-img');
-
+const coverImgLabelBtn = document.querySelector('.cover-img-label');
+const noteCards = document.querySelectorAll('.notes-card');
 
 // other variables
 
 /***** EVENT LISTENERS ******/
+
+noteCards.forEach(
+    function(card){
+        card.addEventListener('mouseover',applyShakeAnimation)
+    }
+);
+
+noteCards.forEach(
+    function(card){
+        card.addEventListener('mouseout',removeShakeAnimation)
+    }
+    
+);
+
 
 
 
@@ -14,6 +29,18 @@ const coverImage = document.querySelector('.cover-img');
 
 
 
+
+/*apply shake animation to note cards function*/
+function applyShakeAnimation(){
+    this.classList.add('shake-bottom');
+    console.log("mouseover")
+    // noteCards.forEach(card=>card.classList.add('shake-bottom'));
+}
+function removeShakeAnimation(){
+    this.classList.remove('shake-bottom');
+    console.log("mouseout")
+    // noteCards.forEach(card=>card.classList.remove('shake-bottom'));
+}
 
 
 /***** LOCAL STORAGE ******/
@@ -21,6 +48,10 @@ const coverImage = document.querySelector('.cover-img');
 
 
 /***** FUNCTIONS ******/
+
+
+/**** ANIMATIONS ******/
+
 
 // coverImageInput.addEventListener('change', () => {
 //   const file = coverImageInput.files[0]; // Get the selected file
