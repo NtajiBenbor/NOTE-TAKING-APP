@@ -9,18 +9,18 @@ const noteCards = document.querySelectorAll('.notes-card');
 
 /***** EVENT LISTENERS ******/
 
-noteCards.forEach(
-    function(card){
-        card.addEventListener('mouseover',applyShakeAnimation)
-    }
-);
+// noteCards.forEach(
+//     function(card){
+//         card.addEventListener('mouseover',applyShakeAnimation)
+//     }
+// );
 
-noteCards.forEach(
-    function(card){
-        card.addEventListener('mouseout',removeShakeAnimation)
-    }
+// noteCards.forEach(
+//     function(card){
+//         card.addEventListener('mouseout',removeShakeAnimation)
+//     }
     
-);
+// );
 
 
 
@@ -31,16 +31,16 @@ noteCards.forEach(
 
 
 /*apply shake animation to note cards function*/
-function applyShakeAnimation(){
-    this.classList.add('shake-bottom');
-    console.log("mouseover")
-    // noteCards.forEach(card=>card.classList.add('shake-bottom'));
-}
-function removeShakeAnimation(){
-    this.classList.remove('shake-bottom');
-    console.log("mouseout")
-    // noteCards.forEach(card=>card.classList.remove('shake-bottom'));
-}
+// function applyShakeAnimation(){
+    //     this.classList.add('shake-bottom');
+    //     console.log("mouseover")
+    //     // noteCards.forEach(card=>card.classList.add('shake-bottom'));
+// }
+// function removeShakeAnimation(){
+//     this.classList.remove('shake-bottom');
+//     console.log("mouseout")
+//     // noteCards.forEach(card=>card.classList.remove('shake-bottom'));
+// }
 
 
 /***** LOCAL STORAGE ******/

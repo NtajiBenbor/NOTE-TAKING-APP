@@ -9,6 +9,7 @@
 	--light-text:rgb(143, 143, 143);
 	--dark-text:#000000;
 	--notes-container-color:#fefae0; 
+	--btn-hover-border-col:#343a40;
 }
 
 
@@ -90,6 +91,17 @@
 span{
 	font-style: inherit;
 }
+/* hide labels, but still accessible to screen readers */
+.sr-only {
+	position: absolute;
+	width: 1px;
+	height: 1px;
+	padding: 0;
+	margin: -1px;
+	overflow: hidden;
+	clip: rect(0, 0, 0, 0);
+	border: 0;
+  }
 
 img{
 	display: block;
@@ -128,7 +140,7 @@ label{
 
 .caption{
 	font-weight: 500;
-	font-family: sans-serif;
+	font-family: var(--body-font);
 	color: #363636;
 	font-size: 80%;
 	padding: 0;
@@ -139,6 +151,10 @@ label{
 
 
 /****LAYOUT STYLES****/
+/* .form-center{
+	border: 1px solid red;
+} */
+
 /** buttons **/
 .app-btns{
 	border: 3px solid var(--border-color);
@@ -148,12 +164,16 @@ label{
 	font-weight: 800;
 	background: linear-gradient(90deg,rgb(255, 234, 0) 45%,rgb(255, 255, 0));
 	border-radius: 0%;
-	transition: all 400ms ease-in-out;
+	transition: all 300ms ease-in-out;
 }
 
 .app-btns:hover{
 	color: #fff;
+	border-color: var(--btn-hover-border-col);
 	background: #000;
+	box-shadow: 1px 1px 0px 1px rgba(52, 58, 64, 1);
+	-webkit-box-shadow: 1px 1px 0px 1px rgba(52, 58, 64, 1);
+	-moz-box-shadow: 1px 1px 0px 1px rgba(52, 58, 64, 1);
 }
 
 .create-note{
@@ -161,16 +181,85 @@ label{
 	padding: .1em .5em;
 }
 
+.add-cover-img-btn{
+	margin-left: auto;
+}
+
 .clear-btn{
 	background: linear-gradient(45deg,rgb(255, 47, 0) 50%,rgb(238, 132, 19));
 	color: var(--body-bg);
 }
 
+/* dark mode light mode slider styles */
+/* From Uiverse.io by Madflows */ 
+.toggle-switch {
+	position: relative;
+	width: 100px;
+	height: 50px;
+	--light: #d8dbe0;
+	--dark: #28292c;
+	--link: rgb(27, 129, 112);
+	--link-hover: rgb(24, 94, 82);
+  }
+  
+  .switch-label {
+	position: absolute;
+	width: 100%;
+	height: 50px;
+	background-color: var(--dark);
+	border-radius: 25px;
+	cursor: pointer;
+	border: 3px solid var(--dark);
+  }
+  
+  .checkbox {
+	position: absolute;
+	display: none;
+  }
+  
+  .slider {
+	position: absolute;
+	width: 100%;
+	height: 100%;
+	border-radius: 25px;
+	-webkit-transition: 0.3s;
+	transition: 0.3s;
+  }
+  
+  .checkbox:checked ~ .slider {
+	background-color: var(--light);
+  }
+  
+  .slider::before {
+	content: "";
+	position: absolute;
+	top: 10px;
+	left: 10px;
+	width: 25px;
+	height: 25px;
+	border-radius: 50%;
+	-webkit-box-shadow: inset 12px -4px 0px 0px var(--light);
+	box-shadow: inset 12px -4px 0px 0px var(--light);
+	background-color: var(--dark);
+	-webkit-transition: 0.3s;
+	transition: 0.3s;
+  }
+  
+  .checkbox:checked ~ .slider::before {
+	-webkit-transform: translateX(50px);
+	-ms-transform: translateX(50px);
+	transform: translateX(50px);
+	background-color: var(--dark);
+	-webkit-box-shadow: none;
+	box-shadow: none;
+  }
+  
 
 
 
 
-/** cover image modal **/
+
+/** Cover Image Modal **/
 .modal-bg{
 	width: 100vw;
 	height: 100vh;
@@ -184,64 +273,61 @@ label{
 	top: 0;
 	left: 0;
 	right: 0;
-	/* visibility: hidden; */
+	visibility: hidden;
 	z-index: -100;
 }
 
 .cover-img-modal{
 	width: 380px;
-	height: 350px;
+	height: 320px;
+	border: 4px solid var(--border-color);
 	background-color: var(--body-bg);
+	box-shadow: 1px 1px 0px 1px rgba(0,0,0,1);
+	-webkit-box-shadow: 1px 1px 0px 1px rgba(0,0,0,1);
+	-moz-box-shadow: 1px 1px 0px 1px rgba(0,0,0,1);
 	margin: 0 auto;
 	text-align: center;
 	padding: 1em;
-	border-radius: 10px;
 	position: relative;
 }
 
-/* label that is styled like a button */
+/*file input label styled like a button */
 .cover-img-label{
 	width: 50px;
-	border: 4px solid var(--border-color);
 	display: inline-block;
-	padding: 4px 12px;
+	padding: .1em;
+	transform: translateY(-10px);
 	cursor: pointer;
 	color: #000;
 	font-weight: 800;
-	font-size: 150%;
+	font-size: 130%;
 	background: linear-gradient(90deg,rgb(255, 234, 0) 45%,rgb(255, 255, 0));
-	transition: all ease-in-out 500ms;
+	animation: vibrate-1 0.3s 2s linear 2 both;
 	border-radius: 2px;
-	/* animation: bounce 900ms 1s ease-in 2; */
-}
-
-.cover-img-label:hover{
-	background-color: var(--border-color);
-	color: #fff;
 }
 
 .modal-center{
 	width: 100%;
 	height: 100%;
 	margin: auto auto;
-	margin-top: .5em;
 	position: relative;
 	display: flex;
 	flex-direction: column;
-	justify-content: space-evenly;
+	justify-content: space-between;
 	align-items: center;
 }
 
 .close-modal-btn{
 	border: none;
 	margin-bottom: 0;
+	width: 40px;
 	background: var(--border-color);
-	color: var(--body-bg);
-	border-radius: 4px;
+	color: var(--btn-color);
+	border-radius: 0;
 	font-weight: 800;
-	font-size: 150%;
+	font-size: 120%;
 	position: absolute;
-	top: -18px;
+	top: -10px;
 	right: -10px;
 }
 
@@ -270,19 +356,29 @@ input[type="file"]{
 
 
 
-/** Input box for typing notes styles **/
-#note-input{
+/** Input Box For Typing Notes **/
+.note-input{
 	width: 100%;
 	margin: 0 auto;
 	padding: 1em;
-	border: 3px solid var(--border-color);
+	border: 4px solid var(--border-color);
 	border-radius: 0%;
+	outline: 0;
+}
+
+.title-input{
+	border: transparent;
+}
+
+.title-input:focus,
+.note-input:focus{
+	background-color: rgba(243, 245, 247, 0.9);
 }
 
 
 
 
-/** Notes card styles **/
+/** Notes Card Styles **/
 .notes-card{
 	border-radius: 0%;
 	border: 1px solid var(--border-color);
@@ -291,28 +387,50 @@ input[type="file"]{
 	box-shadow: 1px 1px 0px 1px rgba(0,0,0,1);
 	-webkit-box-shadow: 1px 1px 0px 1px rgba(0,0,0,1);
 	-moz-box-shadow: 1px 1px 0px 1px rgba(0,0,0,1);
+	cursor: pointer;
+	transition: background 300ms linear, color 300ms linear !important;
 	
+}
+/* hover effect for note cards */
+/* for note card bg */
+.notes-card:hover{
+	background: rgba(0, 0, 0, 0.9) !important; 
+	color: var(--body-bg) !important;
+
+}
+/* for note card text */
+.notes-card:hover .card-txt-color{
+	color: var(--body-bg) !important;
+}
+
+.note-btn{
+	transition: color 300ms linear !important;
+}
+/* for note card button */
+.notes-card:hover .note-btn{
+	color: var(--body-bg) !important;
 }
 
 .note-image-wrapper{
-	border: 2px solid black;
-	border-left: 1px solid var(--border-color);
-	border-bottom: 1px solid var(--border-color);
-	border-top: 1px solid var(--border-color);
+	border: 3px solid black;
+	border-left: 2px solid var(--border-color);
+	border-bottom: 2px solid var(--border-color);
+	border-top: 2px solid var(--border-color);
 	padding: 0;
 	margin: 0;
 }
 
 
 
-/** display note modal style**/
+
+/** Display Note Modal Styles**/
 .display-note-modal{
 	background-color: color-mix(in srgb, rgb(0, 0, 0) 90%, transparent 10%);
 	backdrop-filter: blur(10px);
 	display: none;
 	/* display: grid;	 */
 	place-items: center;
-	z-index: -110;
+	z-index: -99;
 
 }
 
@@ -342,7 +460,7 @@ input[type="file"]{
 	
 	.cover-img-modal{
 		width: 500px;
-		height: 300px;
+		height: 350px;
 	}
 
 	/** display note modal styles**/
@@ -453,6 +571,32 @@ input[type="file"]{
 	}
 	90% {
 	  transform: rotate(2deg);
+	}
+  }
+  
+  /**
+ * ----------------------------------------
+ * animation vibrate-1
+ * ----------------------------------------
+ */
+@keyframes vibrate-1 {
+	0% {
+	  transform: translate(0);
+	}
+	20% {
+	  transform: translate(-2px, 2px);
+	}
+	40% {
+	  transform: translate(-2px, -2px);
+	}
+	60% {
+	  transform: translate(2px, 2px);
+	}
+	80% {
+	  transform: translate(2px, -2px);
+	}
+	100% {
+	  transform: translate(0);
 	}
   }
   
