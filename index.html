@@ -34,17 +34,20 @@
     <!-- container -->
     <div class="container">
         <header class="container">
-            <!-- TITLE START -->
-            <div class="title-container mt-4 d-flex justify-content-between">
-                <!-- title container --> 
+            <!--dark mode toggle  -->
+            <nav class="toggle-wrapper  py-2">
                 <div class="toggle-switch">
-                  <label class="switch-label">
-                    <input type="checkbox" class="checkbox">
-                    <span class="slider"></span>
-                  </label>
-                </div>  
+                    <label class="switch-label">
+                        <input type="checkbox" class="checkbox">
+                        <span class="slider"></span>
+                    </label>
+                </div>
+            </nav>
+            <!-- TITLE START -->
+            <div class="title-container mt-1 d-flex justify-content-between">
+                <!-- title container START-->
                 <div>
-                    <h1 class="title display-6">Welcome to Mindfullness</h1>
+                    <h1 class="title display-6">Mindfullness</h1>
                     <h2 class="sub-title display-6">Your personalized note taking app!</h2>
                 </div>
                 <!-- create note button -->
@@ -57,10 +60,10 @@
 
             <!-- FORM SECTION START -->
             <form action="" id="form" class="mt-4">
-            <section class="form-center">
-                <!-- COVER IMAGE & NOTE TITLE START -->
+                <section class="form-center">
+                    <!-- COVER IMAGE & NOTE TITLE START -->
                     <div>
-                         <!-- add cover photo button -->
+                        <!-- add cover photo button -->
                         <div class="d-flex my-0 py-0 mx-0 px-0">
                             <button type="button" class=" app-btns btn mb-2 add-cover-img-btn">
                                 Add cover photo
@@ -69,7 +72,8 @@
                         <!-- add note title input -->
                         <div class="row mb-1 mb-md-2">
                             <div class="col-12 col-md-4">
-                                <input type="text" class="note-input title-input py-1 py-md-2 px-1" id="note-title" placeholder="Title">
+                                <input type="text" class="note-input title-input py-1 py-md-2 px-1" id="note-title"
+                                    placeholder="Title">
                                 <label for="note-title" class="sr-only">Title</label>
                             </div>
                         </div>
@@ -87,18 +91,17 @@
                                 </button>
                                 <div>
                                     <p class="mt-4">Click the button below to add a cover image to your note.</p>
-                                    <label for="cover-photo"
-                                        class="cover-img-label  app-btns mb-3 mt-0">
+                                    <label for="cover-photo" class="cover-img-label  app-btns mb-3 mt-0" aria-roledescription="button">
                                         <i class="fa-solid fa-plus"></i>
                                     </label>
                                     <input type="file" name="cover-photo" id="cover-photo" size="100" value="upload">
                                 </div>
-                                 <!-- place holder image for preview image -->
+                                <!-- place holder image for preview image -->
                                 <figure>
                                     <div class="cover-img-wrapper">
                                         <i>
-                                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor"
-                                                class="size-4">
+                                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"
+                                                fill="currentColor" class="size-4">
                                                 <path fill-rule="evenodd"
                                                     d="M2 4a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V4Zm10.5 5.707a.5.5 0 0 0-.146-.353l-1-1a.5.5 0 0 0-.708 0L9.354 9.646a.5.5 0 0 1-.708 0L6.354 7.354a.5.5 0 0 0-.708 0l-2 2a.5.5 0 0 0-.146.353V12a.5.5 0 0 0 .5.5h8a.5.5 0 0 0 .5-.5V9.707ZM12 5a1 1 0 1 1-2 0 1 1 0 0 1 2 0Z"
                                                     clip-rule="evenodd" />
@@ -109,6 +112,10 @@
                                         <p class="caption img-caption">image preview</p>
                                     </figcaption>
                                 </figure>
+                                <!-- upload cover img btn -->
+                                <div>
+                                    <button type="button" class="app-btns btn add-note-btn">Upload</button>
+                                </div>
                             </div>
                             <!-- MODAL CENTER  End-->
                         </article>
@@ -118,17 +125,18 @@
                     <div class="form-row mt-1">
                         <div class="form-group col">
                             <label for="note " class="sr-only">Note</label>
-                            <textarea name="note" id="note" class="note-input" cols="30" rows="4" placeholder="Add new note"></textarea>
+                            <textarea name="note" id="note" class="note-input" cols="30" rows="4"
+                                placeholder="Add new note"></textarea>
                         </div>
                     </div><!-- NOTE INPUT END -->
-                    
+
                     <!--SUBMIT FORM BTN -->
                     <div class="col mt-3 mb-3 d-flex justify-content-center">
                         <button type="button" class="app-btns btn add-note-btn">Add note</button>
                     </div>
-            </section>
-        </form> <!-- FORM SECTION END -->
-    </header>
+                </section>
+            </form> <!-- FORM SECTION END -->
+        </header>
 
         <!-- NOTE CARDS SECTION START-->
         <section class="container">
@@ -158,7 +166,8 @@
                                             class="note-time">12:05</span> <span class="note-time-suffix">am.</span>
                                     </h6>
                                     <!-- card text -->
-                                    <p class="card-text dark-txt line-h card-txt-color">This is a wider card with supporting text below
+                                    <p class="card-text dark-txt line-h card-txt-color">This is a wider card with
+                                        supporting text below
                                         as a natural lead-in to additional content. This content is a little bit longer.
                                     </p>
                                 </div>
@@ -192,7 +201,8 @@
                                             class="note-time">12:05</span> <span class="note-time-suffix">am.</span>
                                     </h6>
                                     <!-- card text -->
-                                    <p class="card-text dark-txt line-h card-txt-color">This is a wider card with supporting text below
+                                    <p class="card-text dark-txt line-h card-txt-color">This is a wider card with
+                                        supporting text below
                                         as a natural lead-in to additional content. This content is a little bit longer.
                                     </p>
                                 </div>
@@ -200,6 +210,38 @@
                         </div>
                     </div>
                 </div> <!-- note card end-->
+
+                <!-- note card start no img-->
+                <div class="col">
+                    <div class="card notes-card bg-body-tertiary" style="max-width: 540px;">
+                        <div class="g-0">
+                            <!-- card body -->
+                            <div class="col-md-12">
+                                <div class="card-body">
+                                    <div class="d-flex justify-content-between">
+                                        <!-- card title -->
+                                        <h5 class="card-title">Card title</h5>
+                                        <!-- card btn -->
+                                        <button type="button" class="btn my-0 py-0">
+                                            <i class="fa-solid fa-arrow-right note-btn"></i>
+                                        </button>
+                                    </div>
+                                    <!-- card subtitle -->
+                                    <h6 class="card-subtitle mb-3 mt-1 text-body-secondary light-txt">
+                                        Edited on <span class="note-date">Sat</span> <span
+                                            class="note-time">12:05</span> <span class="note-time-suffix">am.</span>
+                                    </h6>
+                                    <!-- card text -->
+                                    <p class="card-text dark-txt line-h card-txt-color">This is a wider card with
+                                        supporting text below
+                                        as a natural lead-in to additional content. This content is a little bit longer.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div> <!-- note card no img end-->
+
             </div>
 
             <!-- clear all notes btn -->
@@ -246,8 +288,12 @@
                         </div>
                         <!-- note body -->
                         <div class="col-12 note-txt pt-0 pb-0 my-1 px-2 dark-txt">
-                           <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Inventore ad, deserunt vero aliquam iure tempore vel doloribus magnam ipsum, quae placeat accusantium, ex quos amet dicta commodi quo ut recusandae!
-                           Facilis maxime voluptatibus excepturi odit! Animi aut beatae eos, similique consectetur quisquam expedita labore, vel numquam dicta sequi aliquam ad, architecto nemo nihil! Iure vero nisi quos iusto eos eius!
+                            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Inventore ad, deserunt vero
+                                aliquam iure tempore vel doloribus magnam ipsum, quae placeat accusantium, ex quos amet
+                                dicta commodi quo ut recusandae!
+                                Facilis maxime voluptatibus excepturi odit! Animi aut beatae eos, similique consectetur
+                                quisquam expedita labore, vel numquam dicta sequi aliquam ad, architecto nemo nihil!
+                                Iure vero nisi quos iusto eos eius!
                             </p>
                         </div>
                     </div>
