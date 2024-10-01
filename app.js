@@ -1,74 +1,24 @@
 /***** VARIABLES ******/
 // DOM variables
+const noteInputContainer = document.querySelector(".form-center");
+const showNoteInputsBtn = document.querySelector(".create-note");
+const addNoteBtn = document.querySelector(".add-note-btn");
+
+// const form = document.getElementById('form');
 const coverImageInput = document.getElementById('cover-photo');
 const coverImage = document.querySelector('.cover-img');
 const coverImgLabelBtn = document.querySelector('.cover-img-label');
 const noteCards = document.querySelectorAll('.notes-card');
-
 // GLOBAL variables
 
 /***** EVENT LISTENERS ******/
+// displays/hide note inputs
+// dynamically update the create note btn icon when create note btn clicked
+showNoteInputsBtn.addEventListener('click',showNoteInputsContainer);
 
-const scores = [60,50,60,58,54,54,
-                58,50,5,54,48,69,
-                34,55,51,52,44,51,
-                69,64,66,55,52,61,
-                46,31,57,52,44,18,
-                41,53,55,61,51,44]
+// craetes a note after the user clicks submits
+addNoteBtn.addEventListener('click',addNote)
 
-
-
-function generateScoresData(scoresArr){
-
-
-    for(let i=0; i<scoresArr.length; i++){
-        console.log("Bubble solution #"+i+" score:"+scoresArr[i]);
-    }
-
-    console.log("Bubble tests:"+scoresArr.length)
-
-    let max = getHeighestNum(scoresArr)
-
-    console.log("Highest bubble score:"+ max)
-
-
-    for(let i=0; i<scoresArr.length; i++){
-    
-        if(scoresArr[i] == max){
-            console.log("solutions with the highest score#:"+ [i])
-        }
-
-    }
-
-
-}
-
-function getHeighestNum(arr){
-    let max=0;
-    if(arr){
-        for(let counter = 0; counter < arr.length; counter++){
-            if(max <= arr[counter]){
-                max = arr[counter]
-            }
-        }
-    }
-    return max
-}
-
-
-
-// noteCards.forEach(
-//     function(card){
-//         card.addEventListener('mouseover',applyShakeAnimation)
-//     }
-// );
-
-// noteCards.forEach(
-//     function(card){
-//         card.addEventListener('mouseout',removeShakeAnimation)
-//     }
-    
-// );
 
 
 
@@ -76,19 +26,32 @@ function getHeighestNum(arr){
 /***** FUNCTIONS ******/
 
 
+function addNote(e){
+e.preventDefault()
+
+}
 
 
-/*apply shake animation to note cards function*/
-// function applyShakeAnimation(){
-    //     this.classList.add('shake-bottom');
-    //     console.log("mouseover")
-    //     // noteCards.forEach(card=>card.classList.add('shake-bottom'));
-// }
-// function removeShakeAnimation(){
-//     this.classList.remove('shake-bottom');
-//     console.log("mouseout")
-//     // noteCards.forEach(card=>card.classList.remove('shake-bottom'));
-// }
+// dynamically displays the form container that holds the note inputs .
+// dynamically adjust create note btn icons
+function showNoteInputsContainer(e){
+    // selects the add note btn via it's eventListener
+    const addBtn = e.currentTarget;
+    /* toggles the CSS classes that dynamically controls the height values
+       of the note input container displaying the note input on user interaction
+       with the addnote button*/  
+    noteInputContainer.classList.toggle('show-input');
+    /* dynamically changes the icons that displays within the add note button 
+       based on user interaction. this is done by applying the show-btn class
+       to the button */
+    addBtn.classList.toggle('show-btn');
+
+   
+}
+
+function showCoverPhotoModal(){
+    
+}
 
 
 /***** LOCAL STORAGE ******/

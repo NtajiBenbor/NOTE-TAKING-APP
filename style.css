@@ -152,9 +152,12 @@ label{
 
 
 /***** LAYOUT STYLES *****/
-/* .form-center{
-	border: 1px solid red;
-} */
+.form-center {
+	/* border: 1px solid red; */
+	height: 0;
+	overflow: hidden;
+	transition: all 100ms linear;
+}
 
 /** buttons **/
 .app-btns{
@@ -165,7 +168,7 @@ label{
 	font-weight: 800;
 	background: linear-gradient(90deg,rgb(255, 234, 0) 45%,rgb(255, 255, 0));
 	border-radius: 0%;
-	transition: all 400ms ease-in-out;
+	transition: all 300ms ease-in-out;
 }
 
 .app-btns:hover{
@@ -180,6 +183,14 @@ label{
 .create-note{
 	font-size: 150%;
 	padding: .1em .5em;
+
+}
+
+.create-note .add-icon{
+	display: inline-block;
+}
+.create-note .back-icon{
+	display: none;
 }
 
 .add-cover-img-btn{
@@ -270,8 +281,8 @@ label{
 	width: 100vw;
 	height: 100vh;
 	height: 100dvh;
-	display: grid;
-	/* display: none; */
+	/* display: grid; */
+	display: none;
 	place-content: center;
 	background-color: color-mix(in srgb, rgba(0, 0, 0, 0.7) 80%, transparent 20%);
 	backdrop-filter: blur(10px);
@@ -279,8 +290,8 @@ label{
 	top: 0;
 	left: 0;
 	right: 0;
-	visibility: visible;
-	z-index: 100;
+	visibility: hidden;
+	z-index: -100;
 }
 
 .cover-img-modal{
@@ -500,6 +511,26 @@ input[type="file"]{
 
 
 /****JS STYLES *****/
+/* this style is applied with js to show and remove the form input for
+the note title and note input itself */
+
+.show-input{
+	height: 292px;
+	overflow: visible;
+	
+}
+
+/* this style hides the create note btn */
+.show-btn .add-icon{
+	display: none;
+}
+.show-btn .back-icon{
+	display: inline-block;
+}
+
+
+
+
 /* for animations */
 .slide-in-bck-top {
 	animation: slide-in-bck-top 0.6s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
