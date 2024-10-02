@@ -78,14 +78,14 @@
                         <!-- add note title input -->
                         <div class="row mb-1 mb-md-2">
                             <div class="col-12 col-md-4">
-                                <input type="text" class="note-input title-input py-1 py-md-2 px-1" id="note-title"
+                                <input type="text" class="note-input title-input py-1 py-md-2 px-1" id="note-title" name="note-title"
                                     placeholder="Title">
                                 <label for="note-title" class="sr-only">Title</label>
                             </div>
                         </div>
                     </div><!-- COVER IMAGE & NOTE TITLE END -->
 
-                    <!--  COVER IMAGE MODAL START-->
+                    <!--  COVER IMAGE MODAL START -->
                     <div class="modal-bg">
                         <!-- MODAL background -->
                         <article class="cover-img-modal">
@@ -97,14 +97,16 @@
                                 </button>
                                 <div>
                                     <p class="mt-4">Click the button below to add a cover image to your note.</p>
-                                    <label for="cover-photo" class="cover-img-label  app-btns mb-3 mt-0" aria-roledescription="button">
+                                    <!-- select cover image btn -->
+                                    <label for="cover-photo-input" class="cover-img-label app-btns mb-3 mt-0" aria-roledescription="button">
                                         <i class="fa-solid fa-plus"></i>
                                     </label>
-                                    <input type="file" name="cover-photo" id="cover-photo" size="100" value="upload">
+                                    <!-- cover image input field -->
+                                    <input type="file" name="cover-photo-input" id="cover-photo-input" size="100" value="upload" accept="jpeg, png">
                                 </div>
-                                <!-- place holder image for preview image -->
-                                <figure>
-                                    <div class="cover-img-wrapper">
+                                <!-- image preview wrapper -->
+                                <div class="cover-img-wrapper">
+                                    <!-- place holder image for preview image -->
                                         <i>
                                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"
                                                 fill="currentColor" class="size-4">
@@ -114,13 +116,12 @@
                                             </svg>
                                         </i>
                                     </div>
-                                    <figcaption class="mt-2">
-                                        <p class="caption img-caption">image preview</p>
-                                    </figcaption>
-                                </figure>
+                                     <!-- error alert -->
+                                    <div class="alerts"></div>
+                                    <p class="caption img-preview-caption my-2">image preview</p>
                                 <!-- upload cover img btn -->
                                 <div>
-                                    <button type="button" class="app-btns btn add-note-btn">Upload</button>
+                                    <button type="button" class="mt-2 app-btns btn add-note-btn">Done</button>
                                 </div>
                             </div>
                             <!-- MODAL CENTER  End-->
@@ -130,7 +131,7 @@
                     <!-- NOTE INPUT START -->
                     <div class="form-row mt-1">
                         <div class="form-group col">
-                            <label for="note " class="sr-only">Note</label>
+                            <label for="note" class="sr-only">Note</label>
                             <textarea name="note" id="note" class="note-input" cols="30" rows="4"
                                 placeholder="Add new note"></textarea>
                         </div>

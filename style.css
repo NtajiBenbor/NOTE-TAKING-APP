@@ -281,7 +281,6 @@ label{
 	width: 100vw;
 	height: 100vh;
 	height: 100dvh;
-	/* display: grid; */
 	display: none;
 	place-content: center;
 	background-color: color-mix(in srgb, rgba(0, 0, 0, 0.7) 80%, transparent 20%);
@@ -292,6 +291,12 @@ label{
 	right: 0;
 	visibility: hidden;
 	z-index: -100;
+}
+
+.show-modal{
+	display: grid;
+	visibility: visible;
+	z-index: 1000;
 }
 
 .cover-img-modal{
@@ -368,6 +373,11 @@ input[type="file"]{
 	height: 100%;
 	object-position: center center;
 	object-fit: cover;
+	border-radius: 4px;
+}
+
+.alerts{
+	display: none;
 }
 
 
@@ -511,22 +521,35 @@ input[type="file"]{
 
 
 /****JS STYLES *****/
-/* this style is applied with js to show and remove the form input for
+/* this class is applied with js to sisplay the form input for
 the note title and note input itself */
-
 .show-input{
 	height: 292px;
 	overflow: visible;
 	
 }
 
-/* this style hides the create note btn */
+/* this class hides the create note btn plus icon */
 .show-btn .add-icon{
 	display: none;
 }
+/* this class show the create note btn back icon */
 .show-btn .back-icon{
 	display: inline-block;
 }
+/* this class is displays the cover image modal */
+.show-modal{
+	display: grid;
+	visibility: visible;
+	z-index: 1000;
+}
+
+/* displays alert */
+.show-alert{
+	display: block;
+}
+
+
 
 
 
