@@ -71,7 +71,7 @@ function showCoverPhotoModal(){
     // selects the cover modal element in the DOM
     const coverImageModal = document.querySelector(".modal-bg")
     // adds the class of to display the modal on the page
-    coverImageModal.classList.add("show-modal",)
+    coverImageModal.classList.add("show-modal","slide-in-bck-top")
 }
 
 // ADD COVER IMG FUNC
