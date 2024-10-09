@@ -360,6 +360,7 @@ label{
 
 input[type="file"]{
 	display: none;
+	/* display: block; */
 }
 
 .cover-img-wrapper{
@@ -552,9 +553,7 @@ the note title and note input itself */
 	visibility: visible;
 }
 
-.translate-y {
-	transform: translateY(15px);
-}
+
 
 
 

@@ -1,12 +1,12 @@
 /***** VARIABLES ******/
 // Global DOM variables
 const showNoteInputsBtn = document.querySelector(".create-note");
-// const addNoteBtn = document.querySelector(".add-note-btn");
+const addNoteBtn = document.querySelector(".add-note-btn");
 const addCoverImageBtn = document.querySelector(".add-cover-img-btn");
 const coverImageInput = document.getElementById("cover-photo-input");
 const closeModalBtn = document.querySelector(".close-modal-btn");
 const doneBtn = document.querySelector(".done-btn");
-const form = document.getElementById('form');
+// const form = document.getElementById('form');
 
 
 
@@ -31,22 +31,25 @@ form.addEventListener("click",addNote);
 
 //sets up the cover photo preview when the user uploads an image
 // coverImageInput.addEventListener("change",addCoverImage);
-coverImageInput.addEventListener("change",addCoverImage);
+coverImageInput.addEventListener("click",()=>{ console.log("firing on click")});
 
 // closes the cover image modal and cancels the user img inputs
-closeModalBtn.addEventListener("click",cancelCoverImgEntry);
+// closeModalBtn.addEventListener("click",cancelCoverImgEntry);
+
 
 // close the cover image modal but saves the inputed image to a variable 
-doneBtn.addEventListener("click",()=>{
-    const alerts = document.querySelector(".alerts");
-    if(coverImgObj){
-        hideCoverImgModal();
-        CoverImgFlag = true;
-    }else{
-        displayAlert(alerts,"red", "Please, pick an image or click cancel","show-alert",5000);
-    }
+// doneBtn.addEventListener("click",()=>{
+//     const alerts = document.querySelector(".alerts");
+//     if(coverImgObj){
+//         hideCoverImgModal();
+//         CoverImgFlag = true;
+//     }else{
+//         displayAlert(alerts,"red", "Please, pick an image or click cancle","show-alert",5000);
+//     }
     
-});
+// });
+
+
 
 
 
@@ -152,12 +155,12 @@ function addCoverImage(){
     // user uploaded file is accessed via files object using index
     // and then passed to the coverImage Global Variable
     coverImgObj = coverImageInput.files[0]
-    // Checks if the size of the image is greater than 500mb
+    // Checks if the size of the image is greater than 500kb
     if(coverImgObj.size > 524288){
         // reset the cover uploaded file
          coverImgObj = "";
         //reset the value of the file input  
-         coverImageInput.length=0;
+         coverImageInput.value="";
         //  display an error message
          displayAlert(alerts,"red", "file is to large enter a file less than 500mb","show-alert",5000);
         
