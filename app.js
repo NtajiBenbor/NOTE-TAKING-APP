@@ -1,11 +1,10 @@
 /***** VARIABLES ******/
 // Global DOM variables
-const showInputsBtn = document.querySelector(".show-note-inputs");
-const createNoteBtn = document.querySelector(".create-note");
+const showInputsBtn = document.querySelector(".show-inputs-btn");
 const pickCoverImgBtn = document.querySelector(".add-cover-img-btn");
 const fileUploadModal = document.querySelector(".cover-img-modal");
 const fileUploadInput= document.getElementById("cover-photo-input");
-const form = document.getElementById('form');
+const form = document.getElementById("form");
 
 
 
@@ -24,7 +23,7 @@ let edited;
 showInputsBtn.addEventListener("click",showNoteInputsContainer);
 
 // creates a note after the user clicks submits
-form.addEventListener("click",addNote);
+form.addEventListener("click",createNewNote);
 
 //pulls a modal that allows the user add a cover image to their note
  pickCoverImgBtn.addEventListener("click",showCoverPhotoModal);
@@ -48,29 +47,27 @@ fileUploadInput.addEventListener("change",addCoverImage);
 /***** FUNCTIONS ******/
 
 // ADD NEW NOTE FUNC
-function addNote(event){
+function createNewNote(event){
 // event.preventDefault()
 
 }
 
 // SHOW INPUT CONTAINER FUNC
-// dynamically displays the form container that holds the note inputs .
-// dynamically adjust create note btn icons
+
+/**
+ * The function `showNoteInputsContainer` toggles the visibility of a form and buttons when triggered by a click event.*/
 function showNoteInputsContainer(event){
-    const noteInputContainer = document.querySelector(".form-center");
+    const createNoteBtn = document.querySelector(".create-note-btn");
     // selects the add note btn via it's eventListener
     const addBtn = event.currentTarget;
 
-    /* toggles the CSS classes that dynamically controls the height values
-       of the note input container displaying the note input on user interaction
-       with the addnote button*/  
-    noteInputContainer.classList.toggle('show-input');
-    /* dynamically changes the icons that displays within the add note button 
-       based on user interaction. this is done by applying the show-btn class
-       to the button */
-    addBtn.classList.toggle('show-btn');
+    form.classList.toggle("show");
 
-   
+    addBtn.classList.toggle("show");
+
+    setTimeout(()=>{
+        createNoteBtn.classList.toggle("show")
+    },300) 
 }
 
 
@@ -123,7 +120,7 @@ function addCoverImage(event){
         //reset the value of the file input  
          fileUploadInput.value="";
         //  display an error message
-         displayAlert(alerts,"red", "file is to large enter a file less than 500mb","show-alert",5000);
+         displayAlert(alerts,"red", "file is too large enter a file less than 500mb","show-alert",5000);
         
     }else{
         // an image element is created. this element is used to handle the preview
