@@ -182,7 +182,7 @@ header{
 .form-center {
 	height: 0;
 	overflow: hidden;
-	transition: height 500ms ease-in-out;
+	transition: all 500ms ease-in-out;
 }
 
 
@@ -234,7 +234,7 @@ header{
 /*create note btn  */
 .create-note-btn{
 	visibility: hidden;
-	transition: visibility 300ms linear;
+	transition: visibility 400ms linear;
 }
 
 
@@ -405,12 +405,13 @@ input[type="file"]{
 .input-txt-area-container{
 	height: 0;
 	overflow: hidden;
-	transition: height 500ms ease-in-out;
+	transition: all 500ms ease-in-out;
 }
 
 /* the note text area */
 .note-input{
 	width: 100%;
+	/* height: 0; */
 	margin: 0 auto;
 	padding: 1em;
 	border: 4px solid var(--border-color);
@@ -558,6 +559,11 @@ the note title and note input itself */
 	height: 142px;
 	overflow: visible;
 }
+
+/* .show .note-input{
+	height: 136px;
+	overflow: visible;
+} */
 
 /* this class hides the create note btn plus icon */
 .show .add-icon{
