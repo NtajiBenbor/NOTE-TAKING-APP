@@ -43,12 +43,15 @@ fileUploadInput.addEventListener("change",addCoverImage);
 
 
 
-
 /***** FUNCTIONS ******/
 
 // ADD NEW NOTE FUNC
 function createNewNote(event){
-// event.preventDefault()
+
+   
+   
+   
+   
 
 }
 
@@ -104,14 +107,14 @@ function hideCoverImgModal(){
 // ADD COVER IMG FUNC
 /*  this function gets the image the user uploads as a cover img for their notes
     then use the readFiles function to display a preview of the cover image.*/
-function addCoverImage(event){
-    // event.stopPropagation()
+function addCoverImage(){
+
     const ImagePreviewContainer = document.querySelector(".cover-img-wrapper");
     const previewImgTitle = document.querySelector(".img-preview-caption");
     const alerts = document.querySelector(".alerts");
     const fileUploadInput= document.getElementById("cover-photo-input");
-    // user uploaded file is accessed via files object using index
-    // and then passed to the coverImage Global Variable
+    // user uploaded file is accessed via files object through indexing
+    // and then stored in the coverImage Global Variable
     coverImgObj = fileUploadInput.files[0]
     // Checks if the size of the image is greater than 500kb
     if(coverImgObj.size > 524288){
@@ -206,8 +209,6 @@ function cancelCoverImgEntry(){
     /*the default svg image is set as the preview*/
     ImagePreviewContainer.innerHTML = previewImg;
 
-    console.log("firing cancel")
-
     // the modal is then hidden
     hideCoverImgModal()
 }
@@ -224,20 +225,28 @@ function cancelCoverImgEntry(){
 function manageFileInputModal(event){
     let element = event.target;
     const closeModalBtn = document.querySelector(".close-modal-btn");
-    const saveImgBtn = document.querySelector('.done-btn');
-    const alerts = document.querySelector(".alerts");  
+    const saveImgBtn = document.querySelector(".done-btn");
+    const alerts = document.querySelector(".alerts"); 
+    // const fileInputLabel = document.querySelector(".cover-img-label");
+    // const fileUploadInput= document.getElementById("cover-photo-input");
 
     if(element.closest("button") === closeModalBtn){
 
        // closes the cover image modal and cancels the user img inputs
        cancelCoverImgEntry();
 
-    }else if(element.closest('.done-btn') === saveImgBtn){
+    }else if(element.closest(".done-btn") === saveImgBtn){
 
         // closes the cover image modal but saves the inputed image to a variable 
         saveImg(coverImgObj,alerts);
            
     }
+    
+    // else if(element.closest(".cover-img-label") === fileInputLabel){
+    //     console.log("clicking upload label")
+    //     fileUploadInput.click()
+
+    // }
 
 }
 
