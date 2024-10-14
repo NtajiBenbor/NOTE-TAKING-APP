@@ -135,8 +135,24 @@ function addCoverImage(event){
         // displays the uploaded img as a preview
         ImagePreviewContainer.append(previewImg )
     }
-    // updates the img caption with uploaded img name
-     previewImgTitle.textContent = coverImgObj.name;
+   
+    /* updates the img caption with uploaded img name. it dynamically updates the image title
+    based on the length of the string. if the title string characters are greater than 20,
+    the it shortens it but if it is less than 20, it displays it as is.*/
+    let photoTitle = coverImgObj.name;
+
+     photoTitle = photoTitle.split("");
+
+     if(photoTitle.length > 20){
+        let photoTitlePrefix = photoTitle.slice(0,19).join("");
+        let photoTitleSuffix = photoTitle.slice(-4).join("");
+        
+        // updates the img caption with uploaded img name after shortening the string.
+        previewImgTitle.textContent = `${photoTitlePrefix}...${photoTitleSuffix}`
+     }else{
+        // updates the img caption with uploaded img name as is.
+        previewImgTitle.textContent = coverImgObj.name;
+     }
 
 
 }
