@@ -19,13 +19,13 @@ let edited;
 showInputsBtn.addEventListener("click", showNoteInputsContainer);
 
 // creates a note after the user clicks submits
-form.addEventListener("click", createNewNote);
+form.addEventListener("submit", createNewNote);
 
 //pulls a modal that allows the user add a cover image to their note
 pickCoverImgBtn.addEventListener("click", showCoverPhotoModal);
 
 //sets up the cover photo preview when the user uploads an image
-fileUploadModal.addEventListener("click", manageFileInputModal, true);
+fileUploadModal.addEventListener("click", manageFileInputModal);
 
 //change event fires the addCoverImage func(it displays a preview of the selected img)
 fileUploadInput.addEventListener("change", addCoverImage);
@@ -34,11 +34,71 @@ fileUploadInput.addEventListener("change", addCoverImage);
 
 // ADD NEW NOTE FUNC
 function createNewNote(event) {
-  event.preventDefault();
+ 
+event.preventDefault();
 
   let noteTitle = form.elements.note_title.value;
   let noteBody = form.elements.note.value;
-  let noteImg = form.elements.cover_photo_input.value;
+  
+  
+  const notesContainer = document.querySelector(".notes-container")
+  let date = new Date();
+  const id = Math.random().toString(16).slice(2);
+
+  if(noteTitle && noteBody && CoverImgFlag){
+    console.log("i have a cover image")
+	const div = document.createElement('div');
+	let noteImg= document.createElement("img");
+	noteImg.classList.add("img-fluid");
+	readFiles(coverImgObj,noteImg)
+	div.dataset.noteId = id
+	div.classList.add("col")
+
+	let noteElement = ` <div class="card notes-card bg-body-tertiary" style="max-width: 540px;">
+                        <div class="row g-0">
+                            <!-- note card image -->
+                            <div class="col-md-4 note-image-wrapper">
+                                ${noteImg}
+                            </div>
+                            <!-- card body -->
+                            <div class="col-md-8">
+                                <div class="card-body">
+                                    <div class="d-flex justify-content-between">
+                                        <!-- card title -->
+                                        <h5 class="card-title">${noteTitle}</h5>
+                                        <!-- card btn -->
+                                        <button type="button" class="btn my-0 py-0">
+                                            <i class="fa-solid fa-arrow-right note-btn"></i>
+                                        </button>
+                                    </div>
+                                    <!-- card subtitle -->
+                                    <h6 class="card-subtitle mb-3 mt-1 text-body-secondary light-txt">
+                                        Edited on <span class="note-date">Sat</span> <span
+                                            class="note-time">12:05</span> <span class="note-time-suffix">am.</span>
+                                    </h6>
+                                    <!-- card text -->
+                                    <p class="card-text dark-txt line-h card-txt-color">${noteBody}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>`
+			
+	// let noteImg = noteElement.querySelector(".card-img")
+	// readFiles(coverImgObj,noteImg)
+	// console.log(noteImg)
+	div.innerHTML = noteElement
+
+	notesContainer.append(div)
+
+	console.log(div)
+    resetAll()
+  }else if(noteTitle && noteBody && !CoverImgFlag){
+    console.log("no cover img")
+    resetAll()
+  }else{
+    alert("can not enter empty note")
+    resetAll()
+  }
 }
 
 // SHOW INPUT CONTAINER FUNC
@@ -46,6 +106,7 @@ function createNewNote(event) {
 /**
  * The function `showNoteInputsContainer` toggles the visibility of a form and buttons when triggered by a click event.*/
 function showNoteInputsContainer(event) {
+    
   const createNoteBtn = document.querySelector(".create-note-btn");
   // selects the add note btn via it's eventListener
   const addBtn = event.currentTarget;
@@ -57,6 +118,8 @@ function showNoteInputsContainer(event) {
   setTimeout(() => {
     createNoteBtn.classList.toggle("show");
   }, 300);
+
+  
 }
 
 // SHOWCOVER PHOTO MODAL FUNC
@@ -71,6 +134,7 @@ function showCoverPhotoModal() {
   setTimeout(() => {
     coverImageModal.classList.remove("slide-in-bck-center");
   }, 500);
+  
 }
 
 // HIDE MODAL FUNC
@@ -117,7 +181,8 @@ function addCoverImage() {
     previewImg.classList.add("img-fluid", "cover-img");
     // this function reads the file in the cover img variable
     // then updates the src property of the img element that was created
-    readFiles(coverImgObj, previewImg);
+       let img = readFiles(coverImgObj);
+	   previewImg.setAttribute('src',`${img}`);
     // removes the default/placeholder img
     ImagePreviewContainer.children[0].remove();
     // displays the uploaded img as a preview
@@ -152,34 +217,11 @@ function saveImg(imgObj, alertMsg) {
 }
 
 // CANCEL COVER PHOTO ENTRY FUNC
-/**
- * The function `cancelCoverImgEntry` resets the cover image preview to a default placeholder and
- * clears the selected image input.
- */
+/* The function `cancelCoverImgEntry` resets the cover image preview to a default 
+placeholder, resets the file input element value, and then hides the modal.*/
 function cancelCoverImgEntry() {
-  const previewImgTitle = document.querySelector(".img-preview-caption");
-  const ImagePreviewContainer = document.querySelector(".cover-img-wrapper");
-  const fileUploadInput = document.getElementById("cover-photo-input");
-  /*the default svg file is saved in a variable*/
-  let previewImg = `<!-- place holder image for preview image -->
-                   <i>
-                       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"
-                           fill="currentColor" class="size-4">
-                           <path fill-rule="evenodd"
-                               d="M2 4a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V4Zm10.5 5.707a.5.5 0 0 0-.146-.353l-1-1a.5.5 0 0 0-.708 0L9.354 9.646a.5.5 0 0 1-.708 0L6.354 7.354a.5.5 0 0 0-.708 0l-2 2a.5.5 0 0 0-.146.353V12a.5.5 0 0 0 .5.5h8a.5.5 0 0 0 .5-.5V9.707ZM12 5a1 1 0 1 1-2 0 1 1 0 0 1 2 0Z"
-                               clip-rule="evenodd" />
-                       </svg>
-                   </i>`;
-  /*the cover image object is reset to default */
-  coverImgObj = "";
-  /*image preview subtitle reset to default*/
-  previewImgTitle.textContent = "image preview";
-  /*the file input is also reset*/
-  fileUploadInput.value = "";
-  /*the selected image is removed*/
-  ImagePreviewContainer.children[0].remove();
-  /*the default svg image is set as the preview*/
-  ImagePreviewContainer.innerHTML = previewImg;
+	// resets all  input element on this modal element
+	restModalValues()
 
   // the modal is then hidden
   hideCoverImgModal();
@@ -210,7 +252,7 @@ function manageFileInputModal(event) {
   /* this allows the defaualt behaviour of the file input to work even though 
     default behavior of the form is has been turned off in the createNewNote()
      function*/
-  event.stopPropagation();
+//   event.stopPropagation();
 }
 
 // READ FILES FUNC
@@ -219,12 +261,12 @@ The function `readFiles` reads a file using `FileReader` and sets the `src` attr
  of an element to the result.
   * @param file - The `file` parameter is the file object that you want to read.
   * @param element - The `element` parameter in the `readFiles` function is typically a reference to an HTML element, such as an image element (`<img>`), where the content of the file being read will be displayed.*/
-function readFiles(file, element) {
+function readFiles(file) {
   // intantiates a new fileRead instance
   const reader = new FileReader();
   // asynchronously updates the element src with the result of the file reading
   reader.onload = (e) => {
-    element.src = e.target.result;
+    return e.target.result;
   };
   // file is being read here
   reader.readAsDataURL(file);
@@ -247,6 +289,44 @@ function displayAlert(element, color, text, d_class, duration) {
   setTimeout(() => {
     element.classList.remove(`${d_class}`);
   }, duration);
+}
+
+
+//RESET ALL FUNC
+function resetAll(){
+    
+    form.elements.note_title.value = "";
+    form.elements.note.value = "";
+    form.elements.cover_photo_input.value = "";
+	CoverImgFlag = false
+	restModalValues()
+}
+
+// RESET COVER IMG MODAL FUNC
+
+function restModalValues(){
+ const previewImgTitle = document.querySelector(".img-preview-caption");
+ const ImagePreviewContainer = document.querySelector(".cover-img-wrapper");
+  /*the default svg file is saved in a variable*/
+  let previewImg = `<!-- place holder image for preview image -->
+                   <i>
+                       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"
+                           fill="currentColor" class="size-4">
+                           <path fill-rule="evenodd"
+                               d="M2 4a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V4Zm10.5 5.707a.5.5 0 0 0-.146-.353l-1-1a.5.5 0 0 0-.708 0L9.354 9.646a.5.5 0 0 1-.708 0L6.354 7.354a.5.5 0 0 0-.708 0l-2 2a.5.5 0 0 0-.146.353V12a.5.5 0 0 0 .5.5h8a.5.5 0 0 0 .5-.5V9.707ZM12 5a1 1 0 1 1-2 0 1 1 0 0 1 2 0Z"
+                               clip-rule="evenodd" />
+                       </svg>
+                   </i>`;
+  /*the cover image object is reset to default */
+  coverImgObj = "";   
+  /*image preview subtitle reset to default*/
+  previewImgTitle.textContent = "image preview";
+  /*the file input is also reset*/
+  form.elements.cover_photo_input.value = "";
+  /*the selected image is removed*/
+  ImagePreviewContainer.children[0].remove();
+  /*the default svg image is set as the preview*/
+  ImagePreviewContainer.innerHTML = previewImg;
 }
 
 // TRIM FILE NAME FUNC
