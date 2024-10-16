@@ -29,7 +29,7 @@ form.addEventListener("click",createNewNote);
  pickCoverImgBtn.addEventListener("click",showCoverPhotoModal);
 
 //sets up the cover photo preview when the user uploads an image
-fileUploadModal.addEventListener("click",manageFileInputModal);
+fileUploadModal.addEventListener("click",manageFileInputModal,true);
 
 //change event fires the addCoverImage func(it displays a preview of the selected img) 
 fileUploadInput.addEventListener("change",addCoverImage);
@@ -47,6 +47,8 @@ fileUploadInput.addEventListener("change",addCoverImage);
 
 // ADD NEW NOTE FUNC
 function createNewNote(event){
+    
+event.preventDefault()
 
    
    
@@ -85,7 +87,7 @@ function showNoteInputsContainer(event){
 
     setTimeout(()=>{
         coverImageModal.classList.remove("slide-in-bck-center");
-    },2000)
+    },500)
     
 }
 
@@ -100,7 +102,7 @@ function hideCoverImgModal(){
     setTimeout(()=>{
         coverImageModal.classList.remove("show-modal");
         coverImageModal.classList.remove("slide-out-bck-center");
-    },1000)
+    },500)
 }
 
 
@@ -157,7 +159,7 @@ function addCoverImage(){
         previewImgTitle.textContent = coverImgObj.name;
      }
 
-
+    
 }
 
 
@@ -226,9 +228,7 @@ function manageFileInputModal(event){
     let element = event.target;
     const closeModalBtn = document.querySelector(".close-modal-btn");
     const saveImgBtn = document.querySelector(".done-btn");
-    const alerts = document.querySelector(".alerts"); 
-    // const fileInputLabel = document.querySelector(".cover-img-label");
-    // const fileUploadInput= document.getElementById("cover-photo-input");
+    const alerts = document.querySelector(".alerts");
 
     if(element.closest("button") === closeModalBtn){
 
@@ -242,11 +242,10 @@ function manageFileInputModal(event){
            
     }
     
-    // else if(element.closest(".cover-img-label") === fileInputLabel){
-    //     console.log("clicking upload label")
-    //     fileUploadInput.click()
-
-    // }
+    /* this allows the defaualt behaviour of the file input to work even though 
+    default behavior of the form is has been turned off in the createNewNote()
+     function*/ 
+    event.stopPropagation()
 
 }
 
