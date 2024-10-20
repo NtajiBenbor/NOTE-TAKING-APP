@@ -1,6 +1,7 @@
 
 /**** CSS variables ****/
 :root{
+	/* interpolate-size: allow-keywords; */
 	--heading-font:"Oswald";
 	--body-font:"Roboto";
 	--body-bg: #fafdf6;
@@ -177,6 +178,20 @@ header{
 
   main{
 	margin-top: 5em;
+  }
+
+  .main-alerts-display{
+	width: fit-content;
+	padding: .2em .4em;
+	border-radius: 15px;
+	font-weight: 500;
+	color: var(--body-bg);
+	position: fixed;
+	left: 45vw;
+	top: 80px;
+	z-index: -100;
+	visibility: hidden;
+	transition: all 800ms 400ms ease-in;
   }
 
 /* main area of the form that hold all input elements */
@@ -392,7 +407,7 @@ input[type="file"]{
 	border-radius: 4px;
 }
 
-/* Alerts styles */
+/* Alerts styles for photo modal */
 .alerts{
 	visibility: hidden;
 	transform: translateY(-1px) !important;
@@ -439,6 +454,7 @@ input[type="file"]{
 
 .notes-card{
 	min-height: 175px;
+	/* height: 277.938px; */
 	border-radius: 0%;
 	border: 1px solid var(--border-color);
 	border-right: 4px solid var(--border-color);
@@ -458,7 +474,8 @@ input[type="file"]{
 }
 
 /*for note card text */
-.notes-card:hover .card-txt-color{
+.notes-card:hover .card-txt-color,
+.notes-card:hover .card-subtitle{
 	color: var(--body-bg) !important;
 }
 
@@ -470,22 +487,21 @@ input[type="file"]{
 /* for note card button */
 .notes-card:hover .note-btn{
 	color: var(--body-bg) !important;
+	
 }
 
 /* wrappers for the imgs on the note cards */
 .note-image-wrapper{
 	max-height:255px;
+	/* height: 100%; */
 	border: 3px solid black;
 	border-left: 2px solid var(--border-color);
 	border-bottom: 2px solid var(--border-color);
 	border-top: 2px solid var(--border-color);
 	padding: 0;
 	margin: 0;
+	background-color: var(--body-bg);
 }
-
-/* .note-img{
-
-} */
 
 
 
@@ -502,6 +518,14 @@ input[type="file"]{
 	z-index: -110;
 }
 
+/* .notes-card{
+	height: 193px;
+}
+
+.note-image-wrapper{
+	height:inherit;
+	border-color: red;
+} */
 
 
 .note-modal-center{
@@ -575,10 +599,11 @@ the note title and note input itself */
 	overflow: visible;
 }
 
-/* .show .note-input{
-	height: 136px;
-	overflow: visible;
-} */
+
+.show-main-alert {
+	z-index: 1000;
+	visibility: visible;
+  }
 
 /* this class hides the create note btn plus icon */
 .show .add-icon{
@@ -611,6 +636,10 @@ the note title and note input itself */
 /* displays alert */
 .show-alert{
 	visibility: visible;
+}
+
+.show-clear-btn{
+	display: block;
 }
 
 

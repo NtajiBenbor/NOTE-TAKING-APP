@@ -21,7 +21,7 @@
     <link href="/assets/bootstrap-5.3.3-dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Font Awesome Solid + Brands icon css link-->
     <link href="/assets/fontawesome/css/fontawesome.css" rel="stylesheet" />
-    <link href="/assets/fontawesome/css/brands.css" rel="stylesheet" />
+    <!-- <link href="/assets/fontawesome/css/brands.css" rel="stylesheet" /> -->
     <link href="/assets/fontawesome/css/solid.css" rel="stylesheet" />
     <!-- Custom CSS link -->
     <link rel="stylesheet" href="style.css">
@@ -73,6 +73,10 @@
     <main class="container">
         <!-- FORM SECTION START-->
         <section class="container">
+            <!-- Main alerts display -->
+                <div >
+                    <p class="main-alerts-display"><span><i class="fa-solid fa-circle-check" style="color: greenyellow;"></i></span></p>
+                </div>
             <!-- create/back note button wrapper start-->
             <div class="btn-wrapper mt-auto">
                 <button type="button" role="button" class="btn app-btns show-inputs-btn">
@@ -174,11 +178,11 @@
 
         <!-- NOTE CARDS SECTION START-->
         <section class="container">
+            <!-- main container for note cards -->
             <div class="notes-container row row-cols-1 row-cols-md-2 g-4">
                
             </div>
 
-          
             <div class="col mt-3 mb-3 d-flex justify-content-center">
                 <button type="button" class="app-btns btn clear-btn">Clear notes</button><!-- clear all notes btn -->
             </div>
@@ -239,7 +243,7 @@
     <!-- bootstrap js script -->
     <!-- <script src="assets/bootstrap-5.3.3-dist/js/bootstrap.min.js"></script> -->
     <!-- custom js script -->
-    <script src="app.js"></script>
+    <script src="/app.js"></script>
 </body>
 
 </html>

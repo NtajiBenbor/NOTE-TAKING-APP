@@ -4,6 +4,7 @@ const showInputsBtn = document.querySelector(".show-inputs-btn");
 const pickCoverImgBtn = document.querySelector(".add-cover-img-btn");
 const fileUploadModal = document.querySelector(".cover-img-modal");
 const fileUploadInput = document.getElementById("cover-photo-input");
+const mainAlerts = document.querySelector(".main-alerts-display");
 const form = document.getElementById("form");
 
 // GLOBAL variables
@@ -39,6 +40,7 @@ function createNewNote(event) {
     event.preventDefault();
 
     const notesContainer = document.querySelector(".notes-container");
+    const clearBtn = document.querySelector(".clear-btn");
     const weekDays = ["Sun","Mon","Tue","Wed","Thur","Fri","Sat"];
     const months = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
     let noteTitle = form.elements.note_title.value;
@@ -53,76 +55,135 @@ function createNewNote(event) {
         return dateVar.getHours() % 12 || 12 ;
     }
 
+    let day=weekDays[date.getDay()];
+    let month=months[date.getMonth()];
+    let date_=date.getDate();
     let hrs = convertTime(date);
+    let mins = date.getMinutes();
     let pm_am;
+    // check wether time is Am or PM
     hrs < 12 ? pm_am= "pm": pm_am= "am";
 
-  if(noteTitle && noteBody && CoverImgFlag){
+  if(noteTitle && noteBody){
     
     // initializing a card container element and giving it a unique id
-	const cardElement = document.createElement('div');
+	  const cardElement = document.createElement('div');
     cardElement.dataset.noteId = id;
     cardElement.classList.add("col");
     
     // reducing the length of the text for the note card elements
-    noteBody.length > 145 ? cardText = noteBody.slice(0,139): cardText =noteBody;
+    noteBody.length > 145 ? cardText = `${noteBody.slice(0,139)}. . .`: cardText =noteBody;
     
-   // Since file reading is a blocking operation, we need to ensure that the noteImg 
-   // variable has the correct value before updating the cardElement's innerHTML. 
-   // To achieve this, we use template literals to pass the note title, note body, 
-   // and cover image into a pre-structured and pre-styled HTML string. 
-   // This operation is handled asynchronously to ensure the file is fully read 
-   // before its value is used.
-    const reader = new FileReader();
-    reader.onload = (event)=>{
-            // noteImg is updated with the result of the file reading
-            noteImg = event.target.result;
+    // decide  what kind of note card to create for UI based on the coverImage Flag.
+    // if flag is set to false then create a card with only text.
+    // if flag is true then create a cared with both text and a cover image.
+    if(!CoverImgFlag){
+      cardElement.innerHTML = `<div class="card notes-card bg-body-tertiary" style="max-width:540px;">
+      <div class="row g-0">
+          <!-- card body -->
+          <div class="col-12">
+              <div class="card-body">
+                  <div class="d-flex justify-content-between">
+                      <!-- card title -->
+                      <h5 class="card-title">${noteTitle}</h5>
+                      <!-- card btn -->
+                      <button type="button" class="btn my-0 py-0">
+                          <i class="fa-solid fa-arrow-right note-btn"></i>
+                      </button>
+                  </div>
+                  <!-- card subtitle -->
+                  <h6 class="card-subtitle mb-3 mt-1 text-body-secondary light-txt">
+                      Created on <span class="note-day">${day}</span>
+                      <span class="note-date">${date_}</span>  
+                      <span class="note-month">${month}</span> 
+                      <span class="note-time">${hrs}:${mins}</span> 
+                      <span class="note-time-suffix">${pm_am}.</span>
+                  </h6>
+                  <!-- card text -->
+                  <p class="card-text dark-txt line-h card-txt-color">${cardText}</p>
+              </div>
+          </div>
+      </div>
+      </div>`
+    }else{
+      // Since file reading is a blocking operation, we need to ensure that the noteImg 
+      // variable has the correct value before updating the cardElement's innerHTML. 
+      // To achieve this, we use template literals to pass the note title, note body, 
+      // and cover image into a pre-structured and pre-styled HTML string. 
+      // This operation is handled asynchronously to ensure the file is fully read 
+      // before its value is used.
+        const reader = new FileReader();
+        reader.onload = (event)=>{
+                // noteImg is updated with the result of the file reading
+                noteImg = event.target.result;
 
-            //the card inner HTML structure is updated pre-styled & pre-structured HTML 
-            // values for note-title, note-body(trimed text string), date and note-img
-            cardElement.innerHTML = `<div class="card notes-card bg-body-tertiary" style="max-width:540px;">
-            <div class="row g-0">
-                <!-- note card image -->
-                <div class="col-md-4 note-image-wrapper">
-                <img src= ${noteImg}  alt="note cover img">
-                </div>
-                <!-- card body -->
-                <div class="col-md-8">
-                    <div class="card-body">
-                        <div class="d-flex justify-content-between">
-                            <!-- card title -->
-                            <h5 class="card-title">${noteTitle}</h5>
-                            <!-- card btn -->
-                            <button type="button" class="btn my-0 py-0">
-                                <i class="fa-solid fa-arrow-right note-btn"></i>
-                            </button>
+                //the card inner HTML structure is updated pre-styled & pre-structured HTML 
+                // values for note-title, note-body(trimed text string), date and note-img
+                cardElement.innerHTML = `<div class="card notes-card bg-body-tertiary" style="max-width:540px;">
+                <div class="row g-0">
+                    <!-- note card image -->
+                    <div class="col-md-4 note-image-wrapper">
+                    <img src= ${noteImg}  alt="note cover img">
+                    </div>
+                    <!-- card body -->
+                    <div class="col-md-8">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between">
+                                <!-- card title -->
+                                <h5 class="card-title">${noteTitle}</h5>
+                                <!-- card btn -->
+                                <button type="button" class="btn my-0 py-0">
+                                    <i class="fa-solid fa-arrow-right note-btn"></i>
+                                </button>
+                            </div>
+                            <!-- card subtitle -->
+                            <h6 class="card-subtitle mb-3 mt-1 text-body-secondary light-txt">
+                                Created on <span class="note-day">${day}</span>
+                                <span class="note-date">${date_}</span>  
+                                <span class="note-month">${month}</span> 
+                                <span class="note-time">${hrs}:${mins}</span> 
+                                <span class="note-time-suffix">${pm_am}.</span>
+                            </h6>
+                            <!-- card text -->
+                            <p class="card-text dark-txt line-h card-txt-color">${cardText}</p>
                         </div>
-                        <!-- card subtitle -->
-                        <h6 class="card-subtitle mb-3 mt-1 text-body-secondary light-txt">
-                            Created on <span class="note-day">${weekDays[date.getDay()]}</span>
-                            <span class="note-date">${date.getDate()}</span>  
-                            <span class="note-month">${months[date.getMonth()]}</span> 
-                            <span class="note-time">${hrs}:${date.getMinutes()}</span> 
-                            <span class="note-time-suffix">${pm_am}.</span>
-                        </h6>
-                        <!-- card text -->
-                        <p class="card-text dark-txt line-h card-txt-color">${cardText} . . .</p>
                     </div>
                 </div>
-            </div>
-        </div>`;
+            </div>`
+        }
+        reader.readAsDataURL(coverImgObj); 
     }
-    reader.readAsDataURL(coverImgObj); 
-	notesContainer.append(cardElement);
+
+    // append note to UI
+    notesContainer.append(cardElement);
+
+    // alert that note has been created
+    displayAlert(mainAlerts,"white","note created","show",2000);
+   
+    // display clear Notes Button
+    if(notesContainer.childElementCount>0){
+      clearBtn.classList.add("show-clear-btn");
+
+      // add an event listener to the button where if it is clicked, 
+      // hides the button,DELETES ALL NOTES FROM local storage,
+      // removes cards form note UI
+      clearBtn.addEventListener("click",()=>{
+        localStorage.removeItem("noteEntries")
+        clearBtn.classList.remove("show-clear-btn");
+        notesContainer.remove(notesContainer.children)
+      })
+    }
+
+    // save to local storage
+    saveNoteDataToLocalStorage(id,noteTitle,noteBody,day,date_,hrs,mins,pm_am,CoverImgFlag,coverImgObj);
+
     // resets the program
     resetAll()
+  }else if(noteTitle && noteBody && !editFlag){
 
 
-  }else if(noteTitle && noteBody && !CoverImgFlag){
-    console.log("no cover img")
-    resetAll()
   }else{
-    alert("can not enter empty note")
+    displayAlert(mainAlerts,"red","cannot create a blank note !","show",2000)
     resetAll()
   }
 }
@@ -130,26 +191,26 @@ function createNewNote(event) {
 // SHOW INPUT CONTAINER FUNC
 
 /**
- * The function `showNoteInputsContainer` toggles the visibility of a form and buttons when triggered by a click event.*/
+ * The function `showNoteInputsContainer` toggles the visibility of a form and buttons 
+ * when triggered by a click event.*/
 function showNoteInputsContainer(event) {
     
   const createNoteBtn = document.querySelector(".create-note-btn");
   // selects the add note btn via it's eventListener
   const addBtn = event.currentTarget;
-
   form.classList.toggle("show");
-
   addBtn.classList.toggle("show");
 
   setTimeout(() => {
     createNoteBtn.classList.toggle("show");
   }, 300);
 
-  
+  resetAll()
 }
 
 // SHOWCOVER PHOTO MODAL FUNC
-/*The function `showCoverPhotoModal` selects the modal element that allows the user to add images to their notes. It displays the modal by adding a class to it.*/
+/*The function `showCoverPhotoModal` selects the modal element that allows the user to
+ add images to their notes. It displays the modal by adding a class to it.*/
 function showCoverPhotoModal() {
   // selects the cover modal element in the DOM
   const coverImageModal = document.querySelector(".modal-bg");
@@ -163,7 +224,8 @@ function showCoverPhotoModal() {
 }
 
 // HIDE MODAL FUNC
-/* The function `hideCoverImgModal` hides a modal with a cover image by adding and removing CSS classes for animation.*/
+/* The function `hideCoverImgModal` hides a modal with a cover image by adding 
+and removing CSS classes for animation.*/
 function hideCoverImgModal() {
   const coverImageModal = document.querySelector(".modal-bg");
   coverImageModal.classList.add("slide-out-bck-center");
@@ -221,16 +283,19 @@ function addCoverImage() {
 // SAVE COVER PHOTO IMG FUNC
 /**
  * The function `saveImg` checks if an image object is provided, hides a modal and sets a flag.
- * @param imgObj - The `imgObj` parameter is an object that represents an image. It is used to  check if an image object is provided as input to the `saveImg` function.
- * @param alertMsg - The `alertMsg` parameter in the `saveImg` function is a message that will be displayed to the user if the `imgObj` parameter is not provided or is falsy. 
+ * @param imgObj - The `imgObj` parameter is an object that represents an image. It is used to 
+ * check if an image object is provided as input to the `saveImg` function.
+ * @param alertElement - The `alertElement` parameter in the `saveImg` function is\
+ *  a message that will be displayed to the user if the `imgObj` parameter is not 
+ * provided or is falsy. 
  */
-function saveImg(imgObj, alertMsg) {
+function saveImg(imgObj, alertElement) {
   if (imgObj) {
     hideCoverImgModal();
     CoverImgFlag = true;
   } else {
     displayAlert(
-      alertMsg,
+      alertElement,
       "red",
       "Please, pick an image or click cancel",
       "show-alert",
@@ -252,8 +317,12 @@ function cancelCoverImgEntry() {
 
 // MANAGE FILE INPUT MODAL FUNC
 /**
- * The function `manageFileInputModal` handles events related to a file input modal, allowing users to select, save, or cancel cover images.
- * @param event - The `event` parameter in the `manageFileInputModal` function is an object that represents the event that occurred, such as a click or change event. It contains information about the event, including the target element that triggered the event. In this case, the function is using the `event.target
+ * The function `manageFileInputModal` handles events related to a file input modal, 
+ * allowing users to select, save, or cancel cover images.
+ * @param event - The `event` parameter in the `manageFileInputModal` function is an 
+ * object that represents the event that occurred, such as a click or change event. 
+ * It contains information about the event, including the target element that triggered
+ *  the event. In this case, the function is using the `event.target
  */
 function manageFileInputModal(event) {
   let element = event.target;
@@ -276,7 +345,9 @@ function manageFileInputModal(event) {
 The function `readFiles` reads a file using `FileReader` and sets the `src` attribute
  of an element to the result.
   * @param file - The `file` parameter is the file object that you want to read.
-  * @param element - The `element` parameter in the `readFiles` function is typically a reference to an HTML element, such as an image element (`<img>`), where the content of the file being read will be displayed.*/
+  * @param element - The `element` parameter in the `readFiles` function is typically
+  *  a reference to an HTML element, such as an image element (`<img>`), where the
+  *  content of the file being read will be displayed.*/
 function readFiles(file,element) {
   // intantiates a new fileRead instance
   const reader = new FileReader();
@@ -304,8 +375,10 @@ function displayAlert(element, color, text, d_class, duration) {
   element.classList.add(`${d_class}`);
   setTimeout(() => {
     element.classList.remove(`${d_class}`);
+    element.style.color = `white`;
   }, duration);
 }
+
 
 
 //RESET ALL FUNC
@@ -321,7 +394,8 @@ function resetAll(){
 }
 
 // RESET COVER IMG MODAL FUNC
-/*The function `restModalValues` resets the image preview, cover image object, image preview subtitle, file input, and selected image to their default values.*/
+/*The function `restModalValues` resets the image preview, cover image object, image
+ preview subtitle, file input, and selected image to their default values.*/
 function restModalValues(){
  const previewImgTitle = document.querySelector(".img-preview-caption");
  const ImagePreviewContainer = document.querySelector(".cover-img-wrapper");
@@ -353,14 +427,12 @@ function restModalValues(){
 function trimFileName(textElement,image){
   let imageTitle = image.name;
 
-  imageTitle = imageTitle.split("");
-
   if (imageTitle.length > 20) {
-    let imageTitlePrefix = imageTitle.slice(0, 19).join("");
-    let imageTitleSuffix = imageTitle.slice(-4).join("");
+    let shortenedTitle = imageTitle.slice(0, 19);
+    shortenedTitle += `...${imageTitle.slice(-4)}`;
 
     // updates the img caption with uploaded img name after shortening the string.
-    textElement.textContent = `${imageTitlePrefix}...${imageTitleSuffix}`;
+    textElement.textContent = `${shortenedTitle}`;
   } else {
     // updates the img caption with uploaded img name as is.
     textElement.textContent = image.name;
@@ -368,6 +440,33 @@ function trimFileName(textElement,image){
 }
 
 /***** LOCAL STORAGE ******/
+// SAVE NOTES TO LOCAL STORAGE FUNC
+function saveNoteDataToLocalStorage(noteId,nTitle,nBody,nDay,nDate,nHrs,nMins,tSuffix,noteFlag,img){
+  console.log("saved note data to local storage")
+  const notesArray= retriveFromLocalStorage();
+
+  const noteObj = {
+    id:noteId,
+    title:nTitle,
+    body:nBody,
+    day:nDay,
+    date:nDate,
+    hrs:nHrs,
+    mins:nMins,
+    am_pm:tSuffix,
+    img:img,
+    flag:noteFlag
+  };
+
+  notesArray.push(noteObj);
+
+  localStorage.setItem("noteEntries",JSON.stringify(notesArray));
+}
+
+// RETRIVE NOTE FORM LOCAL STORAGE FUNC
+function retriveFromLocalStorage(){
+  return JSON.parse(localStorage.getItem("noteEntries"))||[];
+}
 
 /***** FUNCTIONS ******/
 
