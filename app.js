@@ -187,8 +187,8 @@ function createNewNote(event) {
 
   }else{
     // display error alert
-    let alertMessage = `<p>Erorr! you're creating a blank note.<span> <i class="fa-solid fa-circle-exclamation"></i></span></p>`
-    displayAlert(mainAlerts,"yellow","black",alertMessage,"show-main-alert",3000)
+    let alertMessage = `<p>Error! you can not creating a blank note.<span> <i class="fa-solid fa-circle-exclamation"></i></span></p>`
+    displayAlert(mainAlerts,"yellow","black",alertMessage,"show-main-alert",5000)
     // reset program
     resetAll()
   }
