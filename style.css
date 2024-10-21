@@ -183,6 +183,7 @@ header{
 
   .main-alerts-display{
 	width: 100%;
+	height: 23px;
 	font-family: var(--heading-font);
 	text-align: center;
 	border-radius:5px;
@@ -194,6 +195,10 @@ header{
 	z-index: -100;
 	visibility: hidden;
 	transition: visibility 800ms 400ms ease-in, z-index 800ms 400ms ease-in;
+  }
+
+  .main-alerts-display > p{
+	padding: 0;
   }
 
 /* main area of the form that holds all input elements */
