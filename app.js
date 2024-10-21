@@ -43,12 +43,12 @@ function createNewNote(event) {
     const clearBtn = document.querySelector(".clear-btn");
     const weekDays = ["Sun","Mon","Tue","Wed","Thur","Fri","Sat"];
     const months = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
-    let noteTitle = form.elements.note_title.value;
-    let noteBody = form.elements.note.value;
+    let noteTitle = form.elements.note_title.value.trim();
+    let noteBody = form.elements.note.value.trim();
     let cardText;
     let noteImg;
     let date = new Date();
-    const id = Math.random().toString(16).slice(2);
+    const id = Math.random().toString(16).slice(2).toString();
 
     // generating the time in 12 hrs formart
     function convertTime(dateVar){
@@ -158,7 +158,8 @@ function createNewNote(event) {
     notesContainer.append(cardElement);
 
     // alert that note has been created
-    displayAlert(mainAlerts,"white","note created","show",2000);
+    let alertMessage = '<p>Note created  <span><i class="fa-solid fa-circle-check"></i></span></p>'
+    displayAlert(mainAlerts,"green","white",alertMessage,"show-main-alert",3000);
    
     // display clear Notes Button
     if(notesContainer.childElementCount>0){
@@ -168,8 +169,10 @@ function createNewNote(event) {
       // hides the button,DELETES ALL NOTES FROM local storage,
       // removes cards form note UI
       clearBtn.addEventListener("click",()=>{
+        alertMessage = '<p>Note collection cleared <span><i class="fa-solid fa-circle-xmark"></i></span></p>'
         localStorage.removeItem("noteEntries")
         clearBtn.classList.remove("show-clear-btn");
+        displayAlert(mainAlerts,"red","white",alertMessage,"show-main-alert",3000);
         notesContainer.remove(notesContainer.children)
       })
     }
@@ -183,7 +186,10 @@ function createNewNote(event) {
 
 
   }else{
-    displayAlert(mainAlerts,"red","cannot create a blank note !","show",2000)
+    // display error alert
+    let alertMessage = `<p>Erorr! you're creating a blank note.<span> <i class="fa-solid fa-circle-exclamation"></i></span></p>`
+    displayAlert(mainAlerts,"yellow","black",alertMessage,"show-main-alert",3000)
+    // reset program
     resetAll()
   }
 }
@@ -244,6 +250,7 @@ function addCoverImage() {
   const previewImgTitle = document.querySelector(".img-preview-caption");
   const alerts = document.querySelector(".alerts");
   const fileUploadInput = document.getElementById("cover-photo-input");
+  let alertMessage = '<p>File is too large. Enter a file less than 500mb</p>';
   
   coverImgObj = fileUploadInput.files[0];
   // Checks if the size of the image is greater than 500kb
@@ -255,8 +262,9 @@ function addCoverImage() {
     //  display an error message
     displayAlert(
       alerts,
+      "transparent",
       "red",
-      "file is too large enter a file less than 500mb",
+      alertMessage,
       "show-alert",
       5000
     );
@@ -294,10 +302,12 @@ function saveImg(imgObj, alertElement) {
     hideCoverImgModal();
     CoverImgFlag = true;
   } else {
+    let message = '<p>Please, pick an image or click cancel</p>';
     displayAlert(
       alertElement,
+      "transparent",
       "red",
-      "Please, pick an image or click cancel",
+      message,
       "show-alert",
       5000
     );
@@ -368,14 +378,17 @@ function readFiles(file,element) {
  * @param d_class - The `d_class` parameter is a CSS class that will be added to the element for a certain duration to display a visual effect, such as a style change.
  * @param duration - The `duration` parameter specifies the time in milliseconds for which the `d_class` will be added to the element before it is removed using `setTimeout`.
  */
-function displayAlert(element, color, text, d_class, duration) {
+function displayAlert(element, bgColor, color, text, d_class, duration) {
   element.style.color = `${color}`;
-  element.textContent = `${text}`;
+  element.style.backgroundColor = `${bgColor}`;
+  element.innerHTML = `${text}`;
 
   element.classList.add(`${d_class}`);
   setTimeout(() => {
     element.classList.remove(`${d_class}`);
-    element.style.color = `white`;
+    element.style.color = "white";
+    element.style.backgrounColor = "white";
+    element.innerHTML = "";
   }, duration);
 }
 

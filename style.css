@@ -178,23 +178,25 @@ header{
 
   main{
 	margin-top: 5em;
+	position: relative;
   }
 
   .main-alerts-display{
-	width: fit-content;
-	padding: .2em .4em;
-	border-radius: 15px;
-	font-weight: 500;
+	width: 100%;
+	font-family: var(--heading-font);
+	text-align: center;
+	border-radius:5px;
+	font-weight: 400;
 	color: var(--body-bg);
-	position: fixed;
-	left: 45vw;
-	top: 80px;
+	position: sticky;
+	top: 60px;
+	transform: translateY(5px);
 	z-index: -100;
 	visibility: hidden;
-	transition: all 800ms 400ms ease-in;
+	transition: visibility 800ms 400ms ease-in, z-index 800ms 400ms ease-in;
   }
 
-/* main area of the form that hold all input elements */
+/* main area of the form that holds all input elements */
 .form-center {
 	height: 0;
 	overflow: hidden;
@@ -573,6 +575,12 @@ input[type="file"]{
 	.note-txt{
 		height: 250px;
 	}
+
+	/* for alerts on main page */
+	.main-alerts-display{
+		width: 50%;
+		margin: 0 auto;
+	}
 	
 }
 
@@ -599,7 +607,7 @@ the note title and note input itself */
 	overflow: visible;
 }
 
-
+/* display alert on main page */
 .show-main-alert {
 	z-index: 1000;
 	visibility: visible;
@@ -637,7 +645,7 @@ the note title and note input itself */
 .show-alert{
 	visibility: visible;
 }
-
+/* displays the clear notes btn */
 .show-clear-btn{
 	display: block;
 }
