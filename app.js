@@ -29,6 +29,7 @@ function initApp() {
   const pickCoverImgBtn = document.querySelector(".add-cover-img-btn");
   const fileUploadModal = document.querySelector(".cover-img-modal");
   const fileUploadInput = document.getElementById("cover-photo-input");
+  const noteDisplayModal = document.querySelector(".notes-modal-wrapper");
   const form = document.getElementById("form");
 
   /***** EVENT LISTENERS ******/
@@ -47,9 +48,19 @@ function initApp() {
 
   //change event fires the addCoverImage func(it displays a preview of the selected img)
   fileUploadInput.addEventListener("change", addCoverImage);
+
+ // 
+ noteDisplayModal.addEventListener("click",()=>{
+    noteDisplayModal.classList.remove("show")
+ })  
 }
 
 // ADD NEW NOTE FUNC
+/**
+ * This function creates a new note card with title, body, date, and time
+ * information, and optionally an image, and appends it to the UI while handling 
+ * alerts and local storage.
+ */
 function createNewNote(event) {
   event.preventDefault();
 
@@ -103,9 +114,9 @@ function createNewNote(event) {
       ? (cardText = `${noteBody.slice(0, 139)}. . .`)
       : (cardText = noteBody);
 
-    // decide  what kind of note card to create for UI based on the coverImage Flag.
+    // decide what kind of note card to create for UI based on the coverImage Flag.
     // if flag is set to false then create a card with only text.
-    // if flag is true then create a cared with both text and a cover image.
+    // if flag is true then create a card with both text and a cover image.
     if (!CoverImgFlag) {
       cardElement.innerHTML = `<div class="card notes-card bg-body-tertiary" style="max-width:540px;">
       <div class="row g-0">
@@ -185,6 +196,14 @@ function createNewNote(event) {
 
     // append note card to UI
     notesContainer.append(cardElement);
+    // select note card elements
+    let noteCards = notesContainer.querySelectorAll(".col");
+    // ADDS EVENT LISTENER TO each card that triggers the modal that displays the clicked note in full
+    noteCards.forEach(note=>{
+        note.addEventListener("click",()=>{
+            showFullNote(note.dataset.noteId);
+        })
+    })
 
     // alert that note has been created
     let alertMessage =
@@ -202,10 +221,10 @@ function createNewNote(event) {
     if (notesContainer.childElementCount > 0) {
       clearBtn.classList.add("show-clear-btn");
 
-      // add an event listener to the button where if it is clicked,
+      // ADDS EVENT LISTENER to the button where if it is clicked,
       // hides the button,DELETES ALL NOTES FROM local storage,
       // removes cards form note UI
-      clearBtn.addEventListener("click", () => {
+      clearBtn.addEventListener("click",function removeNotes() {
         alertMessage =
           '<p>Note collection cleared <span><i class="fa-solid fa-circle-xmark"></i></span></p>';
         localStorage.removeItem("noteEntries");
@@ -218,27 +237,29 @@ function createNewNote(event) {
           "show-main-alert",
           4000
         );
-        // select all note card elements, iterate and delete each card
-        let noteCards = notesContainer.querySelectorAll(".col");
+        //iterate and delete each card
+        // let noteCards = notesContainer.querySelectorAll(".col");
         noteCards.forEach(note => {
             note.remove();
         });
+        clearBtn.removeEventListener("click",removeNotes);
       });
     }
 
-    // save to local storage
-    saveNoteDataToLocalStorage(
-      id,
-      noteTitle,
-      noteBody,
-      day,
-      date_,
-      hrs,
-      mins,
-      pm_am,
-      CoverImgFlag,
-      coverImgObj
-    );
+   //save to locale storage  
+   saveNoteDataToLocalStorage(
+    id,
+    noteTitle,
+    noteBody,
+    day,
+    date_,
+    hrs,
+    mins,
+    pm_am,
+    CoverImgFlag,
+    coverImgObj,
+    month
+  );
 
     // resets the program
     resetAll();
@@ -260,8 +281,8 @@ function createNewNote(event) {
   }
 }
 
-// SHOW INPUT CONTAINER FUNC
 
+// SHOW INPUT CONTAINER FUNC
 /**
  * The function `showNoteInputsContainer` toggles the visibility of a form and buttons
  * when triggered by a click event.*/
@@ -293,6 +314,57 @@ function showCoverPhotoModal() {
   }, 500);
 }
 
+// DISPLAY NOTES FUNC
+function showFullNote(id){
+    const noteDisplayModal = document.querySelector(".notes-modal-wrapper");
+    const noteImgSection = document.querySelector(".note-dp-img-container");
+    const noteBody = document.querySelector(".note-dp-txt");
+    const noteDay = document.querySelector(".note-dp-day");
+    const noteDate = document.querySelector(".note-dp-date");
+    const noteMonth = document.querySelector(".note-dp-month");
+    const noteTime = document.querySelector(".note-dp-time");
+    const noteDpTitle = document.querySelector(".note-dp-title");
+    const noteTimeSuffix = document.querySelector(".notedp-time-suffix");
+    console.log("displaying note");
+
+    let noteElement = retriveFromLocalStorage();
+
+    noteElement = noteElement.filter( note => {
+        if(note.id == id){
+            return note;
+        }
+    })
+
+    noteElement = noteElement.pop();
+
+    noteDpTitle.textContent = `${noteElement.title}`;
+    noteDay.textContent =`${noteElement.day}`;
+    noteDate.textContent =`${noteElement.date}`;
+    noteMonth.textContent =`${noteElement.month}`;
+    noteTime.textContent =`${noteElement.hrs}:${noteElement.mins}`;
+    noteTimeSuffix.textContent =`${noteElement.am_pm}`;
+    noteBody.textContent = `${noteElement.body}`;
+
+        console.log(noteElement.image);
+
+    if(noteElement.flag === true){
+
+        let reader = new FileReader();
+        reader.onload = function(event){
+          let element = event.target.result 
+          noteImgSection.innerHTML = ` <div class="col-12 note-dp-img-wrapper p-0">
+                                    <img class="img-fluid h-100" src=${element} alt="note display img">
+                                </div>`
+        }
+        
+        reader.readAsDataURL(noteElement.img)
+    }
+   
+    
+    noteDisplayModal.classList.add("show")
+
+}
+
 // HIDE MODAL FUNC
 /* The function `hideCoverImgModal` hides a modal with a cover image by adding 
 and removing CSS classes for animation.*/
@@ -308,7 +380,7 @@ function hideCoverImgModal() {
 
 // ADD COVER IMG FUNC
 /*  this function gets the image the user uploads as a cover img for their notes
-    then use the readFiles function to display a preview of the cover image.*/
+    then use the displayCoverImgPreview function to display a preview of the cover image.*/
 function addCoverImage() {
   const ImagePreviewContainer = document.querySelector(".cover-img-wrapper");
   const previewImgTitle = document.querySelector(".img-preview-caption");
@@ -339,7 +411,7 @@ function addCoverImage() {
     previewImg.classList.add("img-fluid", "cover-img");
     // this function reads the file in the cover img variable
     // then updates the src property of the img element that was created
-    readFiles(coverImgObj, previewImg);
+    displayCoverImgPreview(coverImgObj,previewImg,true);
     // removes the default/placeholder img
     ImagePreviewContainer.children[0].remove();
     // displays the uploaded img as a preview
@@ -412,21 +484,22 @@ function manageFileInputModal(event) {
 
 // READ FILES FUNC
 /** 
-The function `readFiles` reads a file using `FileReader` and sets the `src` attribute
+The function `displayCoverImgPreview` reads a file using `FileReader` and sets the `src` attribute
  of an element to the result.
   * @param file - The `file` parameter is the file object that you want to read.
-  * @param element - The `element` parameter in the `readFiles` function is typically
+  * @param element - The `element` parameter in the `displayCoverImgPreview` function is typically
   *  a reference to an HTML element, such as an image element (`<img>`), where the
   *  content of the file being read will be displayed.*/
-function readFiles(file, element) {
-  // intantiates a new fileRead instance
-  const reader = new FileReader();
-  // asynchronously updates the element src with the result of the file reading
-  reader.onload = (e) => {
-    element.src = e.target.result;
-  };
-  // file is being read here
-  reader.readAsDataURL(file);
+function displayCoverImgPreview(file,element) {
+
+     // intantiates a new fileRead instance
+     const reader = new FileReader();
+     // asynchronously updates the element src with the result of the file reading
+     reader.onload = (e) => {
+         element.src = e.target.result;
+      };
+     // file is being read here
+     reader.readAsDataURL(file);
 }
 
 //DISPLAY ALERT FUNC
@@ -509,43 +582,66 @@ function trimFileName(textElement, image) {
 
 /***** LOCAL STORAGE ******/
 // SAVE NOTES TO LOCAL STORAGE FUNC
-function saveNoteDataToLocalStorage(
-  noteId,
-  nTitle,
-  nBody,
-  nDay,
-  nDate,
-  nHrs,
-  nMins,
-  tSuffix,
-  noteFlag,
-  img
-) {
+function saveNoteDataToLocalStorage(noteId,nTitle,nBody,nDay,nDate,nHrs,nMins,tSuffix,noteFlag,img_,nMonth) {
+  
   console.log("saved note data to local storage");
-  const notesArray = retriveFromLocalStorage();
 
+  let imageUrlData;
   const noteObj = {
     id: noteId,
     title: nTitle,
     body: nBody,
     day: nDay,
     date: nDate,
+    month:nMonth,
     hrs: nHrs,
     mins: nMins,
     am_pm: tSuffix,
-    img: img,
-    flag: noteFlag,
+    image: img_,
+    flag: noteFlag
   };
+  let notesArray;
 
-  notesArray.push(noteObj);
+  if(noteFlag === true){
 
-  localStorage.setItem("noteEntries", JSON.stringify(notesArray));
+    let fileReading = new FileReader();
+    fileReading.onload = (e)=>{
+      imageUrlData = e.target.result;
+
+      noteObj.image = imageUrlData;
+
+      notesArray = retriveFromLocalStorage();
+      notesArray.push(noteObj);
+      localStorage.setItem("noteEntries", JSON.stringify(notesArray));
+    }
+    fileReading.readAsDataURL(img_);
+
+    
+  }else{
+    notesArray = retriveFromLocalStorage();
+    notesArray.push(noteObj);
+    localStorage.setItem("noteEntries", JSON.stringify(notesArray));
+
+  }
+
+  
+  console.log(noteObj.image)
+  // notesArray.push(noteObj);
+
+  // localStorage.setItem("noteEntries", JSON.stringify(notesArray));
+  // localStorage.setItem("notesImgList", img_);
 }
 
 // RETRIVE NOTE FORM LOCAL STORAGE FUNC
 function retriveFromLocalStorage() {
   return JSON.parse(localStorage.getItem("noteEntries")) || [];
 }
+
+// convert Blob(coverImgObj) to url
+function convertImagBlobToUrlData(blob, element){
+  
+   
+ }
 
 /***** FUNCTIONS ******/
 

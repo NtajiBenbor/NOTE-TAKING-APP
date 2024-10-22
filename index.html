@@ -190,52 +190,53 @@
 
         <!-- NOTE DISPLAY MODAL START-->
         <section>
-            <div class="modal-bg display-note-modal">
-                <article class="container note-modal-center">
-                    <div class="row px-3 pt-4">
-                        <!-- note controls -->
-                        <div class="col-12 row note-controls m-0 justify-content-between px-0">
-                            <div class="col-7">
-                                <!-- back btn -->
-                                <button type="button" class="btn my-0 py-1 app-btns">
-                                    <i class="fa-solid fa-arrow-left "></i>
-                                </button>
+            <div class="notes-modal-wrapper">
+                <div class="modal-bg display-note-modal">
+                    <article class="container note-modal-center">
+                        <div class="row px-3 pt-4">
+                            <!-- note controls -->
+                            <div class="col-12 row note-controls m-0 justify-content-between px-0">
+                                <div class="col-7">
+                                    <!-- back btn -->
+                                    <button type="button" class="btn my-0 py-1 app-btns">
+                                        <i class="fa-solid fa-arrow-left "></i>
+                                    </button>
+                                </div>
+                                <!-- edit and delete btn -->
+                                <div class="col-4 d-flex justify-content-end">
+                                    <!--edit btn  -->
+                                    <button type="button" class="btn my-0 py-1 mx-2 app-btns">
+                                        <i class="fa-solid fa-pen-to-square"></i>
+                                    </button>
+                                    <!-- del btn -->
+                                    <button type="button" class="btn my-0 py-1 app-btns">
+                                        <i class="fa-solid fa-trash-can del-icon"></i>
+                                    </button>
+                                </div>
                             </div>
-                            <!-- edit and delete btn -->
-                            <div class="col-4 d-flex justify-content-end">
-                                <!--edit btn  -->
-                                <button type="button" class="btn my-0 py-1 mx-2 app-btns">
-                                    <i class="fa-solid fa-pen-to-square"></i>
-                                </button>
-                                <!-- del btn -->
-                                <button type="button" class="btn my-0 py-1 app-btns">
-                                    <i class="fa-solid fa-trash-can del-icon"></i>
-                                </button>
+                            <!-- note header -->
+                            <div class="col-12 mt-1 note-dp-header">
+                                <h5 class="note-dp-title"></h5>
+                                <h6 class="light-txt"> Created on 
+                                    <span class="note-dp-day">Mon</span> 
+                                    <span class="note-dp-date">21</span> 
+                                    <span class="note-dp-month">oct</span> 
+                                    <span class="note-dp-time"></span> 
+                                    <span class="notedp-time-suffix">am.</span>
+                                </h6>
+                            </div>
+                            <!-- note cover image -->
+                            <div class="note-dp-img-container">
+                               
+                            </div>
+                            <!-- note body -->
+                            <div class="col-12 note-txt pt-0 pb-0 my-1 px-2 dark-txt">
+                                <p class="note-dp-txt" >
+                                </p>
                             </div>
                         </div>
-                        <!-- note header -->
-                        <div class="col-12 mt-1 note-dp-header">
-                            <h5>Design system</h5>
-                            <h6 class="light-txt"> Edited on <span class="note-date">Sat</span> <span
-                                    class="note-time">12:05</span> <span class="note-time-suffix">am.</span>
-                            </h6>
-                        </div>
-                        <!-- note cover image -->
-                        <div class="col-12 note-dp-img-wrapper p-0">
-                            <img class="img-fluid h-100" src="/assets/img/img-2.jpeg" alt="note display img">
-                        </div>
-                        <!-- note body -->
-                        <div class="col-12 note-txt pt-0 pb-0 my-1 px-2 dark-txt">
-                            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Inventore ad, deserunt vero
-                                aliquam iure tempore vel doloribus magnam ipsum, quae placeat accusantium, ex quos amet
-                                dicta commodi quo ut recusandae!
-                                Facilis maxime voluptatibus excepturi odit! Animi aut beatae eos, similique consectetur
-                                quisquam expedita labore, vel numquam dicta sequi aliquam ad, architecto nemo nihil!
-                                Iure vero nisi quos iusto eos eius!
-                            </p>
-                        </div>
-                    </div>
-                </article>
+                    </article>
+                </div>
             </div>
         </section><!-- NOTE DISPLAY MODAL END-->
     </main>

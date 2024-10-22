@@ -614,7 +614,7 @@ the note title and note input itself */
 
 /* display alert on main page */
 .show-main-alert {
-	z-index: 1000;
+	z-index: 100;
 	visibility: visible;
   }
 
@@ -653,6 +653,14 @@ the note title and note input itself */
 /* displays the clear notes btn */
 .show-clear-btn{
 	display: block;
+}
+
+
+.show .display-note-modal{
+	display: grid;	
+	visibility: visible;
+	place-items: center;
+	z-index: 1100;
 }
 
 
