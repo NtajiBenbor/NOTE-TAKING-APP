@@ -49,9 +49,10 @@ function initApp() {
   //change event fires the addCoverImage func(it displays a preview of the selected img)
   fileUploadInput.addEventListener("change", addCoverImage);
 
- // 
+ // hides the modal that is used to display the full page note
  noteDisplayModal.addEventListener("click",()=>{
     noteDisplayModal.classList.remove("show")
+      resetNoteDisplayModal()
  })  
 }
 
@@ -102,6 +103,7 @@ function createNewNote(event) {
   let pm_am;
   // check wether time is Am or PM
   hrs < 12 ? (pm_am = "pm") : (pm_am = "am");
+  mins < 9 ? mins = `0${mins}`: mins;
 
   if (noteTitle && noteBody) {
     // initializing a card container element and giving it a unique id
@@ -345,19 +347,13 @@ function showFullNote(id){
     noteTimeSuffix.textContent =`${noteElement.am_pm}`;
     noteBody.textContent = `${noteElement.body}`;
 
-        console.log(noteElement.image);
+      console.log(noteElement.image);
 
     if(noteElement.flag === true){
 
-        let reader = new FileReader();
-        reader.onload = function(event){
-          let element = event.target.result 
-          noteImgSection.innerHTML = ` <div class="col-12 note-dp-img-wrapper p-0">
-                                    <img class="img-fluid h-100" src=${element} alt="note display img">
-                                </div>`
-        }
-        
-        reader.readAsDataURL(noteElement.img)
+    noteImgSection.innerHTML = ` <div class="col-12 note-dp-img-wrapper p-0">
+        <img class="img-fluid h-100" src=${noteElement.image} alt="note display img">
+    </div>`
     }
    
     
@@ -411,7 +407,7 @@ function addCoverImage() {
     previewImg.classList.add("img-fluid", "cover-img");
     // this function reads the file in the cover img variable
     // then updates the src property of the img element that was created
-    displayCoverImgPreview(coverImgObj,previewImg,true);
+    displayCoverImgPreview(coverImgObj,previewImg);
     // removes the default/placeholder img
     ImagePreviewContainer.children[0].remove();
     // displays the uploaded img as a preview
@@ -562,6 +558,14 @@ function restModalValues() {
   ImagePreviewContainer.innerHTML = previewImg;
 }
 
+// RESET NOTE DISPLAY MODAL FUNC
+function resetNoteDisplayModal(){
+  const noteImgSection = document.querySelector(".note-dp-img-container") ;
+
+  noteImgSection.innerHTML ="";
+
+}
+
 // TRIM FILE NAME FUNC
 /* updates the img caption with uploaded img name. it dynamically updates the image title
     based on the length of the string. if the title string characters are greater than 20, the it shortens it but if it is less than 20, it displays it as is.*/
@@ -585,8 +589,9 @@ function trimFileName(textElement, image) {
 function saveNoteDataToLocalStorage(noteId,nTitle,nBody,nDay,nDate,nHrs,nMins,tSuffix,noteFlag,img_,nMonth) {
   
   console.log("saved note data to local storage");
-
+  // will hold the result of the blob conversion
   let imageUrlData;
+  // object created to hold note properties
   const noteObj = {
     id: noteId,
     title: nTitle,
@@ -601,13 +606,17 @@ function saveNoteDataToLocalStorage(noteId,nTitle,nBody,nDay,nDate,nHrs,nMins,tS
     flag: noteFlag
   };
   let notesArray;
-
+  
+  //if the flag is set to true, it coverts the coverImgObj(blob) to text.
+  //by performing a file reading operation. 
+  // and then updates the noteObj image property with the result of the operation.
+  // if the flag is set to false it does not modify the noteObj's properties.
   if(noteFlag === true){
 
     let fileReading = new FileReader();
     fileReading.onload = (e)=>{
       imageUrlData = e.target.result;
-
+      // updates the noteObj (object) image property the converted blob data
       noteObj.image = imageUrlData;
 
       notesArray = retriveFromLocalStorage();
@@ -624,12 +633,6 @@ function saveNoteDataToLocalStorage(noteId,nTitle,nBody,nDay,nDate,nHrs,nMins,tS
 
   }
 
-  
-  console.log(noteObj.image)
-  // notesArray.push(noteObj);
-
-  // localStorage.setItem("noteEntries", JSON.stringify(notesArray));
-  // localStorage.setItem("notesImgList", img_);
 }
 
 // RETRIVE NOTE FORM LOCAL STORAGE FUNC
@@ -637,11 +640,6 @@ function retriveFromLocalStorage() {
   return JSON.parse(localStorage.getItem("noteEntries")) || [];
 }
 
-// convert Blob(coverImgObj) to url
-function convertImagBlobToUrlData(blob, element){
-  
-   
- }
 
 /***** FUNCTIONS ******/
 
