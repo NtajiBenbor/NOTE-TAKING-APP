@@ -656,12 +656,11 @@ the note title and note input itself */
 }
 
 
-.show .display-note-modal{
+/* .show .display-note-modal{
 	display: grid;	
 	visibility: visible;
-	place-items: center;
 	z-index: 1100;
-}
+} */
 
 
 

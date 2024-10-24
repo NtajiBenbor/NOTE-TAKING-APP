@@ -27,33 +27,39 @@ document.addEventListener("readystatechange", (event) => {
  */
 function initApp() {
   const showInputsBtn = document.querySelector(".show-inputs-btn");
-  const pickCoverImgBtn = document.querySelector(".add-cover-img-btn");
   const fileUploadModal = document.querySelector(".cover-img-modal");
-  const fileUploadInput = document.getElementById("cover-photo-input");
-  const noteDisplayModal = document.querySelector(".notes-modal-wrapper");
+  const noteDisplayModal = document.querySelector(".display-note-modal");
+  const coverImageModal = document.querySelector(".modal-bg");
   const form = document.getElementById("form");
 
   /***** EVENT LISTENERS ******/
-  // displays/hide note inputs
-  // dynamically update the create note btn icon when create note btn clicked
+  // Displays/hide the Form inputs
+  // dynamically updates the create note btn icon when the button is clicked
   showInputsBtn.addEventListener("click", showNoteInputsContainer);
 
-  // creates a note after the user clicks submits
+  // Creates a note when the user submits the form.
   form.addEventListener("submit", createNewNote);
 
-  //pulls a modal that allows the user add a cover image to their note
-  pickCoverImgBtn.addEventListener("click", showCoverPhotoModal);
-
-  //sets up the cover photo preview when the user uploads an image
-  fileUploadModal.addEventListener("click", manageFileInputModal);
+  //Pulls up the modal that allows the user add a cover image to their note
+  form.addEventListener("click",(event)=>{
+    showModals(event,coverImageModal,"add-cover-img-btn");
+  });
+  
 
   //change event fires the addCoverImage func(it displays a preview of the selected img)
-  fileUploadInput.addEventListener("change", addCoverImage);
+  form.elements.cover_photo_input.addEventListener("change", addCoverImage);
 
- // hides the modal that is used to display the full page note
- noteDisplayModal.addEventListener("click",(event)=>{
-  manageNoteDisplayModal(event,noteDisplayModal)
- })
+  //Pulls up a modal that allows the user to upload and preview an optional cover image for their notes
+  // user action on this modal also controls closing the modal,
+  // if the "x"(close) button is click, the upload operation is cancelled.
+  fileUploadModal.addEventListener("click", manageFileInputModal);
+ 
+  // This handles user interaction on the modal that displays the notes such as; 
+  //  closing the modal when the use clicks the back button.
+  //  deleting or editing the note that is displayed when either button is clicked.
+  noteDisplayModal.addEventListener("click", (event) => {
+    manageNoteDisplayModal(event, noteDisplayModal);
+  });
 
 }
 
@@ -206,8 +212,8 @@ function createNewNote(event) {
         let noteCards = notesContainer.querySelectorAll(".col");
         // ADDS EVENT LISTENER TO each card that triggers the modal that displays the clicked note in full
         noteCards.forEach(note=>{
-            note.addEventListener("click",()=>{
-                showFullNote(note.dataset.noteId);
+            note.addEventListener("click",(event)=>{
+                showFullNote(note.dataset.noteId,event);
             })
         })
 
@@ -225,29 +231,24 @@ function createNewNote(event) {
 
         // display clear Notes Button
         if (notesContainer.childElementCount > 0) {
-              clearBtn.classList.add("show-clear-btn");
 
-              // ADDS EVENT LISTENER to the button where if it is clicked,
-              // hides the button,DELETES ALL NOTES FROM local storage,
-              // removes cards form note UI
-              clearBtn.addEventListener("click",function removeNotes() {
-                alertMessage =
-                  '<p>Note list cleared <span><i class="fa-solid fa-circle-xmark"></i></span></p>';
-                localStorage.removeItem("noteEntries");
-                clearBtn.classList.remove("show-clear-btn");
-                displayAlert(
-                  mainAlerts,
-                  "red",
-                  "white",
-                  alertMessage,
-                  "show-main-alert",
-                  4000
-                );
-                //iterate and delete each card
-                // let noteCards = notesContainer.querySelectorAll(".col");
-                noteCards.forEach(note => {
-                    note.remove();
+                clearBtn.classList.add("show-clear-btn");
+                // ADDS EVENT LISTENER to the button where if it is clicked,
+                // hides the button,DELETES ALL NOTES FROM local storage,
+                // removes cards form note UI
+                clearBtn.addEventListener("click",function removeNotes() {
+                    // delete all note entries from local storage 
+                    localStorage.removeItem("noteEntries");
+                    // remove the btn from the display
+                    clearBtn.classList.remove("show-clear-btn");
+                    // display an alert
+                    alertMessage ='<p>Note list cleared <span><i class="fa-solid fa-circle-xmark"></i></span></p>';
+                    displayAlert(mainAlerts,"red","white",alertMessage,"show-main-alert",4000);
+                    //iterate and delete each card
+                    noteCards.forEach(note => {
+                        note.remove();
                 });
+                // remove the event listener on the btn
                 clearBtn.removeEventListener("click",removeNotes);
               });
         }
@@ -287,7 +288,6 @@ function createNewNote(event) {
       }
 }
 
-
 // SHOW INPUT CONTAINER FUNC
 /**
  * The function `showNoteInputsContainer` toggles the visibility of a form and buttons
@@ -306,86 +306,32 @@ function showNoteInputsContainer(event) {
   resetAll();
 }
 
-// SHOWCOVER PHOTO MODAL FUNC
-/*The function `showCoverPhotoModal` selects the modal element that allows the user to
+// SHOW MODALS FUNC
+/*The function `showModals` selects the modal element that allows the user to
  add images to their notes. It displays the modal by adding a class to it.*/
-function showCoverPhotoModal() {
-  // selects the cover modal element in the DOM
-  const coverImageModal = document.querySelector(".modal-bg");
-  // adds the class of to display the modal on the page
-  coverImageModal.classList.add("show-modal", "slide-in-bck-center");
+function showModals(event,modalElement,clostestElmnt) {
+  // modalElement
+  if(event.target.closest(`.${clostestElmnt}`) ){
+      // adds the class of to display the modal on the page
+      modalElement.classList.add("show-modal", "slide-in-bck-center");
+      console.log("shown modal");
 
-  setTimeout(() => {
-    coverImageModal.classList.remove("slide-in-bck-center");
-  }, 500);
-}
-
-// DISPLAY NOTES FUNC
-/**
- * The function `showFullNote` retrieves a specific note object from local storage based on its ID and
- * updates the UI to display the full details of that note, including title, date, time, body, and
- * optionally an image.
- * @param id - The `id` parameter in the `showFullNote` function is used to identify which note to
- * display in the modal. It is passed as an argument when calling the function and is used to filter
- * out the specific note object from the array of notes retrieved from local storage. This way, the
- * function
- */
-function showFullNote(id){
-    const noteDisplayModal = document.querySelector(".notes-modal-wrapper");
-    const noteImgSection = document.querySelector(".note-dp-img-container");
-    const noteBody = document.querySelector(".note-dp-txt");
-    const noteDay = document.querySelector(".note-dp-day");
-    const noteDate = document.querySelector(".note-dp-date");
-    const noteMonth = document.querySelector(".note-dp-month");
-    const noteTime = document.querySelector(".note-dp-time");
-    const noteDpTitle = document.querySelector(".note-dp-title");
-    const noteTimeSuffix = document.querySelector(".notedp-time-suffix");
-  
-    // retrives the notes array of objects from local storage 
-    let noteElement = retriveFromLocalStorage();
-    // filter out the note object whose id is a match to the id of the clicked card
-    noteElement = noteElement.filter( note => {
-        if(note.id == id){
-            return note;
-        }
-    })
-    // extract the returned note object from the array
-    noteElement = noteElement.pop();
-    // update the note display UI with data from the note object
-    noteDpTitle.textContent = `${noteElement.title}`;
-    noteDay.textContent =`${noteElement.day}`;
-    noteDate.textContent =`${noteElement.date}`;
-    noteMonth.textContent =`${noteElement.month}`;
-    noteTime.textContent =`${noteElement.hrs}:${noteElement.mins}`;
-    noteTimeSuffix.textContent =`${noteElement.am_pm}`;
-    noteBody.textContent = `${noteElement.body}`;
-
-    noteDisplayModal.dataset.noteId = noteElement.id;
-    console.log(noteElement.id)
-
-      // if the note object img property contains update the UI with image
-    if(noteElement.flag === true){
-
-    noteImgSection.innerHTML = ` <div class="col-12 note-dp-img-wrapper p-0">
-        <img class="img-fluid h-100" src=${noteElement.image} alt="note display img">
-    </div>`
-    }
-   
-    // finally add the class that displays the modal to the user
-    noteDisplayModal.classList.add("show");
+      setTimeout(() => {
+        modalElement.classList.remove("slide-in-bck-center");
+      }, 500);
+  }
 
 }
 
 // HIDE MODAL FUNC
-/* The function `hideCoverImgModal` hides a modal with a cover image by adding 
+/* The function `hideModals` hides a modal with a cover image by adding 
 and removing CSS classes for animation.*/
-function hideCoverImgModal() {
-  const coverImageModal = document.querySelector(".modal-bg");
-  coverImageModal.classList.add("slide-out-bck-center");
+function hideModals(modalElement) {
+  modalElement.classList.add("slide-out-bck-center");
 
   setTimeout(() => {
-    coverImageModal.classList.remove("show-modal");
-    coverImageModal.classList.remove("slide-out-bck-center");
+    modalElement.classList.remove("show-modal");
+    modalElement.classList.remove("slide-out-bck-center");
   }, 500);
 }
 
@@ -442,19 +388,14 @@ function addCoverImage() {
  * provided or is falsy.
  */
 function saveImg(imgObj, alertElement) {
+  const coverImageModal = document.querySelector(".modal-bg");
+
   if (imgObj) {
-    hideCoverImgModal();
+    hideModals(coverImageModal);
     CoverImgFlag = true;
   } else {
     let message = "<p>Please, pick an image or click cancel</p>";
-    displayAlert(
-      alertElement,
-      "transparent",
-      "red",
-      message,
-      "show-alert",
-      5000
-    );
+    displayAlert(alertElement,"transparent","red", message,"show-alert",5000);
   }
 }
 
@@ -462,11 +403,11 @@ function saveImg(imgObj, alertElement) {
 /* The function `cancelCoverImgEntry` resets the cover image preview to a default 
 placeholder, resets the file input element value, and then hides the modal.*/
 function cancelCoverImgEntry() {
+  const coverImageModal = document.querySelector(".modal-bg");
   // resets all  input element on this modal element
   restModalValues();
-
   // the modal is then hidden
-  hideCoverImgModal();
+  hideModals(coverImageModal);
 }
 
 // MANAGE FILE INPUT MODAL FUNC
@@ -479,15 +420,11 @@ function cancelCoverImgEntry() {
  *  the event. In this case, the function is using the `event.target
  */
 function manageFileInputModal(event) {
-  let element = event.target;
-  const closeModalBtn = document.querySelector(".close-modal-btn");
-  const saveImgBtn = document.querySelector(".done-btn");
   const alerts = document.querySelector(".alerts");
-
-  if (element.closest("button") === closeModalBtn) {
+  if (event.target.closest(".close-modal-btn")) {
     // closes the cover image modal and cancels the user img inputs
     cancelCoverImgEntry();
-  } else if (element.closest(".done-btn") === saveImgBtn) {
+  } else if (event.target.closest(".done-btn")) {
     // closes the cover image modal but saves the inputed image to a variable
     saveImg(coverImgObj, alerts);
   }
@@ -500,21 +437,76 @@ function manageFileInputModal(event) {
  * @param modalElement - The `modalElement` parameter is a reference to the modal element that is being
  * managed for displaying notes.
  */
-function manageNoteDisplayModal(evt,modalElement){
+function manageNoteDisplayModal(event,modalElement){
   const noteImgSection = document.querySelector(".note-dp-img-container");
 
-  if(evt.target.closest(".back-btn")){
-    // hides the modal and sets. 
-    // the element that contains the not image to an empty string.
-    // delete the noteID attribute from the note display modal.
-    modalElement.classList.remove("show");
+  if(event.target.closest(".back-btn")){
+    // hides the modal 
+    // resets image container element to default(empty).
+    // remove the noteID attribute from the modal.
+    hideModals(modalElement);
     noteImgSection.innerHTML = "";
     delete modalElement.dataset.noteId;
-  }else if(evt.target.closest(".edit-btn")){
+  }else if(event.target.closest(".edit-btn")){
      editNote();
-  }else if(evt.target.closest(".del-btn")){
+  }else if(event.target.closest(".del-btn")){
      deleteNote();
   }
+}
+
+// DISPLAY NOTES FUNC
+/**
+ * The function `showFullNote` retrieves a specific note object from local storage based on its ID and
+ * updates the UI to display the full details of that note, including title, date, time, body, and
+ * optionally an image.
+ * @param id - The `id` parameter in the `showFullNote` function is used to identify which note to
+ * display in the modal. It is passed as an argument when calling the function and is used to filter
+ * out the specific note object from the array of notes retrieved from local storage. This way, the
+ * function
+ */
+function showFullNote(id,event){
+  const noteDisplayModal = document.querySelector(".display-note-modal");
+  const noteImgSection = document.querySelector(".note-dp-img-container");
+  const noteBody = document.querySelector(".note-dp-txt");
+  const noteDay = document.querySelector(".note-dp-day");
+  const noteDate = document.querySelector(".note-dp-date");
+  const noteMonth = document.querySelector(".note-dp-month");
+  const noteTime = document.querySelector(".note-dp-time");
+  const noteDpTitle = document.querySelector(".note-dp-title");
+  const noteTimeSuffix = document.querySelector(".notedp-time-suffix");
+
+  // retrives the notes array of objects from local storage 
+  let noteElement = retriveFromLocalStorage();
+  // filter out the note object whose id is a match to the id of the clicked card
+  noteElement = noteElement.filter( note => {
+      if(note.id == id){
+          return note;
+      }
+  })
+  // extract the returned note object from the array
+  noteElement = noteElement.pop();
+  // update the note display UI with data from the note object
+  noteDpTitle.textContent = `${noteElement.title}`;
+  noteDay.textContent =`${noteElement.day}`;
+  noteDate.textContent =`${noteElement.date}`;
+  noteMonth.textContent =`${noteElement.month}`;
+  noteTime.textContent =`${noteElement.hrs}:${noteElement.mins}`;
+  noteTimeSuffix.textContent =`${noteElement.am_pm}`;
+  noteBody.textContent = `${noteElement.body}`;
+
+  //create a noteId dataset attribute on the note that is being viewed using the noteOject's id
+  noteDisplayModal.dataset.noteId = noteElement.id;
+
+    // if the note object img property contains update the UI with image
+  if(noteElement.flag === true){
+  noteImgSection.innerHTML = ` <div class="col-12 note-dp-img-wrapper p-0">
+      <img class="img-fluid h-100" src=${noteElement.image} alt="note display img">
+  </div>`
+  }
+ 
+  // display the note that has been built
+  showModals(event,noteDisplayModal,"col");
+
 }
 
 // READ FILES FUNC
@@ -619,6 +611,22 @@ function trimFileName(textElement, image) {
 // DELETE NOTE FUNC
 function deleteNote(){
   console.log("note deleted");
+  const noteDisplayModal = document.querySelector(".display-note-modal");
+  const noteCards = document.querySelectorAll(".col");
+  let id = noteDisplayModal.dataset.noteId;
+  console.log(id);
+
+  noteCards.forEach(card =>{
+    if(id === card.dataset.noteId){
+      console.log(card)
+       card.remove()
+    }
+  })
+  
+  hideModals(noteDisplayModal)
+
+  // deleteItemFromLocalStorage()
+
 }
 
 // EDIT NOTE FUNC
