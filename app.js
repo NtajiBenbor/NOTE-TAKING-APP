@@ -254,19 +254,8 @@ function createNewNote(event) {
         }
 
         //save to locale storage  
-        saveNoteDataToLocalStorage(
-          id,
-          noteTitle,
-          noteBody,
-          day,
-          date_,
-          hrs,
-          mins,
-          pm_am,
-          CoverImgFlag,
-          coverImgObj,
-          month
-        );
+        saveNoteDataToLocalStorage( id,noteTitle,noteBody,day,date_,
+          hrs,mins,pm_am,CoverImgFlag,coverImgObj,month);
 
         // resets the program
         resetAll();
@@ -274,15 +263,7 @@ function createNewNote(event) {
   } else {
         // display error alert
         let alertMessage = `<p>Error! you can not create a blank note.<span> <i class="fa-solid fa-circle-exclamation"></i></span></p>`;
-        displayAlert(
-          mainAlerts,
-          "yellow",
-          "black",
-          alertMessage,
-          "show-main-alert",
-          4000
-        );
-
+        displayAlert( mainAlerts,"yellow","black",alertMessage,"show-main-alert",4000);
         // reset program
         resetAll();
       }
@@ -314,7 +295,6 @@ function showModals(event,modalElement,clostestElmnt) {
   if(event.target.closest(`.${clostestElmnt}`) ){
       // adds the class of to display the modal on the page
       modalElement.classList.add("show-modal", "slide-in-bck-center");
-      console.log("shown modal");
 
       setTimeout(() => {
         modalElement.classList.remove("slide-in-bck-center");
@@ -353,14 +333,7 @@ function addCoverImage() {
     //reset the value of the file input
     fileUploadInput.value = "";
     //  display an error message
-    displayAlert(
-      alerts,
-      "transparent",
-      "red",
-      alertMessage,
-      "show-alert",
-      5000
-    );
+    displayAlert( alerts,"transparent","red",alertMessage,"show-alert",5000);
   } else {
     // an image element is created. this element is used to handle the preview
     const previewImg = document.createElement("img");
@@ -609,25 +582,44 @@ function trimFileName(textElement, image) {
 }
 
 // DELETE NOTE FUNC
+/**
+ * The `deleteNote` function deletes a note card from the UI, hides the note modal, and removes the
+ * clear button if there are no more notes in the container, while also deleting the note from local
+ * storage.
+ */
 function deleteNote(){
-  console.log("note deleted");
   const noteDisplayModal = document.querySelector(".display-note-modal");
   const noteCards = document.querySelectorAll(".col");
+  const notesContainer = document.querySelector(".notes-container");
+  const clearBtn = document.querySelector(".clear-btn");
+  const mainAlerts = document.querySelector(".main-alerts-display");
+  const noteImgSection = document.querySelector(".note-dp-img-container");
   let id = noteDisplayModal.dataset.noteId;
-  console.log(id);
 
+  //deletes card that matches the noteId from the UI. 
   noteCards.forEach(card =>{
     if(id === card.dataset.noteId){
-      console.log(card)
        card.remove()
     }
   })
-  
-  hideModals(noteDisplayModal)
+  // hides the note modal
+  hideModals(noteDisplayModal);
+  // remove the btn from the display 
+  if (notesContainer.childElementCount === 0) {
+    clearBtn.classList.remove("show-clear-btn");
+  }
 
-  // deleteItemFromLocalStorage()
+  noteImgSection.innerHTML = "";
+
+  // display alert
+  alertMessage ='<p>Note Deleted <span class="ml-1"><i class="fa-solid fa-circle-xmark"></i></span></p>';
+  displayAlert(mainAlerts,"red","white",alertMessage,"show-main-alert",4000);
+
+  // deletes note from local storage
+  deleteNoteFromLocalStorage(id)
 
 }
+
 
 // EDIT NOTE FUNC
 function editNote(){
@@ -663,7 +655,8 @@ function editNote(){
  * @param nMonth - The `nMonth` parameter in the `saveNoteDataToLocalStorage` function represents the
  * month the note was created.
  */
-function saveNoteDataToLocalStorage(noteId,nTitle,nBody,nDay,nDate,nHrs,nMins,tSuffix,noteFlag,img_,nMonth) {
+function saveNoteDataToLocalStorage(noteId,nTitle,nBody,nDay,nDate,nHrs,nMins,
+  tSuffix,noteFlag,img_,nMonth) {
   
   // will hold the result of the blob conversion
   let imageUrlData;
@@ -714,6 +707,26 @@ function saveNoteDataToLocalStorage(noteId,nTitle,nBody,nDay,nDate,nHrs,nMins,tS
 // RETRIVE NOTE FORM LOCAL STORAGE FUNC
 function retriveFromLocalStorage() {
   return JSON.parse(localStorage.getItem("noteEntries")) || [];
+}
+
+// DELETE NOTE FROM LOCAL STORAGE FUNC
+/**
+ * The function `deleteNoteFromLocalStorage` removes a specific note entry from local storage based on
+ * its ID.
+ * @param _id - The `_id` parameter in the `deleteNoteFromLocalStorage` function is the unique
+ * identifier of the note that you want to delete from the local storage.
+ */
+function deleteNoteFromLocalStorage(_id){
+  let notesArray = retriveFromLocalStorage()
+
+  notesArray = notesArray.filter(noteObj=>{
+    if(noteObj.id !== _id){
+      return noteObj;
+    }
+  })
+
+  localStorage.setItem("noteEntries", JSON.stringify(notesArray));
+
 }
 
 
