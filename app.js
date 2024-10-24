@@ -35,7 +35,7 @@ function initApp() {
   /***** EVENT LISTENERS ******/
   // Displays/hide the Form inputs
   // dynamically updates the create note btn icon when the button is clicked
-  showInputsBtn.addEventListener("click", showNoteInputsContainer);
+  showInputsBtn.addEventListener("click", toggleInputsContainer);
 
   // Creates a note when the user submits the form.
   form.addEventListener("submit", createNewNote);
@@ -45,7 +45,6 @@ function initApp() {
     showModals(event,coverImageModal,"add-cover-img-btn");
   });
   
-
   //change event fires the addCoverImage func(it displays a preview of the selected img)
   form.elements.cover_photo_input.addEventListener("change", addCoverImage);
 
@@ -129,33 +128,9 @@ function createNewNote(event) {
         // if flag is set to false then create a card with only text.
         // if flag is true then create a card with both text and a cover image.
         if (!CoverImgFlag) {
-            cardElement.innerHTML = `<div class="card notes-card bg-body-tertiary" style="max-width:540px;">
-            <div class="row g-0">
-                <!-- card body -->
-                <div class="col-12">
-                    <div class="card-body">
-                        <div class="d-flex justify-content-between">
-                            <!-- card title -->
-                            <h5 class="card-title">${noteTitle}</h5>
-                            <!-- card btn -->
-                            <button type="button" class="btn my-0 py-0">
-                                <i class="fa-solid fa-arrow-right note-btn"></i>
-                            </button>
-                        </div>
-                        <!-- card subtitle -->
-                        <h6 class="card-subtitle mb-3 mt-1 text-body-secondary light-txt">
-                            Created on <span class="note-day">${day}</span>
-                            <span class="note-date">${date_}</span>  
-                            <span class="note-month">${month}</span> 
-                            <span class="note-time">${hrs}:${mins}</span> 
-                            <span class="note-time-suffix">${pm_am}.</span>
-                        </h6>
-                        <!-- card text -->
-                        <p class="card-text dark-txt line-h card-txt-color">${cardText}</p>
-                    </div>
-                </div>
-            </div>
-            </div>`;
+
+            cardElement.innerHTML = buildNoteCardsUI(noteTitle,day,date_,month,hrs,
+              mins,pm_am,cardText);
         } else {
           // Since file reading is a blocking operation, we need to ensure that the noteImg
           // variable has the correct value before updating the cardElement's innerHTML.
@@ -168,40 +143,11 @@ function createNewNote(event) {
             // noteImg is updated with the result of the file reading
             noteImg = event.target.result;
 
-            //the card inner HTML structure is updated pre-styled & pre-structured HTML
-            // values for note-title, note-body(trimed text string), date and note-img
-            cardElement.innerHTML = `<div class="card notes-card bg-body-tertiary" style="max-width:540px;">
-                    <div class="row g-0">
-                        <!-- note card image -->
-                        <div class="col-md-4 note-image-wrapper">
-                        <img src= ${noteImg}  alt="note cover img">
-                        </div>
-                        <!-- card body -->
-                        <div class="col-md-8">
-                            <div class="card-body">
-                                <div class="d-flex justify-content-between">
-                                    <!-- card title -->
-                                    <h5 class="card-title">${noteTitle}</h5>
-                                    <!-- card btn -->
-                                    <button type="button" class="btn my-0 py-0">
-                                        <i class="fa-solid fa-arrow-right note-btn"></i>
-                                    </button>
-                                </div>
-                                <!-- card subtitle -->
-                                <h6 class="card-subtitle mb-3 mt-1 text-body-secondary light-txt">
-                                    Created on <span class="note-day">${day}</span>
-                                    <span class="note-date">${date_}</span>  
-                                    <span class="note-month">${month}</span> 
-                                    <span class="note-time">${hrs}:${mins}</span> 
-                                    <span class="note-time-suffix">${pm_am}.</span>
-                                </h6>
-                                <!-- card text -->
-                                <p class="card-text dark-txt line-h card-txt-color">${cardText}</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>`;
-          };
+            //the card inner HTML structure is updated with pre-styled & pre-structured HTML
+            // values for note-title, note-body(trimed text string), date and note-img are passed in
+            cardElement.innerHTML = buildNoteCardsUI(noteTitle,day,date_,month,hrs,
+                  mins,pm_am,cardText,noteImg);
+          }
           reader.readAsDataURL(coverImgObj);
         }
 
@@ -213,7 +159,7 @@ function createNewNote(event) {
         // ADDS EVENT LISTENER TO each card that triggers the modal that displays the clicked note in full
         noteCards.forEach(note=>{
             note.addEventListener("click",(event)=>{
-                showFullNote(note.dataset.noteId,event);
+                viewNoteDetails(note.dataset.noteId,event);
             })
         })
 
@@ -269,11 +215,12 @@ function createNewNote(event) {
       }
 }
 
-// SHOW INPUT CONTAINER FUNC
+
+
+// TOGGLE INPUT CONTAINER FUNC
 /**
- * The function `showNoteInputsContainer` toggles the visibility of a form and buttons
- * when triggered by a click event.*/
-function showNoteInputsContainer(event) {
+ * The function `toggleInputsContainer` toggles the visibility of the form and buttons when triggered by a click event.*/
+function toggleInputsContainer(event) {
   const createNoteBtn = document.querySelector(".create-note-btn");
   // selects the add note btn via it's eventListener
   const addBtn = event.currentTarget;
@@ -317,7 +264,7 @@ function hideModals(modalElement) {
 
 // ADD COVER IMG FUNC
 /*  this function gets the image the user uploads as a cover img for their notes
-    then use the displayCoverImgPreview function to display a preview of the cover image.*/
+    then use the previewCoverImg function to display a preview of the cover image.*/
 function addCoverImage() {
   const ImagePreviewContainer = document.querySelector(".cover-img-wrapper");
   const previewImgTitle = document.querySelector(".img-preview-caption");
@@ -341,7 +288,7 @@ function addCoverImage() {
     previewImg.classList.add("img-fluid", "cover-img");
     // this function reads the file in the cover img variable
     // then updates the src property of the img element that was created
-    displayCoverImgPreview(coverImgObj,previewImg);
+    previewCoverImg(coverImgObj,previewImg);
     // removes the default/placeholder img
     ImagePreviewContainer.children[0].remove();
     // displays the uploaded img as a preview
@@ -412,7 +359,6 @@ function manageFileInputModal(event) {
  */
 function manageNoteDisplayModal(event,modalElement){
   const noteImgSection = document.querySelector(".note-dp-img-container");
-
   if(event.target.closest(".back-btn")){
     // hides the modal 
     // resets image container element to default(empty).
@@ -427,17 +373,91 @@ function manageNoteDisplayModal(event,modalElement){
   }
 }
 
-// DISPLAY NOTES FUNC
+// BUILD NOTE CARD UI FUNC
 /**
- * The function `showFullNote` retrieves a specific note object from local storage based on its ID and
+ * The function `buildNoteCardsUI` generates HTML code for a note card with specified content and
+ * styling.
+ * @returns The function `buildNoteCardsUI` returns an HTML string that represents a note card UI
+ * element with the provided dynamic content such as title, day, date, month, time, card body, and
+ * image.
+ */
+function buildNoteCardsUI(title,day,date,mnth,hours,
+  mins,timeSuffix,cardBody,imge){
+    if (imge) {
+      return `<!-- note card element with picture start-->
+    <div class="card notes-card bg-body-tertiary" style="max-width: 540px;">
+        <div class="row g-0">
+            <!-- note card image -->
+            <div class="col-md-4 note-image-wrapper">
+                <img src="${imge}" class="img-fluid" alt="note cover img">
+            </div>
+            <!-- card body -->
+            <div class="col-md-8">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <!-- card title -->
+                        <h5 class="card-title">${title}</h5>
+                        <!-- card btn -->
+                        <button type="button" class="btn my-0 py-0">
+                            <i class="fa-solid fa-arrow-right note-btn"></i>
+                        </button>
+                    </div>
+                    <!-- card subtitle -->
+                    <h6 class="card-subtitle mb-3 mt-1 text-body-secondary light-txt">
+                         Created on <span class="note-day">${day}</span>
+                      <span class="note-date">${date}</span>  
+                      <span class="note-month">${mnth}</span> 
+                      <span class="note-time">${hours}:${mins}</span> 
+                      <span class="note-time-suffix">${timeSuffix}.</span>
+                    </h6>
+                    <!-- card text -->
+                    <p class="card-text dark-txt line-h card-txt-color">${cardBody}</p>
+                </div>
+            </div>
+        </div>
+    </div> <!-- note card element with picture end-->`;
+    } else {
+      return `<div class="card notes-card bg-body-tertiary" style="max-width:540px;">
+            <div class="row g-0">
+          <!-- card body -->
+          <div class="col-12">
+              <div class="card-body">
+                  <div class="d-flex justify-content-between">
+                      <!-- card title -->
+                      <h5 class="card-title">${title}</h5>
+                      <!-- card btn -->
+                      <button type="button" class="btn my-0 py-0">
+                          <i class="fa-solid fa-arrow-right note-btn"></i>
+                      </button>
+                  </div>
+                  <!-- card subtitle -->
+                  <h6 class="card-subtitle mb-3 mt-1 text-body-secondary light-txt">
+                      Created on <span class="note-day">${day}</span>
+                      <span class="note-date">${date}</span>  
+                      <span class="note-month">${mnth}</span> 
+                      <span class="note-time">${hours}:${mins}</span> 
+                      <span class="note-time-suffix">${timeSuffix}.</span>
+                  </h6>
+                  <!-- card text -->
+                  <p class="card-text dark-txt line-h card-txt-color">${cardBody}</p>
+              </div>
+          </div>
+      </div>
+    </div>`;
+    }
+}
+
+// VIEW NOTES DETAILS FUNC
+/**
+ * The function `viewNoteDetails` retrieves a specific note object from local storage based on its ID and
  * updates the UI to display the full details of that note, including title, date, time, body, and
  * optionally an image.
- * @param id - The `id` parameter in the `showFullNote` function is used to identify which note to
+ * @param id - The `id` parameter in the `viewNoteDetails` function is used to identify which note to
  * display in the modal. It is passed as an argument when calling the function and is used to filter
  * out the specific note object from the array of notes retrieved from local storage. This way, the
  * function
  */
-function showFullNote(id,event){
+function viewNoteDetails(id,event){
   const noteDisplayModal = document.querySelector(".display-note-modal");
   const noteImgSection = document.querySelector(".note-dp-img-container");
   const noteBody = document.querySelector(".note-dp-txt");
@@ -482,15 +502,15 @@ function showFullNote(id,event){
 
 }
 
-// READ FILES FUNC
+// PREVIEW COVER IMAGE FUNC
 /** 
-The function `displayCoverImgPreview` reads a file using `FileReader` and sets the `src` attribute
+The function `previewCoverImg` reads a file using `FileReader` and sets the `src` attribute
  of an element to the result.
   * @param file - The `file` parameter is the file object that you want to read.
-  * @param element - The `element` parameter in the `displayCoverImgPreview` function is typically
+  * @param element - The `element` parameter in the `previewCoverImg` function is typically
   *  a reference to an HTML element, such as an image element (`<img>`), where the
   *  content of the file being read will be displayed.*/
-function displayCoverImgPreview(file,element) {
+function previewCoverImg(file,element) {
 
      // intantiates a new fileRead instance
      const reader = new FileReader();
@@ -711,8 +731,7 @@ function retriveFromLocalStorage() {
 
 // DELETE NOTE FROM LOCAL STORAGE FUNC
 /**
- * The function `deleteNoteFromLocalStorage` removes a specific note entry from local storage based on
- * its ID.
+ * The function `deleteNoteFromLocalStorage` removes a specific note entry from local storage based on its ID.
  * @param _id - The `_id` parameter in the `deleteNoteFromLocalStorage` function is the unique
  * identifier of the note that you want to delete from the local storage.
  */
