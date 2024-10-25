@@ -179,67 +179,65 @@
         <!-- NOTE CARDS SECTION START-->
         <section class="container">
             <!-- main container for note cards -->
-            <div class="notes-container row row-cols-1 row-cols-md-2 g-4">
-               
+            <div class="notes-container  row row-cols-1 row-cols-md-2 g-4">
+                
             </div>
 
-            <div class="col mt-3 mb-3 d-flex justify-content-center">
+            <div class="col mt-4 mb-3 d-flex justify-content-start">
                 <button type="button" class="app-btns btn clear-btn">Clear notes</button><!-- clear all notes btn -->
             </div>
         </section><!-- NOTE CARDS SECTION END-->
 
         <!-- NOTE DISPLAY MODAL START-->
         <section>
-            <div class="notes-modal-wrapper">
-                <div class="modal-bg display-note-modal">
-                    <article class="container note-modal-center">
-                        <div class="row px-3 pt-4">
-                            <!-- note controls -->
-                            <div class="col-12 row note-controls m-0 justify-content-between px-0">
-                                <div class="col-7">
-                                    <!-- back btn -->
-                                    <button type="button" class="btn my-0 py-1 app-btns back-btn">
-                                        <i class="fa-solid fa-arrow-left "></i>
-                                    </button>
-                                </div>
-                                <!-- edit and delete btn -->
-                                <div class="col-4 d-flex justify-content-end">
-                                    <!--edit btn  -->
-                                    <button type="button" class="btn my-0 py-1 mx-2 app-btns edit-btn">
-                                        <i class="fa-solid fa-pen-to-square"></i>
-                                    </button>
-                                    <!-- del btn -->
-                                    <button type="button" class="btn my-0 py-1 app-btns del-btn">
-                                        <i class="fa-solid fa-trash-can del-icon"></i>
-                                    </button>
-                                </div>
+            <div class="modal-bg display-note-modal">
+                <article class="container note-modal-center">
+                    <div class="row px-3 pt-4">
+                        <!-- note controls -->
+                        <div class="col-12 row note-controls m-0 justify-content-between px-0">
+                            <div class="col-7">
+                                <!-- back btn -->
+                                <button type="button" class="btn my-0 py-1 app-btns back-btn">
+                                    <i class="fa-solid fa-arrow-left "></i>
+                                </button>
                             </div>
-                            <!-- note header -->
-                            <div class="col-12 mt-1 note-dp-header">
-                                <!-- note title -->
-                                <h5 class="note-dp-title"></h5>
-                                <!-- date day and time of note creation -->
-                                <h6 class="light-txt"> 
-                                    <span class="note-dp-day"></span> 
-                                    <span class="note-dp-date"></span> 
-                                    <span class="note-dp-month"></span> 
-                                    <span class="note-dp-time"></span> 
-                                    <span class="notedp-time-suffix"></span>
-                                </h6>
-                            </div>
-                            <!-- note cover image -->
-                            <div class="note-dp-img-container">
-                               
-                            </div>
-                            <!-- note body -->
-                            <div class="col-12 note-txt pt-0 pb-0 my-1 px-2 dark-txt">
-                                <p class="note-dp-txt" >
-                                </p>
+                            <!-- edit and delete btn -->
+                            <div class="col-4 d-flex justify-content-end">
+                                <!--edit btn  -->
+                                <button type="button" class="btn my-0 py-1 mx-2 app-btns edit-btn">
+                                    <i class="fa-solid fa-pen-to-square"></i>
+                                </button>
+                                <!-- del btn -->
+                                <button type="button" class="btn my-0 py-1 app-btns del-btn">
+                                    <i class="fa-solid fa-trash-can del-icon"></i>
+                                </button>
                             </div>
                         </div>
-                        <!-- note body end-->
-                    </article>
-                </div>
+                        <!-- note header -->
+                        <div class="col-12 mt-1 note-dp-header">
+                            <!-- note title -->
+                            <h5 class="note-dp-title"></h5>
+                            <!-- date day and time of note creation -->
+                            <h6 class="light-txt"> 
+                                <span class="note-dp-day"></span> 
+                                <span class="note-dp-date"></span> 
+                                <span class="note-dp-month"></span> 
+                                <span class="note-dp-time"></span> 
+                                <span class="notedp-time-suffix"></span>
+                            </h6>
+                        </div>
+                        <!-- note cover image -->
+                        <div class="note-dp-img-container">
+                           
+                        </div>
+                        <!-- note body -->
+                        <div class="col-12 note-txt pt-0 pb-0 my-1 px-2 dark-txt">
+                            <p class="note-dp-txt" >
+                            </p>
+                        </div>
+                    </div>
+                    <!-- note body end-->
+                </article>
             </div>
         </section><!-- NOTE DISPLAY MODAL END-->
     </main>

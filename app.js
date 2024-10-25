@@ -115,9 +115,10 @@ function createNewNote(event) {
 
   if (noteTitle && noteBody) {
         // initializing a card container element and giving it a unique id
-        const cardElement = document.createElement("div");
+        const cardElement = document.createElement("article");
         cardElement.dataset.noteId = id;
-        cardElement.classList.add("col");
+        cardElement.classList.add("card","notes-card","bg-body-tertiary");
+
 
         // reducing the length of the text for the note card elements
         noteBody.length > 145
@@ -154,12 +155,18 @@ function createNewNote(event) {
         // append note card to UI
         notesContainer.append(cardElement);
 
+        // console.log(noteCards)
+
         // select note card elements
-        let noteCards = notesContainer.querySelectorAll(".col");
+        let noteCards = document.querySelectorAll(".notes-card");
+        
         // ADDS EVENT LISTENER TO each card that triggers the modal that displays the clicked note in full
         noteCards.forEach(note=>{
             note.addEventListener("click",(event)=>{
                 viewNoteDetails(note.dataset.noteId,event);
+                console.log(note)
+                console.log(note.dataset.noteId)
+
             })
         })
 
@@ -358,13 +365,14 @@ function manageFileInputModal(event) {
  * managed for displaying notes.
  */
 function manageNoteDisplayModal(event,modalElement){
-  const noteImgSection = document.querySelector(".note-dp-img-container");
   if(event.target.closest(".back-btn")){
     // hides the modal 
     // resets image container element to default(empty).
     // remove the noteID attribute from the modal.
     hideModals(modalElement);
-    noteImgSection.innerHTML = "";
+    setTimeout(()=>{
+      restNoteDisplayModal();
+    },1000)
     delete modalElement.dataset.noteId;
   }else if(event.target.closest(".edit-btn")){
      editNote();
@@ -373,7 +381,7 @@ function manageNoteDisplayModal(event,modalElement){
   }
 }
 
-// BUILD NOTE CARD UI FUNC
+// BUILD NOTE CARDS UI FUNC
 /**
  * The function `buildNoteCardsUI` generates HTML code for a note card with specified content and
  * styling.
@@ -384,15 +392,42 @@ function manageNoteDisplayModal(event,modalElement){
 function buildNoteCardsUI(title,day,date,mnth,hours,
   mins,timeSuffix,cardBody,imge){
     if (imge) {
-      return `<!-- note card element with picture start-->
-    <div class="card notes-card bg-body-tertiary" style="max-width: 540px;">
-        <div class="row g-0">
-            <!-- note card image -->
-            <div class="col-md-4 note-image-wrapper">
-                <img src="${imge}" class="img-fluid" alt="note cover img">
-            </div>
+        return `<!-- note card element with picture start-->
+          <div class="row g-0 note-card-center">
+              <!-- note card image -->
+              <div class="card-head-wrapper">
+                  <img src="${imge}" class="img-fluid" alt="note cover img">
+              </div>
+              <!-- card body -->
+              <div class="card-body-wrappper">
+                  <div class="card-body">
+                      <div class="d-flex justify-content-between">
+                          <!-- card title -->
+                          <h5 class="card-title">${title}</h5>
+                          <!-- card btn -->
+                          <button type="button" class="btn my-0 py-0">
+                              <i class="fa-solid fa-arrow-right note-btn"></i>
+                          </button>
+                      </div>
+                      <!-- card subtitle -->
+                      <h6 class="card-subtitle mb-3 mt-1 text-body-secondary light-txt">
+                          Created on <span class="note-day">${day}</span>
+                        <span class="note-date">${date}</span>  
+                        <span class="note-month">${mnth}</span> 
+                        <span class="note-time">${hours}:${mins}</span> 
+                        <span class="note-time-suffix">${timeSuffix}.</span>
+                      </h6>
+                      <!-- card text -->
+                      <p class="card-text dark-txt line-h card-txt-color">${cardBody}</p>
+                  </div>
+              </div>
+          </div>
+ <!-- note card element with picture end-->`;
+    } else {
+        return `
+        <div class="row g-0 py-0">
             <!-- card body -->
-            <div class="col-md-8">
+            <div class="col-12">
                 <div class="card-body">
                     <div class="d-flex justify-content-between">
                         <!-- card title -->
@@ -404,46 +439,17 @@ function buildNoteCardsUI(title,day,date,mnth,hours,
                     </div>
                     <!-- card subtitle -->
                     <h6 class="card-subtitle mb-3 mt-1 text-body-secondary light-txt">
-                         Created on <span class="note-day">${day}</span>
-                      <span class="note-date">${date}</span>  
-                      <span class="note-month">${mnth}</span> 
-                      <span class="note-time">${hours}:${mins}</span> 
-                      <span class="note-time-suffix">${timeSuffix}.</span>
+                        Created on <span class="note-day">${day}</span>
+                        <span class="note-date">${date}</span>  
+                        <span class="note-month">${mnth}</span> 
+                        <span class="note-time">${hours}:${mins}</span> 
+                        <span class="note-time-suffix">${timeSuffix}.</span>
                     </h6>
                     <!-- card text -->
                     <p class="card-text dark-txt line-h card-txt-color">${cardBody}</p>
                 </div>
             </div>
-        </div>
-    </div> <!-- note card element with picture end-->`;
-    } else {
-      return `<div class="card notes-card bg-body-tertiary" style="max-width:540px;">
-            <div class="row g-0">
-          <!-- card body -->
-          <div class="col-12">
-              <div class="card-body">
-                  <div class="d-flex justify-content-between">
-                      <!-- card title -->
-                      <h5 class="card-title">${title}</h5>
-                      <!-- card btn -->
-                      <button type="button" class="btn my-0 py-0">
-                          <i class="fa-solid fa-arrow-right note-btn"></i>
-                      </button>
-                  </div>
-                  <!-- card subtitle -->
-                  <h6 class="card-subtitle mb-3 mt-1 text-body-secondary light-txt">
-                      Created on <span class="note-day">${day}</span>
-                      <span class="note-date">${date}</span>  
-                      <span class="note-month">${mnth}</span> 
-                      <span class="note-time">${hours}:${mins}</span> 
-                      <span class="note-time-suffix">${timeSuffix}.</span>
-                  </h6>
-                  <!-- card text -->
-                  <p class="card-text dark-txt line-h card-txt-color">${cardBody}</p>
-              </div>
-          </div>
-      </div>
-    </div>`;
+        </div>`
     }
 }
 
@@ -498,7 +504,7 @@ function viewNoteDetails(id,event){
   }
  
   // display the note that has been built
-  showModals(event,noteDisplayModal,"col");
+  showModals(event,noteDisplayModal,"notes-card");
 
 }
 
@@ -582,6 +588,29 @@ function restModalValues() {
   ImagePreviewContainer.innerHTML = previewImg;
 }
 
+  // RESET MODAL FUNCTION
+ /**
+  * The function `restNoteDisplayModal` clears the content of various elements within a note display modal.
+  */
+  function restNoteDisplayModal(){
+    const noteImgSection = document.querySelector(".note-dp-img-container");
+    const noteBody = document.querySelector(".note-dp-txt");
+    const noteDay = document.querySelector(".note-dp-day");
+    const noteDate = document.querySelector(".note-dp-date");
+    const noteMonth = document.querySelector(".note-dp-month");
+    const noteTime = document.querySelector(".note-dp-time");
+    const noteDpTitle = document.querySelector(".note-dp-title");
+    const noteTimeSuffix = document.querySelector(".notedp-time-suffix");
+
+    noteDpTitle.textContent = "";
+    noteDay.textContent ="";
+    noteDate.textContent ="";
+    noteMonth.textContent ="";
+    noteTime.textContent ="";
+    noteTimeSuffix.textContent ="";
+    noteBody.textContent = "";
+    noteImgSection.innerHTML="";
+  }
 
 // TRIM FILE NAME FUNC
 /* updates the img caption with uploaded img name. it dynamically updates the image title
@@ -609,11 +638,10 @@ function trimFileName(textElement, image) {
  */
 function deleteNote(){
   const noteDisplayModal = document.querySelector(".display-note-modal");
-  const noteCards = document.querySelectorAll(".col");
+  const noteCards = document.querySelectorAll(".notes-card");
   const notesContainer = document.querySelector(".notes-container");
   const clearBtn = document.querySelector(".clear-btn");
   const mainAlerts = document.querySelector(".main-alerts-display");
-  const noteImgSection = document.querySelector(".note-dp-img-container");
   let id = noteDisplayModal.dataset.noteId;
 
   //deletes card that matches the noteId from the UI. 
@@ -629,7 +657,6 @@ function deleteNote(){
     clearBtn.classList.remove("show-clear-btn");
   }
 
-  noteImgSection.innerHTML = "";
 
   // display alert
   alertMessage ='<p>Note Deleted <span class="ml-1"><i class="fa-solid fa-circle-xmark"></i></span></p>';
@@ -644,6 +671,40 @@ function deleteNote(){
 // EDIT NOTE FUNC
 function editNote(){
   console.log("editing note");
+  const noteDisplayModal = document.querySelector(".display-note-modal");
+  const noteCards = document.querySelectorAll(".notes-card");
+  // const notesContainer = document.querySelector(".notes-container");
+  // const clearBtn = document.querySelector(".clear-btn");
+  // const mainAlerts = document.querySelector(".main-alerts-display");
+  // const noteImgSection = document.querySelector(".note-dp-img-container");
+  let id = noteDisplayModal.dataset.noteId;
+  editFlag = true;
+  let notesArry = retriveFromLocalStorage();
+
+  hideModals(noteDisplayModal);
+  console.log(noteCards)
+ 
+  // let cardId = noteCards.filter(card =>{
+  //   if(card.dataset.noteId === id){
+  //    return card
+  //   }
+  //   })
+
+    // console.log(cardId)
+
+
+
+
+
+
+//     edited = notesArry.pop();
+//     console.log(edited);
+
+
+// cards.querySelector(".notes-card").classList.add("edit-color")
+
+
+
 }
 
 
