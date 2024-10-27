@@ -431,7 +431,7 @@ img.cover-img{
 /**** INPUT BOX FOR NOTE TITLE AND NOTE ****/
 /* class that controls the sizing on the text area element */
 .input-txt-area-container{
-	height: 0;
+	height: auto;
 	overflow: hidden;
 	transition: all 500ms ease-in-out;
 }
@@ -439,7 +439,7 @@ img.cover-img{
 /* the note text area */
 .note-input{
 	width: 100%;
-	/* height: 0; */
+	height: auto;
 	margin: 0 auto;
 	padding: 1em;
 	border: 4px solid var(--border-color);
@@ -449,7 +449,8 @@ img.cover-img{
 
 /* the note title text input */
 .title-input{
-	border: transparent;	background-color: transparent;
+	height: 32px;
+	border: transparent;
 }
 
 /* focus state for the input and textarea elements */
@@ -497,25 +498,15 @@ img.cover-img{
 }
 
 /* hover effect for note cards */
-/* for note card bg */
-.notes-card:hover{
-	/* background: rgba(0, 0, 0, 0.9) !important; 
-	color: var(--body-bg) !important; */
-	transform: translate(-3px,-3px) !important;
-}
 
 /* note btn that have arrow icons */
 .notes-card .note-btn{
 	transition: transform 300ms linear !important;
 }
 
-
-
 /* for note card button */
 .notes-card:hover .note-btn{
 	transform: translate(8px);
-	
-	
 }
 
 /* wrappers for the imgs on the note cards */
@@ -598,24 +589,7 @@ img.cover-img{
 		margin: 0 auto;
 	}
 
-		/* flex container for the card text and card image */
-		.note-card-center{
-			flex-direction: row;
-			width: 100%;
-		}
-		/* wrapper for the image section of the card*/
-		.note-card-center div.card-head-wrapper{
-			width: 35%;
-		}
-		/*wapper for the text section of the card  */
-		.note-card-center div.card-body-wrappper{
-			width: 65%;
-		}
-	
-}
-
 /** contorls the with and orientation of the note cards **/
-@media screen and (min-width: 950px) {
 	.notes-container{
 		display: flex;
 		flex-direction: row;
@@ -631,16 +605,27 @@ img.cover-img{
 		flex-direction: row;
 		width: 100%;
 	}
+
 	/* wrapper for the image section of the card*/
-	.note-card-center div.card-head-wrapper{
+	.note-card-center .card-head-wrapper{
 		width: 35%;
 	}
+
 	/*wapper for the text section of the card  */
-	.note-card-center div.card-body-wrappper{
+	.note-card-center .card-body-wrappper{
 		width: 65%;
 	}
 
+	/* hover effect for note cards */
+	/* for note card bg */
+	.notes-card:hover{
+		/* background: rgba(0, 0, 0, 0.9) !important; 
+		color: var(--body-bg) !important; */
+		transform: translate(-3px,-3px) !important;
+	}
+	
 }
+
 
 /** large and X-large screens size **/
 @media screen and (min-width: 992px) {
@@ -661,7 +646,8 @@ the note title and note input itself */
 }
 
 .show .input-txt-area-container{
-	height: 142px;
+	/* height: 142px; */
+	height:auto;
 	overflow: visible;
 }
 
@@ -708,13 +694,21 @@ the note title and note input itself */
 	display: block;
 }
 
-.edit-color{
+/* class that are applied when a note is being edited */
+.editable-card{
 	background-color: skyblue !important;
+	outline: 2px solid darkblue !important;
+	transform: scale(1) !important;
+	
+}
+/*styling to indicate that this cards are disabled when the edit class has been applied to 
+the card being edited */
+.disabled-cards .notes-card{
+	transform: scale(0.9);
+
 }
 
-.edit-color:hover{
-	cursor: default !important;
-}
+
 
 
 

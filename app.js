@@ -4,7 +4,7 @@ let editFlag = false;
 let CoverImgFlag = false;
 let coverImgObj;
 let editID;
-let edited;
+let editedObj;
 
 /***** EVENT LISTENERS ******/
 // This event listener waits for the document's readyState to become "complete",
@@ -76,6 +76,8 @@ function createNewNote(event) {
   const notesContainer = document.querySelector(".notes-container");
   const mainAlerts = document.querySelector(".main-alerts-display");
   const clearBtn = document.querySelector(".clear-btn");
+
+
   const weekDays = ["Sun", "Mon", "Tue", "Wed", "Thur", "Fri", "Sat"];
   const months = [
     "Jan",
@@ -98,6 +100,7 @@ function createNewNote(event) {
   let date = new Date();
   const id = Math.random().toString(16).slice(2).toString();
 
+
   // convert time to 12 hrs formart
   function convertTime(dateVar) {
     return dateVar.getHours() % 12 || 12;
@@ -113,113 +116,191 @@ function createNewNote(event) {
   hrs < 12 ? (pm_am = "pm") : (pm_am = "am");
   mins < 10 ? mins = `0${mins}`: mins;
 
-  if (noteTitle && noteBody) {
-        // initializing a card container element and giving it a unique id
-        const cardElement = document.createElement("article");
-        cardElement.dataset.noteId = id;
-        cardElement.classList.add("card","notes-card","bg-body-tertiary");
+  if (noteTitle && noteBody && !editFlag) {
+    // initializing a card container element and giving it a unique id
+    const cardElement = document.createElement("article");
+    cardElement.dataset.noteId = id;
+    cardElement.classList.add("card", "notes-card", "bg-body-tertiary");
 
+    // reducing the length of the text for the note card elements
+    cardText = trimUiCardText(noteBody);
 
-        // reducing the length of the text for the note card elements
-        noteBody.length > 145
-          ? (cardText = `${noteBody.slice(0, 139)}. . .`)
-          : (cardText = noteBody);
+    // decide what kind of note card to create for UI based on the coverImage Flag.
+    // if flag is set to false then create a card with only text.
+    // if flag is true then create a card with both text and a cover image.
+    if (!CoverImgFlag) {
+      cardElement.innerHTML = buildNoteCardsUI(
+        "Created",
+        noteTitle,
+        day,
+        date_,
+        month,
+        hrs,
+        mins,
+        pm_am,
+        cardText
+      );
+    } else {
+      // Since file reading is a blocking operation, we need to ensure that the noteImg
+      // variable has the correct value before updating the cardElement's innerHTML.
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        // noteImg is updated with the result of the file reading
+        noteImg = event.target.result;
 
-        // decide what kind of note card to create for UI based on the coverImage Flag.
-        // if flag is set to false then create a card with only text.
-        // if flag is true then create a card with both text and a cover image.
-        if (!CoverImgFlag) {
+        //the card inner HTML structure is updated with pre-styled & pre-structured HTML
+        // values for note-title, note-body(trimed text string), date and note-img are passed in
+        cardElement.innerHTML = buildNoteCardsUI(
+          "Created",
+          noteTitle,
+          day,
+          date_,
+          month,
+          hrs,
+          mins,
+          pm_am,
+          cardText,
+          noteImg
+        );
+      };
+      reader.readAsDataURL(coverImgObj);
+    }
 
-            cardElement.innerHTML = buildNoteCardsUI(noteTitle,day,date_,month,hrs,
-              mins,pm_am,cardText);
-        } else {
-          // Since file reading is a blocking operation, we need to ensure that the noteImg
-          // variable has the correct value before updating the cardElement's innerHTML.
-          // To achieve this, we use template literals to pass the note title, note body,
-          // and cover image into a pre-structured and pre-styled HTML string.
-          // This operation is handled asynchronously to ensure the file is fully read
-          // before its value is used.
-          const reader = new FileReader();
-          reader.onload = (event) => {
-            // noteImg is updated with the result of the file reading
+    // append note card to UI
+    notesContainer.append(cardElement);
+
+    // console.log(noteCards)
+
+    // select note card elements
+    let noteCards = document.querySelectorAll(".notes-card");
+
+    // ADDS EVENT LISTENER TO each card that triggers the modal that displays the clicked note in full
+    noteCards.forEach((note) => {
+      note.addEventListener("click", (event) => {
+        viewNoteDetails(note.dataset.noteId, event);
+      });
+    });
+
+    // alert that note has been created
+    let alertMessage =
+      '<p>Note created  <span><i class="fa-solid fa-circle-check"></i></span></p>';
+    displayAlert(
+      mainAlerts,
+      "green",
+      "white",
+      alertMessage,
+      "show-main-alert",
+      3000
+    );
+
+    // display clear Notes Button
+    if (notesContainer.childElementCount > 0) {
+      clearBtn.classList.add("show-clear-btn");
+      // ADDS EVENT LISTENER to the button where if it is clicked,
+      // hides the button,DELETES ALL NOTES FROM local storage,
+      // removes cards form note UI
+      clearBtn.addEventListener("click", function removeNotes() {
+        // delete all note entries from local storage
+        localStorage.removeItem("noteEntries");
+        // remove the btn from the display
+        clearBtn.classList.remove("show-clear-btn");
+        // display an alert
+        alertMessage =
+          '<p>Note list cleared <span><i class="fa-solid fa-circle-xmark"></i></span></p>';
+        displayAlert(
+          mainAlerts,
+          "red",
+          "white",
+          alertMessage,
+          "show-main-alert",
+          4000
+        );
+        //iterate and delete each card
+        noteCards.forEach((note) => {
+          note.remove();
+        });
+        // reset the sate of the inpute to their default
+        resetAll();
+        // remove the event listener on the btn
+        clearBtn.removeEventListener("click", removeNotes);
+      });
+    }
+
+    //save to local storage
+    saveNoteDataToLocalStorage(
+      id,
+      noteTitle,
+      noteBody,
+      day,
+      date_,
+      hrs,
+      mins,
+      pm_am,
+      CoverImgFlag,
+      coverImgObj,
+      month
+    );
+    // resets the program
+    resetAll();
+
+  } else if (noteTitle && noteBody && editFlag) {
+
+    const editedCardElement = document.querySelector(".editable-card");
+    const updateNoteBtn = document.querySelector(".create-note-btn");
+    let cardId = editedCardElement.dataset.noteId;
+    console.log(cardId)
+    // trim note body text for the card UI
+    cardText = trimUiCardText(noteBody)
+
+    // update the card element on the UI with the new data enterd by the user
+    if(CoverImgFlag){
+      // Since file reading is a blocking operation, we need to ensure that the noteImg
+      // variable has the correct value before updating the cardElement's innerHTML.
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        // noteImg is updated with the result of the file reading
             noteImg = event.target.result;
 
             //the card inner HTML structure is updated with pre-styled & pre-structured HTML
             // values for note-title, note-body(trimed text string), date and note-img are passed in
-            cardElement.innerHTML = buildNoteCardsUI(noteTitle,day,date_,month,hrs,
-                  mins,pm_am,cardText,noteImg);
-          }
-          reader.readAsDataURL(coverImgObj);
-        }
+            editedCardElement.innerHTML = buildNoteCardsUI("Edited",noteTitle,day,date_,month,hrs,mins,
+              pm_am,cardText,noteImg);
 
-        // append note card to UI
-        notesContainer.append(cardElement);
+            // edit in local storage
+              editInLocalStorage(cardId,noteTitle,noteBody,day,date_,hrs,mins,
+            pm_am,CoverImgFlag,noteImg,month);
+        };
+        reader.readAsDataURL(coverImgObj);
 
-        // console.log(noteCards)
+    }else{
+      // buid
+      editedCardElement.innerHTML = buildNoteCardsUI("Edited",noteTitle,day,date_,month,hrs,mins,
+        pm_am,cardText,noteImg);
 
-        // select note card elements
-        let noteCards = document.querySelectorAll(".notes-card");
-        
-        // ADDS EVENT LISTENER TO each card that triggers the modal that displays the clicked note in full
-        noteCards.forEach(note=>{
-            note.addEventListener("click",(event)=>{
-                viewNoteDetails(note.dataset.noteId,event);
-                console.log(note)
-                console.log(note.dataset.noteId)
+      // edit in local Note data storage
+      console.log(CoverImgFlag);
+      editInLocalStorage(cardId,noteTitle,noteBody,day,date_,hrs,mins,
+        pm_am,CoverImgFlag,noteImg,month);
+    }
+    // change the text of the button
+    updateNoteBtn.textContent = "Create note"
+    // reset the app back to default state
+    resetAll()
 
-            })
-        })
-
-        // alert that note has been created
-        let alertMessage =
-          '<p>Note created  <span><i class="fa-solid fa-circle-check"></i></span></p>';
-        displayAlert(
-          mainAlerts,
-          "green",
-          "white",
-          alertMessage,
-          "show-main-alert",
-          3000
-        );
-
-        // display clear Notes Button
-        if (notesContainer.childElementCount > 0) {
-
-                clearBtn.classList.add("show-clear-btn");
-                // ADDS EVENT LISTENER to the button where if it is clicked,
-                // hides the button,DELETES ALL NOTES FROM local storage,
-                // removes cards form note UI
-                clearBtn.addEventListener("click",function removeNotes() {
-                    // delete all note entries from local storage 
-                    localStorage.removeItem("noteEntries");
-                    // remove the btn from the display
-                    clearBtn.classList.remove("show-clear-btn");
-                    // display an alert
-                    alertMessage ='<p>Note list cleared <span><i class="fa-solid fa-circle-xmark"></i></span></p>';
-                    displayAlert(mainAlerts,"red","white",alertMessage,"show-main-alert",4000);
-                    //iterate and delete each card
-                    noteCards.forEach(note => {
-                        note.remove();
-                });
-                // remove the event listener on the btn
-                clearBtn.removeEventListener("click",removeNotes);
-              });
-        }
-
-        //save to locale storage  
-        saveNoteDataToLocalStorage( id,noteTitle,noteBody,day,date_,
-          hrs,mins,pm_am,CoverImgFlag,coverImgObj,month);
-
-        // resets the program
-        resetAll();
-  } else if (noteTitle && noteBody && !editFlag) {
   } else {
-        // display error alert
-        let alertMessage = `<p>Error! you can not create a blank note.<span> <i class="fa-solid fa-circle-exclamation"></i></span></p>`;
-        displayAlert( mainAlerts,"yellow","black",alertMessage,"show-main-alert",4000);
-        // reset program
-        resetAll();
-      }
+    // display error alert
+    let alertMessage = `<p>Error! you can not create a blank note.<span> <i class="fa-solid fa-circle-exclamation"></i></span></p>`;
+    displayAlert(
+      mainAlerts,
+      "yellow",
+      "black",
+      alertMessage,
+      "show-main-alert",
+      4000
+    );
+    // reset program
+    resetAll();
+  }
 }
 
 
@@ -332,7 +413,7 @@ placeholder, resets the file input element value, and then hides the modal.*/
 function cancelCoverImgEntry() {
   const coverImageModal = document.querySelector(".modal-bg");
   // resets all  input element on this modal element
-  restModalValues();
+  resetModalValues();
   // the modal is then hidden
   hideModals(coverImageModal);
 }
@@ -371,7 +452,7 @@ function manageNoteDisplayModal(event,modalElement){
     // remove the noteID attribute from the modal.
     hideModals(modalElement);
     setTimeout(()=>{
-      restNoteDisplayModal();
+      resetNoteDisplayModal();
     },1000)
     delete modalElement.dataset.noteId;
   }else if(event.target.closest(".edit-btn")){
@@ -389,7 +470,7 @@ function manageNoteDisplayModal(event,modalElement){
  * element with the provided dynamic content such as title, day, date, month, time, card body, and
  * image.
  */
-function buildNoteCardsUI(title,day,date,mnth,hours,
+function buildNoteCardsUI(introText,title,day,date,mnth,hours,
   mins,timeSuffix,cardBody,imge){
     if (imge) {
         return `<!-- note card element with picture start-->
@@ -411,7 +492,7 @@ function buildNoteCardsUI(title,day,date,mnth,hours,
                       </div>
                       <!-- card subtitle -->
                       <h6 class="card-subtitle mb-3 mt-1 text-body-secondary light-txt">
-                          Created on <span class="note-day">${day}</span>
+                          <span>${introText}</span> on <span class="note-day">${day}</span>
                         <span class="note-date">${date}</span>  
                         <span class="note-month">${mnth}</span> 
                         <span class="note-time">${hours}:${mins}</span> 
@@ -439,7 +520,7 @@ function buildNoteCardsUI(title,day,date,mnth,hours,
                     </div>
                     <!-- card subtitle -->
                     <h6 class="card-subtitle mb-3 mt-1 text-body-secondary light-txt">
-                        Created on <span class="note-day">${day}</span>
+                        <span>${introText}</span> on <span class="note-day">${day}</span>
                         <span class="note-date">${date}</span>  
                         <span class="note-month">${mnth}</span> 
                         <span class="note-time">${hours}:${mins}</span> 
@@ -478,7 +559,7 @@ function viewNoteDetails(id,event){
   let noteElement = retriveFromLocalStorage();
   // filter out the note object whose id is a match to the id of the clicked card
   noteElement = noteElement.filter( note => {
-      if(note.id == id){
+      if(note.id === id){
           return note;
       }
   })
@@ -552,18 +633,29 @@ function displayAlert(element, bgColor, color, text, d_class, duration) {
 /**The function `resetAll` clears the values of input fields and resets a flag variable.
  essentially reseting the app to its default state */
 function resetAll() {
+  const notesContainer = document.querySelector(".notes-container");
+  const noteCards = document.querySelectorAll(".notes-card");
+
   form.elements.note_title.value = "";
   form.elements.note.value = "";
   form.elements.cover_photo_input.value = "";
   CoverImgFlag = false;
+  editFlag = false;
+  //reset elements after editing
+  noteCards.forEach(card =>{
+      card.classList.remove("editable-card");
+      notesContainer.classList.remove("disabled-cards");
+      card.removeAttribute("inert","");
+  }) 
   // resets the file input modal to its default state
-  restModalValues();
+  resetModalValues();
+
 }
 
 // RESET COVER IMG MODAL FUNC
-/*The function `restModalValues` resets the image preview, cover image object, image
+/*The function `resetModalValues` resets the image preview, cover image object, image
  preview subtitle, file input, and selected image to their default values.*/
-function restModalValues() {
+function resetModalValues() {
   const previewImgTitle = document.querySelector(".img-preview-caption");
   const ImagePreviewContainer = document.querySelector(".cover-img-wrapper");
   /*the default svg file is saved in a variable*/
@@ -588,11 +680,11 @@ function restModalValues() {
   ImagePreviewContainer.innerHTML = previewImg;
 }
 
-  // RESET MODAL FUNCTION
+  // RESET NOTE DISPLAY MODAL FUNC
  /**
-  * The function `restNoteDisplayModal` clears the content of various elements within a note display modal.
+  * The function `resetNoteDisplayModal` clears the content of various elements within a note display modal.
   */
-  function restNoteDisplayModal(){
+  function resetNoteDisplayModal(){
     const noteImgSection = document.querySelector(".note-dp-img-container");
     const noteBody = document.querySelector(".note-dp-txt");
     const noteDay = document.querySelector(".note-dp-day");
@@ -630,6 +722,25 @@ function trimFileName(textElement, image) {
   }
 }
 
+// TRIM UI CARD BODY TEXT FUNC
+/**
+ * The function `trimUiCardText` takes a string as input and returns a trimmed version of the string if
+ * its length exceeds 145 characters, adding ellipsis at the end.
+ * @param b_text - The `trimUiCardText` function takes a parameter `b_text`, which represents the text
+ * content of a UI card. If the length of `b_text` is greater than 145 characters, the function will
+ * trim it down to 139 characters and add " . . ." at the end to
+ * @returns The `trimUiCardText` function returns the input `b_text` trimmed to a maximum length of 142
+ * characters followed by an ellipsis if the length of `b_text` is greater than 145 characters.
+ */
+function trimUiCardText(b_text){
+  if(b_text.length > 145){
+    return `${b_text.slice(0, 139)}. . .`;
+  }else{
+    return b_text;
+  }
+
+}
+
 // DELETE NOTE FUNC
 /**
  * The `deleteNote` function deletes a note card from the UI, hides the note modal, and removes the
@@ -665,45 +776,64 @@ function deleteNote(){
   // deletes note from local storage
   deleteNoteFromLocalStorage(id)
 
+  resetAll();
+
 }
 
-
 // EDIT NOTE FUNC
+/**
+ * The `editNote` function retrieves a note OBJECT from local storage, updates the UI to allow
+ * editing of the note, and populates form inputs with the note's data for editing.
+ */
 function editNote(){
-  console.log("editing note");
   const noteDisplayModal = document.querySelector(".display-note-modal");
   const noteCards = document.querySelectorAll(".notes-card");
-  // const notesContainer = document.querySelector(".notes-container");
-  // const clearBtn = document.querySelector(".clear-btn");
-  // const mainAlerts = document.querySelector(".main-alerts-display");
-  // const noteImgSection = document.querySelector(".note-dp-img-container");
+  const notesContainer = document.querySelector(".notes-container");
+  const updateNoteBtn = document.querySelector(".create-note-btn");
+ 
+  // get the current note id from the note modal dispaly
+  // set the edit flage to true
   let id = noteDisplayModal.dataset.noteId;
   editFlag = true;
-  let notesArry = retriveFromLocalStorage();
 
+  // get note data from local storage(an array of note objects)
+  let notesElement = retriveFromLocalStorage();
+
+  // close the the note display modal
   hideModals(noteDisplayModal);
-  console.log(noteCards)
- 
-  // let cardId = noteCards.filter(card =>{
-  //   if(card.dataset.noteId === id){
-  //    return card
-  //   }
-  //   })
 
-    // console.log(cardId)
+  // update the crate note btn text
+  updateNoteBtn.textContent = "Update note";
+
+// using the card id to implement a test, use forEach to iterate through all the cards on the UI
+// apply styles to give visual cue to the user based on these test
+// showing which card is being edited and disabling the rest of the cards
+ noteCards.forEach(card =>{
+    if(card.dataset.noteId === id){ 
+      card.classList.add("editable-card");
+    }
+
+    if(card.dataset.noteId !== id){
+      notesContainer.classList.add("disabled-cards")
+      card.setAttribute("inert","");
+    }
+    })
+
+    // search for a match with the card id from the array of object gotten from the local storage
+    notesElement = notesElement.filter( note =>{
+        if(note.id === id){
+          return note;
+        }
+    })
+
+    // create a copy of the returned note object
+    notesElement = notesElement.pop();
 
 
-
-
-
-
-//     edited = notesArry.pop();
-//     console.log(edited);
-
-
-// cards.querySelector(".notes-card").classList.add("edit-color")
-
-
+    // update the values of the form inputs with values from edit object
+    // this change is captured on the UI
+    form.elements.note_title.value = notesElement.title;
+    form.elements.note.value = notesElement.body;
 
 }
 
@@ -785,12 +915,12 @@ function saveNoteDataToLocalStorage(noteId,nTitle,nBody,nDay,nDate,nHrs,nMins,
 
 }
 
-// RETRIVE NOTE FORM LOCAL STORAGE FUNC
+// RETRIVE NOTE DATA FORM LOCAL STORAGE FUNC
 function retriveFromLocalStorage() {
   return JSON.parse(localStorage.getItem("noteEntries")) || [];
 }
 
-// DELETE NOTE FROM LOCAL STORAGE FUNC
+// DELETE NOTE DATA FROM LOCAL STORAGE FUNC
 /**
  * The function `deleteNoteFromLocalStorage` removes a specific note entry from local storage based on its ID.
  * @param _id - The `_id` parameter in the `deleteNoteFromLocalStorage` function is the unique
@@ -808,6 +938,39 @@ function deleteNoteFromLocalStorage(_id){
   localStorage.setItem("noteEntries", JSON.stringify(notesArray));
 
 }
+
+// EDIT NOTE DATA IN LOCAL STORAGE FUNC
+function editInLocalStorage(_id,nTitle,nBody,nDay,nDate,nHrs,nMins,
+  tSuffix,noteFlag,img_,nMonth){
+
+  let notesArray = retriveFromLocalStorage();
+  console.log(CoverImgFlag);;
+  console.log(CoverImgFlag);;
+
+   notesArray = notesArray.map(note=>{
+    if(_id === note.id)
+      return {
+        ...note,
+        title:nTitle,
+        body:nBody,
+        day:nDay,
+        date:nDate,
+        month:nMonth,
+        hrs:nHrs,
+        mins:nMins,
+        am_pm:tSuffix,
+        image:img_,
+        flag:noteFlag
+    }
+    console.log(note)
+    return note;
+  });
+
+  console.log(notesArray)
+
+  localStorage.setItem("noteEntries", JSON.stringify(notesArray));
+}
+
 
 
 /***** FUNCTIONS ******/
