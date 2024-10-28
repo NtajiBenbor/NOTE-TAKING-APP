@@ -95,8 +95,6 @@ function createNewNote(event) {
   ];
   let noteTitle = form.elements.note_title.value.trim();
   let noteBody = form.elements.note.value.trim();
-  let cardText;
-  let noteImg;
   let date = new Date();
   const id = Math.random().toString(16).slice(2).toString();
 
@@ -117,6 +115,7 @@ function createNewNote(event) {
   mins < 10 ? mins = `0${mins}`: mins;
 
   if (noteTitle && noteBody && !editFlag) {
+    
     // initializing a card container element and giving it a unique id
     const cardElement = document.createElement("article");
     cardElement.dataset.noteId = id;
@@ -125,51 +124,17 @@ function createNewNote(event) {
     // reducing the length of the text for the note card elements
     cardText = trimUiCardText(noteBody);
 
-    // decide what kind of note card to create for UI based on the coverImage Flag.
-    // if flag is set to false then create a card with only text.
-    // if flag is true then create a card with both text and a cover image.
-    if (!CoverImgFlag) {
-      cardElement.innerHTML = buildNoteCardsUI(
-        "Created",
-        noteTitle,
-        day,
-        date_,
-        month,
-        hrs,
-        mins,
-        pm_am,
-        cardText
-      );
-    } else {
-      // Since file reading is a blocking operation, we need to ensure that the noteImg
-      // variable has the correct value before updating the cardElement's innerHTML.
-      const reader = new FileReader();
-      reader.onload = (event) => {
-        // noteImg is updated with the result of the file reading
-        noteImg = event.target.result;
 
-        //the card inner HTML structure is updated with pre-styled & pre-structured HTML
-        // values for note-title, note-body(trimed text string), date and note-img are passed in
-        cardElement.innerHTML = buildNoteCardsUI(
-          "Created",
-          noteTitle,
-          day,
-          date_,
-          month,
-          hrs,
-          mins,
-          pm_am,
-          cardText,
-          noteImg
-        );
-      };
-      reader.readAsDataURL(coverImgObj);
-    }
+    buildNoteCardsUI(
+      cardElement,cardText,
+      noteTitle,day,date_,
+      month,hrs,mins,pm_am,
+      noteBody,noteImg)
+
+    
 
     // append note card to UI
     notesContainer.append(cardElement);
-
-    // console.log(noteCards)
 
     // select note card elements
     let noteCards = document.querySelectorAll(".notes-card");
@@ -242,7 +207,6 @@ function createNewNote(event) {
     );
     // resets the program
     resetAll();
-
   } else if (noteTitle && noteBody && editFlag) {
 
     const editedCardElement = document.querySelector(".editable-card");
@@ -252,8 +216,6 @@ function createNewNote(event) {
     // trim note body text for the card UI
     cardText = trimUiCardText(noteBody)
 
-    // update the card element on the UI with the new data enterd by the user
-    if(CoverImgFlag){
       // Since file reading is a blocking operation, we need to ensure that the noteImg
       // variable has the correct value before updating the cardElement's innerHTML.
       const reader = new FileReader();
@@ -263,29 +225,26 @@ function createNewNote(event) {
 
             //the card inner HTML structure is updated with pre-styled & pre-structured HTML
             // values for note-title, note-body(trimed text string), date and note-img are passed in
-            editedCardElement.innerHTML = buildNoteCardsUI("Edited",noteTitle,day,date_,month,hrs,mins,
+            editedCardElement.innerHTML = generateCardHTMLTemplates("Edited",noteTitle,day,date_,month,hrs,mins,
               pm_am,cardText,noteImg);
 
             // edit in local storage
               editInLocalStorage(cardId,noteTitle,noteBody,day,date_,hrs,mins,
             pm_am,CoverImgFlag,noteImg,month);
+
+            updateNoteBtn.textContent = "Create note"
+            // reset the app back to default state
+            resetAll()
         };
         reader.readAsDataURL(coverImgObj);
-
-    }else{
-      // buid
-      editedCardElement.innerHTML = buildNoteCardsUI("Edited",noteTitle,day,date_,month,hrs,mins,
-        pm_am,cardText,noteImg);
-
+      
       // edit in local Note data storage
-      console.log(CoverImgFlag);
-      editInLocalStorage(cardId,noteTitle,noteBody,day,date_,hrs,mins,
-        pm_am,CoverImgFlag,noteImg,month);
-    }
+      // console.log(CoverImgFlag);
+      // editInLocalStorage(cardId,noteTitle,noteBody,day,date_,hrs,mins,
+      //   pm_am,CoverImgFlag,noteImg,month);
+  
     // change the text of the button
-    updateNoteBtn.textContent = "Create note"
-    // reset the app back to default state
-    resetAll()
+
 
   } else {
     // display error alert
@@ -303,7 +262,49 @@ function createNewNote(event) {
   }
 }
 
+// BUILD NOTE CARD UI FUNC
+function buildNoteCardsUI(cardElement,cardText,
+  noteTitle,day,date_,
+  month,hrs,mins,pm_am,
+  cardId,CoverImgFlag,
+  noteBody,noteImg,
+  editLocalStrgFunc,
+  resetAllFunc
+){
+  let cardText = trimUiCardText(noteBody);
+  let noteImg;
+if(coverImgObj){
+// Since file reading is a blocking operation, we need to ensure that the noteImg
+// variable has the correct value before updating the cardElement's innerHTML.
+const reader = new FileReader();
+reader.onload = (event) => {
+// noteImg is updated with the result of the file reading
+noteImg = event.target.result;
 
+//the card inner HTML structure is updated with pre-styled & pre-structured HTML
+// values for note-title, note-body(trimed text string), date and note-img are passed in
+cardElement.innerHTML = generateCardHTMLTemplates("Created",noteTitle,day,
+        date_,month,hrs,mins,pm_am,cardText,noteImg);
+};
+reader.readAsDataURL(coverImgObj);
+
+if(editFlag){
+   // edit in local storage
+ editLocalStrgFunc(cardId,noteTitle,noteBody,day,date_,hrs,mins,
+  pm_am,CoverImgFlag,noteImg,month);
+
+  updateNoteBtn.textContent = "Create note"
+  // reset the app back to default state
+  resetAllFunc()
+}
+
+}else{
+
+cardElement.innerHTML = generateCardHTMLTemplates("Created",noteTitle,day,
+      date_,month,hrs,mins,pm_am,cardText);
+
+}
+}
 
 // TOGGLE INPUT CONTAINER FUNC
 /**
@@ -462,15 +463,15 @@ function manageNoteDisplayModal(event,modalElement){
   }
 }
 
-// BUILD NOTE CARDS UI FUNC
+// GENERATE CARD HTML TEMPLATE FUNC
 /**
- * The function `buildNoteCardsUI` generates HTML code for a note card with specified content and
+ * The function `generateCardHTMLTemplates` generates HTML code for a note card with specified content and
  * styling.
- * @returns The function `buildNoteCardsUI` returns an HTML string that represents a note card UI
+ * @returns The function `generateCardHTMLTemplates` returns an HTML string that represents a note card UI
  * element with the provided dynamic content such as title, day, date, month, time, card body, and
  * image.
  */
-function buildNoteCardsUI(introText,title,day,date,mnth,hours,
+function generateCardHTMLTemplates(introText,title,day,date,mnth,hours,
   mins,timeSuffix,cardBody,imge){
     if (imge) {
         return `<!-- note card element with picture start-->
