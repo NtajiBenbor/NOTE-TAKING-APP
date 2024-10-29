@@ -6,13 +6,12 @@ let coverImgObj;
 let editedObj;
 
 /***** EVENT LISTENERS ******/
-// This event listener waits for the document's readyState to become "complete",
-// which indicates that the entire page (including resources like images and scripts)
-// has finished loading. Once the state is "complete", it calls the initApp() function
-// to initialize the application.
+// Waits for the document to fully load, 
+// then initializes the application by calling initApp().
 document.addEventListener("readystatechange", (event) => {
   if (event.target.readyState === "complete") {
     initApp();
+    loadDataFromStorage();
   }
   // show loader
 });
@@ -20,10 +19,8 @@ document.addEventListener("readystatechange", (event) => {
 /***** FUNCTIONS ******/
 
 // INITIALIZE APP FUNC
-/**
- * The `initApp` function sets up event listeners for showing note inputs, creating a new note, adding
- * a cover image, and managing file input modal in a web application.
- */
+// Initializes the application by setting up event listeners for displaying note inputs,
+// creating new notes, adding cover images, and managing the file input modal.
 function initApp() {
   const showInputsBtn = document.querySelector(".show-inputs-btn");
   const fileUploadModal = document.querySelector(".cover-img-modal");
@@ -39,22 +36,21 @@ function initApp() {
   // Creates a note when the user submits the form.
   form.addEventListener("submit", createNewNote);
 
-  //Pulls up the modal that allows the user add a cover image to their note
+  // Opens the cover image modal when the "add-cover-img-btn" is clicked,
+  //  allowing the user to add a cover image to their note.
   form.addEventListener("click",(event)=>{
     showModals(event,coverImageModal,"add-cover-img-btn");
   });
   
-  //change event fires the addCoverImage func(it displays a preview of the selected img)
+  // Triggers addCoverImage function on change event to display a preview of the selected image.
   form.elements.cover_photo_input.addEventListener("change", addCoverImage);
 
-  //Pulls up a modal that allows the user to upload and preview an optional cover image for their notes
-  // user action on this modal also controls closing the modal,
-  // if the "x"(close) button is click, the upload operation is cancelled.
+  // Opens a modal for uploading and previewing an optional cover image; 
+  // handles closing the modal and canceling the upload if the close button is clicked.
   fileUploadModal.addEventListener("click", manageFileInputModal);
  
-  // This handles user interaction on the modal that displays the notes such as; 
-  //  closing the modal when the use clicks the back button.
-  //  deleting or editing the note that is displayed when either button is clicked.
+  // Manages user interactions on the note display modal, handling close, 
+  // delete, and edit actions based on button clicks.
   noteDisplayModal.addEventListener("click", (event) => {
     manageNoteDisplayModal(event, noteDisplayModal);
   });
@@ -64,11 +60,10 @@ function initApp() {
 
 
 // ADD NEW NOTE FUNC
-/**
- * This function creates a new note card with title, body, date, and time
- * information, and optionally an image, and appends it to the UI while handling 
- * alerts and local storage.
- */
+// Creates a new note card with title, body, date, and optional image, 
+// appending it to the UI,
+// saving data to local storage, 
+// and handling alerts for successful or unsuccessful creation.
 function createNewNote(event) {
   event.preventDefault();
 
@@ -222,6 +217,74 @@ function createNewNote(event) {
     resetAll();
   }
 }
+// WIP
+//LOAD PERSITED NOTE DATA FROM LOCAL STORAGE FUNC
+function loadDataFromStorage(){
+   const notesContainer = document.querySelector(".notes-container");
+   const cardElement = document.createElement("article");
+   const clearBtn = document.querySelector(".clear-btn");
+   let notesArray = retriveFromLocalStorage();
+   cardElement.classList.add("card", "notes-card", "bg-body-tertiary");
+ 
+   if(notesArray){
+      notesArray.forEach(note=>{
+        let noteId = note.id
+          cardElement.dataset.noteId = noteId
+          buildNoteCardsUI(
+            cardElement,
+            note.body,
+            note.title,
+            note.day,
+            note.date,
+            note.month,
+            note.hrs,
+            note.mins,
+            note.am_pm,
+            note.image
+          );
+          // ADDS EVENT LISTENER TO each card that triggers the modal that
+          // displays full details of the clicked note card
+          let noteCards = document.querySelectorAll(".notes-card");
+
+          noteCards.forEach((noteCard) => {
+            noteCard.addEventListener("click", (event) => {
+              viewNoteDetails(noteId, event);
+            });
+          });
+          // append note card to UI
+          notesContainer.append(cardElement);
+
+    // ADDS EVENT LISTENER to the button where if it is clicked,
+    // hides the button,DELETES ALL NOTES FROM local storage,
+    // removes all the cards form the UI
+    if (notesContainer.childElementCount > 0) {
+      clearBtn.classList.add("show-clear-btn");
+      clearBtn.addEventListener("click", function removeNotes() {
+        localStorage.removeItem("noteEntries");
+        clearBtn.classList.remove("show-clear-btn");
+        alertMessage =
+          '<p>Note list cleared <span><i class="fa-solid fa-circle-xmark"></i></span></p>';
+        displayAlert(
+          mainAlerts,
+          "red",
+          "white",
+          alertMessage,
+          "show-main-alert",
+          4000
+        );
+        //iterate and delete each card
+        noteCards.forEach((note) => {
+          note.remove();
+        });
+        // reset the state of the input to their default
+        resetAll();
+        clearBtn.removeEventListener("click", removeNotes);
+         });
+       }
+    })
+   }
+ }
+// WIP
 
 // TOGGLE INPUT CONTAINER FUNC
 //  The function `toggleInputsContainer` toggles the visibility 
@@ -453,7 +516,6 @@ function buildNoteCardsUI(
 
   // trim note body text for the card UI
   let cardText = trimUiCardText(noteBody);
-
   // Since file reading is a blocking operation, we need to ensure that the noteImg
   // variable has the correct value before updating the cardElement's innerHTML.
   if (coverImgObj) {
@@ -814,6 +876,8 @@ function editNote(){
     form.elements.note_title.value = notesElement.title;
     form.elements.note.value = notesElement.body;
 }
+
+
 
 
 /***** LOCAL STORAGE ******/
