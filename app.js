@@ -11,7 +11,7 @@ let editedObj;
 document.addEventListener("readystatechange", (event) => {
   if (event.target.readyState === "complete") {
     initApp();
-    loadDataFromStorage();
+    loadNoteDataOnPageLoad();
   }
   // show loader
 });
@@ -58,11 +58,10 @@ function initApp() {
 }
 
 
-
 // ADD NEW NOTE FUNC
 // Creates a new note card with title, body, date, and optional image, 
 // appending it to the UI,
-// saving data to local storage, 
+// saving note data to local storage, 
 // and handling alerts for successful or unsuccessful creation.
 function createNewNote(event) {
   event.preventDefault();
@@ -107,7 +106,7 @@ function createNewNote(event) {
   mins < 10 ? mins = `0${mins}`: mins;
 
   if (noteTitle && noteBody && !editFlag) {
-    // updates the card being edited with the change data
+    //create and append note card to UI
    if(coverImgObj && coverImgFlag){
 
 		buildImgNoteCardsUI(
@@ -134,9 +133,11 @@ function createNewNote(event) {
        pm_am
      );
      cardDetails.cardElement.dataset.noteId = id;
-     console.log(cardDetails);
      // append note card to UI
      notesContainer.append(cardDetails.cardElement);
+		 
+		 orderCards();
+
      makeCardsClickable();
      //save to local storage
      saveNoteDataToLocalStorage(
@@ -154,15 +155,14 @@ function createNewNote(event) {
      );
      // resets the program
      resetAll();
+
+
 	 }
     // alert that note has been created
-    let alertMessage =
-      '<p>Note created  <span><i class="fa-solid fa-circle-check"></i></span></p>';
+    let alertMessage ='<p>Note created  <span><i class="fa-solid fa-circle-check"></i></span></p>';
     displayAlert(
-      mainAlerts,
-      "green",
-      "white",
-      alertMessage,
+      mainAlerts,"green",
+      "white",alertMessage,
       "show-main-alert",
       3000
     );
@@ -172,24 +172,15 @@ function createNewNote(event) {
       clearAllNotes();
     }
   }
-	 else if(noteTitle && noteBody && editFlag){
-
+	else if(noteTitle && noteBody && editFlag){
     const editedCardElement = document.querySelector(".editable-card");
     let cardId = editedCardElement.dataset.noteId;
-
-		// updates the card being edited with the changed data 
-    // buildNoteCardsUI(
-    //   editedCardElement,noteBody,
-    //   noteTitle,day,date_,
-    //   month,hrs,mins,pm_am,
-    //   cardId,coverImgFlag
-    // )
+		// update the card that is being edited with the changed data
 		UpdateEditedCards( 
 			editedCardElement,noteBody,
       noteTitle,day,date_,
       month,hrs,mins,pm_am,
-      cardId,coverImgFlag)
- 
+      cardId,coverImgFlag);
   } 
 	else {
     // display error alert
@@ -205,21 +196,20 @@ function createNewNote(event) {
   }
 }
 
-
-
-//LOAD PERSITED NOTE DATA FROM LOCAL STORAGE FUNC
-function loadDataFromStorage(){
+//LOAD NOTE DATA ON PAGE LOAD
+function loadNoteDataOnPageLoad(){
   const notesContainer = document.querySelector(".notes-container");
-  const cardElement = document.createElement("article");
   let notesArray = retriveFromLocalStorage();
-  cardElement.classList.add("card","notes-card","bg-body-tertiary");
-
+  
   if (notesArray.length>0) {
     notesArray.forEach((note) => {
-
-      // cardElement.dataset.noteId = note.id;
-     let cardDetails =buildNoteCardsUI(
-        note.body,
+			// handles cases where the note object retrived from local storage contains a cover image
+     if(note.flag){
+			let element = document.createElement("article");
+			element.classList.add("card","notes-card","bg-body-tertiary");
+			element.dataset.noteId = note.id; 
+			element.innerHTML = buildImgNoteCardsUI(
+				note.body,
         note.title,
         note.day,
         note.date,
@@ -228,29 +218,41 @@ function loadDataFromStorage(){
         note.mins,
         note.am_pm,
         note.image
+			)
+
+			notesContainer.append(element);
+		 }
+		 else{
+			// handles cases where the note object returned do not have cover image
+			let cardDetails = buildNoteCardsUI(
+        note.body,
+        note.title,
+        note.day,
+        note.date,
+        note.month,
+        note.hrs,
+        note.mins,
+        note.am_pm
       );
 			cardDetails.cardElement.dataset.noteId = note.id;
       // append note card to UI
       notesContainer.append(cardDetails.cardElement);
-		
-    });
+			 }
+  	});
 
-		 let noteCards = document.querySelectorAll(".notes-card");
+		let noteCards = document.querySelectorAll(".notes-card");
 		// displays full details of the clicked note card
-		 noteCards.forEach((noteCard) => {
+		noteCards.forEach((noteCard) => {
 			 noteCard.addEventListener("click",(event) => {
-				 viewNoteDetails(noteCard.dataset.noteId, event);
+				viewNoteDetails(noteCard.dataset.noteId, event);
 			 });
 		 });
 
-   
     // sets up the functionality to clear notes
    if(notesContainer.childElementCount > 0){
 				clearAllNotes();
-
 	 }
   }
-
 }
 
 // CLEAR ALL NOTES FUNC
@@ -501,23 +503,24 @@ function buildImgNoteCardsUI(
   hrs,
   mins,
   pm_am,
-  cardId,
+	img,
+  cardId ="undefine"
 ) {
-	const notesContainer = document.querySelector(".notes-container");
-	const cardElement = document.createElement("article");
-  cardElement.classList.add("card", "notes-card", "bg-body-tertiary");
-	cardElement.dataset.noteId = cardId;
   let noteImg;
 
   // trim note body text for the card UI
   let cardText = trimUiCardText(noteBody);
   // Since file reading is a blocking operation, we need to ensure that the noteImg
   // variable has the correct value before updating the cardElement's innerHTML.
-    const reader = new FileReader();
+	if(coverImgObj){
+		const notesContainer = document.querySelector(".notes-container");
+		const cardElement = document.createElement("article");
+  	cardElement.classList.add("card", "notes-card", "bg-body-tertiary");
+		cardElement.dataset.noteId = cardId;
+		const reader = new FileReader();
     reader.onload = (event) => {
       // noteImg is updated with the result of the file reading
       noteImg = event.target.result;
-
       cardElement.innerHTML = generateCardHTMLTemplates(
         "Created",
         noteTitle,
@@ -545,11 +548,26 @@ function buildImgNoteCardsUI(
         coverImgObj,
         month
       );
-
       makeCardsClickable();
       resetAll();
     };
     reader.readAsDataURL(coverImgObj);
+	}else{
+    // noteImg is updated with the image data from a note object
+    noteImg = img;
+    return generateCardHTMLTemplates(
+      "Created",
+      noteTitle,
+      day,
+      date_,
+      month,
+      hrs,
+      mins,
+      pm_am,
+      cardText,
+      noteImg
+    );
+  }
 }
 
 // BUILD NOTE CARD UI FUNC
@@ -910,9 +928,14 @@ function editNote(){
     form.elements.note.value = notesElement.body;
 }
 
-
-
-
+// ORDER CARD FUNC
+// This function reverses the order of the note cards on the page 
+function orderCards(){
+	let noteCards = document.querySelectorAll(".notes-cards");
+	([...noteCards]).reverse().forEach(card=>{
+		notesContainer.appendChild(card)
+	})
+}
 /***** LOCAL STORAGE ******/
 // SAVE NOTES TO LOCAL STORAGE FUNC
 //  This function  saves note data to local storage, including an image if specified,
@@ -1017,6 +1040,3 @@ function deleteNoteFromLocalStorage(_id){
   });
   localStorage.setItem("noteEntries", JSON.stringify(notesArray));
 }
-
-/***** FUNCTIONS ******/
-
