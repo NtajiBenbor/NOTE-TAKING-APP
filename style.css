@@ -8,7 +8,7 @@
 	--border-color:#000000;
 	--light-text:rgb(39, 37, 74);
 	--dark-text:#000000;
-	--notes-container-color:#fefae0; 
+	--notes-container-color:#ffffff; 
 	--btn-hover-border-col:#343a40;
 }
 
@@ -469,6 +469,9 @@ img.cover-img{
 	justify-content: space-between;
 	flex-direction: column;
 	flex-wrap: wrap;
+	background-color: var(--notes-container-color);
+	position: relative;
+	z-index: 20;
 }
 
 /* card element */

@@ -69,7 +69,6 @@ function createNewNote(event) {
 
   const notesContainer = document.querySelector(".notes-container");
   const mainAlerts = document.querySelector(".main-alerts-display");
-  const clearBtn = document.querySelector(".clear-btn");
   const weekDays = ["Sun", "Mon", "Tue", "Wed", "Thur", "Fri", "Sat"];
   const months = [
     "Jan",
@@ -88,7 +87,8 @@ function createNewNote(event) {
   let noteTitle = form.elements.note_title.value.trim();
   let noteBody = form.elements.note.value.trim();
   let date = new Date();
-  const id = Math.random().toString(16).slice(2).toString();
+	const id = Math.random().toString(16).slice(2).toString();
+
 
   // convert time to 12 hrs formart
   function convertTime(dateVar) {
@@ -107,36 +107,54 @@ function createNewNote(event) {
   mins < 10 ? mins = `0${mins}`: mins;
 
   if (noteTitle && noteBody && !editFlag) {
-    // initializing a card container element and giving it a unique id
-    const cardElement = document.createElement("article");
-    cardElement.dataset.noteId = id;
-    cardElement.classList.add("card", "notes-card", "bg-body-tertiary");
-
     // updates the card being edited with the change data
-    buildNoteCardsUI(
-      cardElement,
-      noteBody,
-      noteTitle,
-      day,
-      date_,
-      month,
-      hrs,
-      mins,
-      pm_am
-    );
+   if(coverImgObj && coverImgFlag){
 
-    // append note card to UI
-    notesContainer.append(cardElement);
-
-    // ADDS EVENT LISTENER TO each card that triggers the modal that
-    // displays full details of the clicked note card
-    let noteCards = document.querySelectorAll(".notes-card");
-    noteCards.forEach((note) => {
-      note.addEventListener("click", (event) => {
-        viewNoteDetails(note.dataset.noteId, event);
-      });
-    });
-
+		buildImgNoteCardsUI(
+			noteBody,
+			noteTitle,
+			day,
+			date_,
+			month,
+			hrs,
+			mins,
+			pm_am,
+			id
+		)
+	 }
+	 else{
+     let cardDetails = buildNoteCardsUI(
+       noteBody,
+       noteTitle,
+       day,
+       date_,
+       month,
+       hrs,
+       mins,
+       pm_am
+     );
+     cardDetails.cardElement.dataset.noteId = id;
+     console.log(cardDetails);
+     // append note card to UI
+     notesContainer.append(cardDetails.cardElement);
+     makeCardsClickable();
+     //save to local storage
+     saveNoteDataToLocalStorage(
+       id,
+       noteTitle,
+       noteBody,
+       day,
+       date_,
+       hrs,
+       mins,
+       pm_am,
+       coverImgFlag,
+       coverImgObj,
+       month
+     );
+     // resets the program
+     resetAll();
+	 }
     // alert that note has been created
     let alertMessage =
       '<p>Note created  <span><i class="fa-solid fa-circle-check"></i></span></p>';
@@ -148,63 +166,32 @@ function createNewNote(event) {
       "show-main-alert",
       3000
     );
-    // ADDS EVENT LISTENER to the button where if it is clicked,
-    // hides the button,DELETES ALL NOTES FROM local storage,
-    // removes all the cards form the UI
-    if (notesContainer.childElementCount > 0) {
-      clearBtn.classList.add("show-clear-btn");
-      clearBtn.addEventListener("click", function removeNotes() {
-        localStorage.removeItem("noteEntries");
-        clearBtn.classList.remove("show-clear-btn");
-        alertMessage =
-          '<p>Note list cleared <span><i class="fa-solid fa-circle-xmark"></i></span></p>';
-        displayAlert(
-          mainAlerts,
-          "red",
-          "white",
-          alertMessage,
-          "show-main-alert",
-          4000
-        );
-        //iterate and delete each card
-        noteCards.forEach((note) => {
-          note.remove();
-        });
-        // reset the state of the input to their default
-        resetAll();
-        clearBtn.removeEventListener("click", removeNotes);
-      });
+
+    // sets up funtionality to clear notes
+    if(notesContainer.childElementCount > 0){
+      clearAllNotes();
     }
-    //save to local storage
-    saveNoteDataToLocalStorage(
-      id,
-      noteTitle,
-      noteBody,
-      day,
-      date_,
-      hrs,
-      mins,
-      pm_am,
-      coverImgFlag,
-      coverImgObj,
-      month
-    );
-    // resets the program
-    resetAll();
-  } else if (noteTitle && noteBody && editFlag) {
+  }
+	 else if(noteTitle && noteBody && editFlag){
 
     const editedCardElement = document.querySelector(".editable-card");
     let cardId = editedCardElement.dataset.noteId;
 
-		// updates the card being edited with the change data 
-    buildNoteCardsUI(
-      editedCardElement,noteBody,
+		// updates the card being edited with the changed data 
+    // buildNoteCardsUI(
+    //   editedCardElement,noteBody,
+    //   noteTitle,day,date_,
+    //   month,hrs,mins,pm_am,
+    //   cardId,coverImgFlag
+    // )
+		UpdateEditedCards( 
+			editedCardElement,noteBody,
       noteTitle,day,date_,
       month,hrs,mins,pm_am,
-      cardId,coverImgFlag
-    )
+      cardId,coverImgFlag)
  
-  } else {
+  } 
+	else {
     // display error alert
     let alertMessage = `<p>Error! you can not create a blank note.<span> <i class="fa-solid fa-circle-exclamation"></i></span></p>`;
     
@@ -217,74 +204,80 @@ function createNewNote(event) {
     resetAll();
   }
 }
-// WIP
+
+
+
 //LOAD PERSITED NOTE DATA FROM LOCAL STORAGE FUNC
 function loadDataFromStorage(){
-   const notesContainer = document.querySelector(".notes-container");
-   const cardElement = document.createElement("article");
-   const clearBtn = document.querySelector(".clear-btn");
-   let notesArray = retriveFromLocalStorage();
-   cardElement.classList.add("card", "notes-card", "bg-body-tertiary");
- 
-   if(notesArray){
-      notesArray.forEach(note=>{
-        let noteId = note.id
-          cardElement.dataset.noteId = noteId
-          buildNoteCardsUI(
-            cardElement,
-            note.body,
-            note.title,
-            note.day,
-            note.date,
-            note.month,
-            note.hrs,
-            note.mins,
-            note.am_pm,
-            note.image
-          );
-          // ADDS EVENT LISTENER TO each card that triggers the modal that
-          // displays full details of the clicked note card
-          let noteCards = document.querySelectorAll(".notes-card");
+  const notesContainer = document.querySelector(".notes-container");
+  const cardElement = document.createElement("article");
+  let notesArray = retriveFromLocalStorage();
+  cardElement.classList.add("card","notes-card","bg-body-tertiary");
 
-          noteCards.forEach((noteCard) => {
-            noteCard.addEventListener("click", (event) => {
-              viewNoteDetails(noteId, event);
-            });
-          });
-          // append note card to UI
-          notesContainer.append(cardElement);
+  if (notesArray.length>0) {
+    notesArray.forEach((note) => {
 
-    // ADDS EVENT LISTENER to the button where if it is clicked,
-    // hides the button,DELETES ALL NOTES FROM local storage,
-    // removes all the cards form the UI
-    if (notesContainer.childElementCount > 0) {
-      clearBtn.classList.add("show-clear-btn");
-      clearBtn.addEventListener("click", function removeNotes() {
-        localStorage.removeItem("noteEntries");
-        clearBtn.classList.remove("show-clear-btn");
-        alertMessage =
-          '<p>Note list cleared <span><i class="fa-solid fa-circle-xmark"></i></span></p>';
-        displayAlert(
-          mainAlerts,
-          "red",
-          "white",
-          alertMessage,
-          "show-main-alert",
-          4000
-        );
-        //iterate and delete each card
-        noteCards.forEach((note) => {
-          note.remove();
-        });
-        // reset the state of the input to their default
-        resetAll();
-        clearBtn.removeEventListener("click", removeNotes);
-         });
-       }
-    })
-   }
- }
-// WIP
+      // cardElement.dataset.noteId = note.id;
+     let cardDetails =buildNoteCardsUI(
+        note.body,
+        note.title,
+        note.day,
+        note.date,
+        note.month,
+        note.hrs,
+        note.mins,
+        note.am_pm,
+        note.image
+      );
+			cardDetails.cardElement.dataset.noteId = note.id;
+      // append note card to UI
+      notesContainer.append(cardDetails.cardElement);
+		
+    });
+
+		 let noteCards = document.querySelectorAll(".notes-card");
+		// displays full details of the clicked note card
+		 noteCards.forEach((noteCard) => {
+			 noteCard.addEventListener("click",(event) => {
+				 viewNoteDetails(noteCard.dataset.noteId, event);
+			 });
+		 });
+
+   
+    // sets up the functionality to clear notes
+   if(notesContainer.childElementCount > 0){
+				clearAllNotes();
+
+	 }
+  }
+
+}
+
+// CLEAR ALL NOTES FUNC
+// this function clears all notes from the UI, updates the display,and resets input states.
+function clearAllNotes(){
+	const mainAlerts = document.querySelector(".main-alerts-display");
+	const clearBtn = document.querySelector(".clear-btn");
+	let noteCards = document.querySelectorAll(".notes-card");
+	alertMessage =
+	'<p>Note list cleared <span><i class="fa-solid fa-circle-xmark"></i></span></p>';
+
+	clearBtn.classList.add("show-clear-btn");
+
+	clearBtn.addEventListener("click", function removeNotes(){
+				localStorage.removeItem("noteEntries");
+				clearBtn.classList.remove("show-clear-btn");
+
+				displayAlert(mainAlerts,"red","white",alertMessage,"show-main-alert",4000);
+				//iterate and delete each card
+				noteCards.forEach((note) => {
+					note.remove();
+				});
+				// reset the state of the input to their default
+				resetAll();
+				clearBtn.removeEventListener("click", removeNotes);
+		});
+}
 
 // TOGGLE INPUT CONTAINER FUNC
 //  The function `toggleInputsContainer` toggles the visibility 
@@ -496,10 +489,10 @@ function generateCardHTMLTemplates(
     }
 }
 
-// BUILD NOTE CARD UI FUNC
-// this function builds or update a card on the UI based on the user actions.
-function buildNoteCardsUI(
-  element,
+// BUILD IMAGE NOTE CARD UI FUNC
+// this function builds a card on the UI based on data the user entered.
+// This handles cases where the user creates a note with a cover image.
+function buildImgNoteCardsUI(
   noteBody,
   noteTitle,
   day,
@@ -509,22 +502,23 @@ function buildNoteCardsUI(
   mins,
   pm_am,
   cardId,
-  coverImgFlag
 ) {
-  const updateNoteBtn = document.querySelector(".create-note-btn");
+	const notesContainer = document.querySelector(".notes-container");
+	const cardElement = document.createElement("article");
+  cardElement.classList.add("card", "notes-card", "bg-body-tertiary");
+	cardElement.dataset.noteId = cardId;
   let noteImg;
 
   // trim note body text for the card UI
   let cardText = trimUiCardText(noteBody);
   // Since file reading is a blocking operation, we need to ensure that the noteImg
   // variable has the correct value before updating the cardElement's innerHTML.
-  if (coverImgObj) {
-		// handles cases where the user is creating a note with a cover image 
     const reader = new FileReader();
     reader.onload = (event) => {
       // noteImg is updated with the result of the file reading
       noteImg = event.target.result;
-      element.innerHTML = generateCardHTMLTemplates(
+
+      cardElement.innerHTML = generateCardHTMLTemplates(
         "Created",
         noteTitle,
         day,
@@ -536,29 +530,9 @@ function buildNoteCardsUI(
         cardText,
         noteImg
       );
-    };
-    reader.readAsDataURL(coverImgObj);
-  }
-  if (editFlag && coverImgObj) {
-		// handles cases where the user edits the note and includes a cover image
-    const reader = new FileReader();
-    reader.onload = (event) => {
-      // noteImg is updated with the result of the file reading
-      noteImg = event.target.result;
-      element.innerHTML = generateCardHTMLTemplates(
-        "Edited",
-        noteTitle,
-        day,
-        date_,
-        month,
-        hrs,
-        mins,
-        pm_am,
-        cardText,
-        noteImg
-      );
-      // edit in local storage
-      editInLocalStorage(
+      notesContainer.append(cardElement);
+      //save to local storage
+      saveNoteDataToLocalStorage(
         cardId,
         noteTitle,
         noteBody,
@@ -568,45 +542,34 @@ function buildNoteCardsUI(
         mins,
         pm_am,
         coverImgFlag,
-        noteImg,
+        coverImgObj,
         month
       );
-      updateNoteBtn.textContent = "Create note";
+
+      makeCardsClickable();
       resetAll();
     };
     reader.readAsDataURL(coverImgObj);
-  } else if (editFlag && !coverImgObj) {
-		// handles cases where the user edits the note and does not includes a cover image
-    element.innerHTML = generateCardHTMLTemplates(
-      "Edited",
-      noteTitle,
-      day,
-      date_,
-      month,
-      hrs,
-      mins,
-      pm_am,
-      cardText
-    );
-    // edit in local storage
-    editInLocalStorage(
-      cardId,
-      noteTitle,
-      noteBody,
-      day,
-      date_,
-      hrs,
-      mins,
-      pm_am,
-      coverImgFlag,
-      noteImg,
-      month
-    );
-    updateNoteBtn.textContent = "Create note";
-    resetAll();
-  } else if (!coverImgObj && !editFlag) {
+}
+
+// BUILD NOTE CARD UI FUNC
+// this function builds a card on the UI based on data the user entered.
+// This handles cases where the user creates a note without an image.
+function buildNoteCardsUI(
+	noteBody,
+  noteTitle,
+  day,
+  date_,
+  month,
+  hrs,
+  mins,
+  pm_am){
+		const cardElement = document.createElement("article");
+    cardElement.classList.add("card", "notes-card", "bg-body-tertiary");
+		  // trim note body text for the card UI
+			let cardText = trimUiCardText(noteBody);
     // handles cases where the user creates a note without a cover image
-    element.innerHTML = generateCardHTMLTemplates(
+   cardElement.innerHTML = generateCardHTMLTemplates(
       "Created",
       noteTitle,
       day,
@@ -617,8 +580,78 @@ function buildNoteCardsUI(
       pm_am,
       cardText
     );
+
+		return {cardElement};
   }
+
+// MAKE CARDCLIKABLE FUNC
+// This function adds click event listeners to all note card elements on the UI.
+// it enables users to view note details based on the card being clicked.
+function makeCardsClickable() {
+    let noteCards = document.querySelectorAll(".notes-card");
+		noteCards.forEach(noteCard =>{
+			let id = noteCard.dataset.noteId
+    noteCard.addEventListener("click", (event) => {
+      viewNoteDetails(id, event);
+    });
+	})
 }
+
+// UPDATE EDITED CARDS FUNC
+// this function updates the card data on the UI based on data the user entered.
+function UpdateEditedCards(
+	element,noteBody,
+	noteTitle,day,date_,
+	month,hrs,mins,pm_am,
+	cardId,coverImgFlag
+){
+	const updateNoteBtn = document.querySelector(".create-note-btn");
+	// trim note body text for the card UI
+	let cardText = trimUiCardText(noteBody);
+		if (editFlag && (coverImgObj || coverImgFlag)) {
+	 
+		// handles cases where the user edits the note and includes a cover image
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      // noteImg is updated with the result of the file reading
+      noteImg = event.target.result;
+      element.innerHTML = generateCardHTMLTemplates(
+				"Edited",noteTitle,day,
+				date_,month,hrs,mins,
+				pm_am,cardText,noteImg
+			);
+      // edit in local storage
+      editInLocalStorage(
+        cardId,noteTitle,
+        noteBody,day,date_,
+        hrs,mins,pm_am,
+        coverImgFlag,
+        noteImg,month
+			);
+      updateNoteBtn.textContent = "Create note";
+      resetAll();
+    };
+    reader.readAsDataURL(coverImgObj);
+  } 
+	else if (editFlag && (!coverImgObj || !coverImgFlag)) {
+		// handles cases where the user edits the note and does not includes a cover image
+    element.innerHTML = generateCardHTMLTemplates(
+      "Edited",noteTitle,day,
+      date_,month,hrs,
+      mins,pm_am,cardText
+    );
+    // edit in local storage
+    editInLocalStorage(
+      cardId,noteTitle,noteBody,
+      day,date_,hrs,mins,pm_am,
+      coverImgFlag,month
+    );
+    updateNoteBtn.textContent = "Create note";
+    resetAll();
+  } 
+}
+
+
 
 // VIEW NOTES DETAILS FUNC
 // This function retrieves a specific note object from local storage based on its ID and
