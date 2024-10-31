@@ -931,7 +931,6 @@ function editNote(){
     // update the values of the form inputs with values from note object.
     form.elements.note_title.value = notesElement.title;
     form.elements.note.value = notesElement.body;
-    toggleInputsContainer()
 }
 
 // ORDER CARDS FUNC
