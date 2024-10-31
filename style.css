@@ -1,4 +1,3 @@
-
 /**** CSS variables ****/
 :root{
 	/* interpolate-size: allow-keywords; */
@@ -11,8 +10,6 @@
 	--notes-container-color:#ffffff; 
 	--btn-hover-border-col:#343a40;
 }
-
-
 
 /* ======= CSS RESET ======== */
 /*
@@ -176,7 +173,7 @@ header{
 
 /*element that displays the alerts on the main page(does not display on the modals)  */
 .main-alerts-display{
-	width: 100%;
+	width: 0;
 	height: 23px;
 	font-family: var(--heading-font);
 	text-align: center;
@@ -188,7 +185,7 @@ header{
 	transform: translateY(5px);
 	z-index: -100;
 	visibility: hidden;
-	transition: visibility 800ms 400ms ease-in, z-index 800ms 400ms ease-in;
+	transition: all 400ms 400ms linear;
   }
 
 .main-alerts-display > p{
@@ -503,6 +500,17 @@ img.cover-img{
 	background-color: var(--body-bg);
 }
 
+.card-img{
+	filter: brightness(85%);
+	border-radius: 0;
+	transition: all 300ms linear;
+}
+
+.notes-card:hover 
+.card-img{
+	filter: brightness(100%);
+}
+
 /** Display Note Modal Styles**/
 /* display note modal bg */
 .display-note-modal{
@@ -630,8 +638,9 @@ the note title and note input itself */
 
 /* display alert on main page */
 .show-main-alert {
-	z-index: 100;
+	z-index: 10;
 	visibility: visible;
+	width: 50%;
   }
 
 /* this class hides the create note btn plus icon */
@@ -662,7 +671,7 @@ the note title and note input itself */
 	z-index: 1000;
 }
 
-/* displays alert */
+/* displays alert on the cover image modal */
 .show-alert{
 	visibility: visible;
 }
@@ -687,13 +696,17 @@ the card being edited */
 
 /* JS animations classes */
 .slide-in-bck-center {
-	-webkit-animation: slide-in-bck-center 0.7s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
-	animation: slide-in-bck-center 0.7s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
+	-webkit-animation: slide-in-bck-center 0.7s 
+	cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
+	animation: slide-in-bck-center 0.7s
+	 cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
 }
 
 .slide-out-bck-center {
-	-webkit-animation: slide-out-bck-center 0.5s cubic-bezier(0.550, 0.085, 0.680, 0.530) both;
-	        animation: slide-out-bck-center 0.5s cubic-bezier(0.550, 0.085, 0.680, 0.530) both;
+	-webkit-animation: slide-out-bck-center 0.5s 
+	cubic-bezier(0.550, 0.085, 0.680, 0.530) both;
+	animation: slide-out-bck-center 0.5s 
+	cubic-bezier(0.550, 0.085, 0.680, 0.530) both;
 }
 
 .shake-bottom {

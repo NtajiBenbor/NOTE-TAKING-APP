@@ -83,6 +83,7 @@ function createNewNote(event) {
     "Nov",
     "Dec",
   ];
+	let alertMessage;
   let noteTitle = form.elements.note_title.value.trim();
   let noteBody = form.elements.note.value.trim();
   let date = new Date();
@@ -107,63 +108,63 @@ function createNewNote(event) {
 
   if (noteTitle && noteBody && !editFlag) {
     //create and append note card to UI
-   if(coverImgObj && coverImgFlag){
+		if(coverImgObj && coverImgFlag){
 
-		buildImgNoteCardsUI(
-			noteBody,
-			noteTitle,
-			day,
-			date_,
-			month,
-			hrs,
-			mins,
-			pm_am,
-      null,
-			id
-		)
-	 }
-	 else{
-     let cardDetails = buildNoteCardsUI(
-       noteBody,
-       noteTitle,
-       day,
-       date_,
-       month,
-       hrs,
-       mins,
-       pm_am
-     );
-     cardDetails.cardElement.dataset.noteId = id;
-     // append note card to UI
-     notesContainer.append(cardDetails.cardElement);
+			buildImgNoteCardsUI(
+				noteBody,
+				noteTitle,
+				day,
+				date_,
+				month,
+				hrs,
+				mins,
+				pm_am,
+				null,
+				id
+			)
+		}
+		else{
+			let cardDetails = buildNoteCardsUI(
+				noteBody,
+				noteTitle,
+				day,
+				date_,
+				month,
+				hrs,
+				mins,
+				pm_am
+			);
+			cardDetails.cardElement.dataset.noteId = id;
+			// append note card to UI
+			notesContainer.append(cardDetails.cardElement);
 
-     makeCardsClickable();
-     //save to local storage
-     saveNoteDataToLocalStorage(
-       id,
-       noteTitle,
-       noteBody,
-       day,
-       date_,
-       hrs,
-       mins,
-       pm_am,
-       coverImgFlag,
-       coverImgObj,
-       month
-     );
-     // resets the program
-     resetAll();
+			makeCardsClickable();
+			//save to local storage
+			saveNoteDataToLocalStorage(
+				id,
+				noteTitle,
+				noteBody,
+				day,
+				date_,
+				hrs,
+				mins,
+				pm_am,
+				coverImgFlag,
+				coverImgObj,
+				month
+			);
+			// resets the program
+			toggleInputsContainer();
 
 
-	 }
+		}
     // alert that note has been created
-    let alertMessage ='<p>Note created  <span><i class="fa-solid fa-circle-check"></i></span></p>';
+    alertMessage ='<p>Note created  <span><i class="fa-solid fa-circle-check"></i></span></p>';
     displayAlert(
-      mainAlerts,"green",
+      mainAlerts,"black",
       "white",alertMessage,
       "show-main-alert",
-      3000
+      4000
     );
 
     // sets up funtionality to clear notes
@@ -182,14 +183,27 @@ function createNewNote(event) {
       noteTitle,day,date_,
       month,hrs,mins,pm_am,
       cardId,coverImgFlag);
+
+			let position = editedCardElement.getBoundingClientRect().top
+			window.scrollTo({
+				top:position,
+				left:0,
+				behavior:"smooth"
+			})
+
+			
+		
+			// display alert
+		alertMessage ='<p>Note Updated  <span class="pl-1"><i class="fa-solid fa-circle-xmark"></i></span></p>';
+		displayAlert(mainAlerts,"black","white",alertMessage,"show-main-alert",4000);
   } 
 	else {
     // display error alert
-    let alertMessage = `<p>Error! you can not create a blank note.<span> <i class="fa-solid fa-circle-exclamation"></i></span></p>`;
+    let alertMessage = `<p>Error! you can not create a blank note. <span class="pl-1"> <i class="fa-solid fa-circle-exclamation"></i></span></p>`;
     
     displayAlert(
-       mainAlerts,"yellow",
-      "black",alertMessage,
+       mainAlerts,"black",
+      "white",alertMessage,
       "show-main-alert",4000);
 
     // reset program
@@ -271,7 +285,7 @@ function clearAllNotes(){
 				localStorage.removeItem("noteEntries");
 				clearBtn.classList.remove("show-clear-btn");
 
-				displayAlert(mainAlerts,"red","white",alertMessage,"show-main-alert",4000);
+				displayAlert(mainAlerts,"black","white",alertMessage,"show-main-alert",4000);
 				//iterate and delete each card
 				noteCards.forEach((note) => {
 					note.remove();
@@ -285,9 +299,9 @@ function clearAllNotes(){
 // TOGGLE INPUT CONTAINER FUNC
 //  The function `toggleInputsContainer` toggles the visibility 
 // of the form and buttons when triggered by a click event.
-function toggleInputsContainer(event) {
+function toggleInputsContainer() {
   const createNoteBtn = document.querySelector(".create-note-btn");
-  const addBtn = event.target;
+	const addBtn = document.querySelector(".show-inputs-btn");
   form.classList.toggle("show");
   addBtn.classList.toggle("show");
 
@@ -435,7 +449,7 @@ function generateCardHTMLTemplates(
           <div class="row g-0 note-card-center">
               <!-- note card image -->
               <div class="card-head-wrapper">
-                  <img src="${imge}" class="img-fluid" alt="note cover img">
+                  <img src="${imge}" class="img-fluid card-img" alt="note cover img">
               </div>
               <!-- card body -->
               <div class="card-body-wrappper">
@@ -550,7 +564,7 @@ function buildImgNoteCardsUI(
         month
       );
       makeCardsClickable();
-      resetAll();
+			toggleInputsContainer();
     };
     reader.readAsDataURL(coverImgObj);
 	}else{
@@ -648,7 +662,8 @@ function UpdateEditedCards(
         noteImg,month
 			);
       updateNoteBtn.textContent = "Create note";
-      resetAll();
+			// hide form inputs and reset the app
+      toggleInputsContainer();
     };
     reader.readAsDataURL(coverImgObj);
   } 
@@ -666,7 +681,8 @@ function UpdateEditedCards(
       coverImgFlag,month
     );
     updateNoteBtn.textContent = "Create note";
-    resetAll();
+
+    toggleInputsContainer();
   } 
 }
 
@@ -749,7 +765,8 @@ function displayAlert(element,bgColor,color,text,d_class,duration){
   element.classList.add(`${d_class}`);
 
   setTimeout(() => {
-    element.classList.remove(`${d_class}`);    
+    element.classList.remove(`${d_class}`);
+		element.innerHTML = "";    
   }, duration);
 }
 
@@ -882,8 +899,8 @@ function deleteNote(){
     clearBtn.classList.remove("show-clear-btn");
   }
   // display alert
-  alertMessage ='<p>Note Deleted <span class="ml-1"><i class="fa-solid fa-circle-xmark"></i></span></p>';
-  displayAlert(mainAlerts,"red","white",alertMessage,"show-main-alert",4000);
+  alertMessage ='<p>Note Deleted  <span class="pl-1"><i class="fa-solid fa-circle-xmark"></i></span></p>';
+  displayAlert(mainAlerts,"black","white",alertMessage,"show-main-alert",4000);
   deleteNoteFromLocalStorage(id)
   resetAll();
 }
@@ -897,6 +914,8 @@ function editNote(){
   const noteCards = document.querySelectorAll(".notes-card");
   const notesContainer = document.querySelector(".notes-container");
   const updateNoteBtn = document.querySelector(".create-note-btn");
+  const form = document.getElementById("form");
+	const addBtn = document.querySelector(".show-inputs-btn");
  
   // get the current note id from the note modal dispaly
   let id = noteDisplayModal.dataset.noteId;
@@ -931,6 +950,17 @@ function editNote(){
     // update the values of the form inputs with values from note object.
     form.elements.note_title.value = notesElement.title;
     form.elements.note.value = notesElement.body;
+
+		form.classList.toggle("show");
+		addBtn.classList.toggle("show");
+		createNoteBtn.classList.toggle("show");
+
+		let position = form.getBoundingClientRect().top;
+		window.scrollTo({
+				top:position,
+				left:0,
+				behavior:"smooth"
+			})
 }
 
 // ORDER CARDS FUNC
