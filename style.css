@@ -241,6 +241,17 @@ button.show-inputs-btn{
 /* add cover img btn */
 .add-cover-img-btn{
 	margin-left: auto;
+	margin-right: 10px;
+	border: none;
+	outline: none;
+	background-color: transparent;
+	padding: 0;
+	height: min-content;
+	border-radius: 0;
+	font-size: 2.5rem;
+	color:#000;
+	/* color:color-mix(in srgb, #ffea00 45%, #ffff00 55%); */
+
 }
 
 
@@ -443,10 +454,9 @@ img.cover-img{
 /* wrapper element that contains the card element */
 .notes-container{
 	display: flex;
-	justify-content: space-between;
+	justify-content: center;
 	flex-direction: column;
 	flex-wrap: wrap;
-	flex-direction: column-reverse;
 	background-color: var(--notes-container-color);
 	position: relative;
 	z-index: 20;
@@ -455,7 +465,7 @@ img.cover-img{
 /* card element */
 .notes-card{
 	min-height: 175px;
-	width: 100%;
+	width: 90%;
 	padding: 0;
 	border-radius: 0%;
 	border: 1px solid var(--border-color);
@@ -471,7 +481,6 @@ img.cover-img{
 .note-card-center{
 	display:flex;
 	flex-direction: column;
-	width: inherit;
 }
 
 .card-text{
@@ -578,6 +587,7 @@ img.cover-img{
 /** contorls the with and orientation of the note cards **/
 	.notes-container{
 		display: flex;
+		justify-content: space-between;
 		flex-direction: row;
 	}
 

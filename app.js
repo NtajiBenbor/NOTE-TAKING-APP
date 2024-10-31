@@ -304,11 +304,7 @@ function toggleInputsContainer() {
 	const addBtn = document.querySelector(".show-inputs-btn");
   form.classList.toggle("show");
   addBtn.classList.toggle("show");
-
-  setTimeout(() => {
-    createNoteBtn.classList.toggle("show");
-  }, 300);
-
+	createNoteBtn.classList.toggle("show");
   resetAll();
 }
 
@@ -916,6 +912,7 @@ function editNote(){
   const updateNoteBtn = document.querySelector(".create-note-btn");
   const form = document.getElementById("form");
 	const addBtn = document.querySelector(".show-inputs-btn");
+	const createNoteBtn = document.querySelector(".create-note-btn");
  
   // get the current note id from the note modal dispaly
   let id = noteDisplayModal.dataset.noteId;
@@ -951,9 +948,9 @@ function editNote(){
     form.elements.note_title.value = notesElement.title;
     form.elements.note.value = notesElement.body;
 
-		form.classList.toggle("show");
-		addBtn.classList.toggle("show");
-		createNoteBtn.classList.toggle("show");
+		form.classList.add("show");
+		addBtn.classList.add("show");
+		createNoteBtn.classList.add("show");
 
 		let position = form.getBoundingClientRect().top;
 		window.scrollTo({
@@ -968,6 +965,10 @@ function editNote(){
 function orderCards(){
   const notesContainer = document.querySelector(".notes-container");
 	let noteCards = document.querySelectorAll(".notes-cards");
+	([...noteCards]).forEach(card =>{
+		card.remove();
+	})
+
 	([...noteCards]).reverse().forEach(card=>{
 		notesContainer.appendChild(card)
 	})
