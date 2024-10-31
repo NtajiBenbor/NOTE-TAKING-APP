@@ -118,6 +118,7 @@ function createNewNote(event) {
 			hrs,
 			mins,
 			pm_am,
+      null,
 			id
 		)
 	 }
@@ -135,8 +136,6 @@ function createNewNote(event) {
      cardDetails.cardElement.dataset.noteId = id;
      // append note card to UI
      notesContainer.append(cardDetails.cardElement);
-		 
-		 orderCards();
 
      makeCardsClickable();
      //save to local storage
@@ -171,6 +170,8 @@ function createNewNote(event) {
     if(notesContainer.childElementCount > 0){
       clearAllNotes();
     }
+
+    orderCards();
   }
 	else if(noteTitle && noteBody && editFlag){
     const editedCardElement = document.querySelector(".editable-card");
@@ -286,7 +287,7 @@ function clearAllNotes(){
 // of the form and buttons when triggered by a click event.
 function toggleInputsContainer(event) {
   const createNoteBtn = document.querySelector(".create-note-btn");
-  const addBtn = event.currentTarget;
+  const addBtn = event.target;
   form.classList.toggle("show");
   addBtn.classList.toggle("show");
 
@@ -602,7 +603,7 @@ function buildNoteCardsUI(
 		return {cardElement};
   }
 
-// MAKE CARDCLIKABLE FUNC
+// MAKE CARDCLICKABLE FUNC
 // This function adds click event listeners to all note card elements on the UI.
 // it enables users to view note details based on the card being clicked.
 function makeCardsClickable() {
@@ -669,8 +670,6 @@ function UpdateEditedCards(
   } 
 }
 
-
-
 // VIEW NOTES DETAILS FUNC
 // This function retrieves a specific note object from local storage based on its ID and
 // updates the UI to display the full details of that note, including title, date, time,
@@ -703,8 +702,11 @@ function viewNoteDetails(id,event){
   noteTimeSuffix.textContent =`${noteElement.am_pm}`;
   noteBody.textContent = `${noteElement.body}`;
 
+  console.log(noteElement.id);
   // create an on the note display modal using the noteOject's id
   noteDisplayModal.dataset.noteId = noteElement.id;
+
+
 
   // if the note object has an img property update the UI with this image
   if(noteElement.flag === true){
@@ -812,6 +814,7 @@ function resetModalValues() {
     const noteTime = document.querySelector(".note-dp-time");
     const noteDpTitle = document.querySelector(".note-dp-title");
     const noteTimeSuffix = document.querySelector(".notedp-time-suffix");
+    const noteDisplayModal = document.querySelector(".display-note-modal");
 
     noteDpTitle.textContent = "";
     noteDay.textContent ="";
@@ -821,6 +824,8 @@ function resetModalValues() {
     noteTimeSuffix.textContent ="";
     noteBody.textContent = "";
     noteImgSection.innerHTML="";
+    delete noteDisplayModal.dataset.noteId;
+
   }
 
 // TRIM FILE NAME FUNC
@@ -904,13 +909,13 @@ function editNote(){
 // apply styles to give visual cue to the user based on these test
 // showing which card is being edited and disabling the rest of the cards
  noteCards.forEach(card =>{
-    if(card.dataset.noteId === id){ 
-      card.classList.add("editable-card");
+    if(card.dataset.noteId !== id){
+      notesContainer.classList.add("disabled-cards");
+      card.setAttribute("inert","");
     }
 
-    if(card.dataset.noteId !== id){
-      notesContainer.classList.add("disabled-cards")
-      card.setAttribute("inert","");
+    if(card.dataset.noteId === id){
+      card.classList.add("editable-card");
     }
     })
 
@@ -926,16 +931,19 @@ function editNote(){
     // update the values of the form inputs with values from note object.
     form.elements.note_title.value = notesElement.title;
     form.elements.note.value = notesElement.body;
+    toggleInputsContainer()
 }
 
-// ORDER CARD FUNC
+// ORDER CARDS FUNC
 // This function reverses the order of the note cards on the page 
 function orderCards(){
+  const notesContainer = document.querySelector(".notes-container");
 	let noteCards = document.querySelectorAll(".notes-cards");
 	([...noteCards]).reverse().forEach(card=>{
 		notesContainer.appendChild(card)
 	})
 }
+
 /***** LOCAL STORAGE ******/
 // SAVE NOTES TO LOCAL STORAGE FUNC
 //  This function  saves note data to local storage, including an image if specified,

@@ -674,8 +674,7 @@ the note title and note input itself */
 /* class that are applied when a note is being edited */
 .editable-card{
 	background-color: skyblue !important;
-	outline: 2px solid darkblue !important;
-	transform: scale(1) !important;
+	transform: scale(1.1) !important;
 	
 }
 /*styling to indicate that this cards are disabled when the edit class has been applied to 
