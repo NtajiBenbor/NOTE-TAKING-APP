@@ -10,8 +10,10 @@ let editedObj;
 // then initializes the application by calling initApp().
 document.addEventListener("readystatechange", (event) => {
   if (event.target.readyState === "complete") {
+		themeDetection();
     initApp();
     loadNoteDataOnPageLoad();
+
   }
   // show loader
 });
@@ -26,6 +28,7 @@ function initApp() {
   const fileUploadModal = document.querySelector(".cover-img-modal");
   const noteDisplayModal = document.querySelector(".display-note-modal");
   const coverImageModal = document.querySelector(".modal-bg");
+  const darkModeToggle = document.getElementById("switch");
   const form = document.getElementById("form");
 
   /***** EVENT LISTENERS ******/
@@ -54,6 +57,11 @@ function initApp() {
   noteDisplayModal.addEventListener("click", (event) => {
     manageNoteDisplayModal(event, noteDisplayModal);
   });
+
+
+	darkModeToggle.addEventListener("change",()=>{
+		localStorage.getItem("theme") === "light"? enableDarkMode():disableDarkMode();
+	})
 
 }
 
@@ -973,6 +981,40 @@ function orderCards(){
 		notesContainer.appendChild(card)
 	})
 }
+
+/***** DARK MODE FUNTIONALITY ******/
+function enableDarkMode(){
+	const body = document.querySelector("body");
+	body.classList.add("dark-mode");
+	localStorage.setItem("theme", "dark");
+}
+
+function disableDarkMode(){
+	const body = document.querySelector("body");
+	body.classList.remove("dark-mode");
+	localStorage.setItem("theme", "light");
+}
+
+function themeDetection(){
+	const darkModeToggle = document.getElementById("switch");
+	let theme = "light"
+
+	if(localStorage.getItem("theme")){
+
+		theme = localStorage.getItem("theme");
+
+	}else if(matchMedia && matchMedia("(prefares-color-scheme: dark)").matches){
+		theme = "dark"
+	}
+
+	if(theme === "dark"){
+		darkModeToggle.checked = true;
+	} 
+	
+	theme === "dark"? enableDarkMode():disableDarkMode();
+}
+
+
 
 /***** LOCAL STORAGE ******/
 // SAVE NOTES TO LOCAL STORAGE FUNC
