@@ -169,8 +169,8 @@ function createNewNote(event) {
     // alert that note has been created
     alertMessage ='<p>Note created  <span><i class="fa-solid fa-circle-check"></i></span></p>';
     displayAlert(
-      mainAlerts,"black",
-      "white",alertMessage,
+      mainAlerts,
+      alertMessage,
       "show-main-alert",
       4000
     );
@@ -203,16 +203,17 @@ function createNewNote(event) {
 		
 			// display alert
 		alertMessage ='<p>Note Updated  <span class="pl-1"><i class="fa-solid fa-circle-xmark"></i></span></p>';
-		displayAlert(mainAlerts,"black","white",alertMessage,"show-main-alert",4000);
+		displayAlert(mainAlerts,alertMessage,"show-main-alert",4000);
   } 
 	else {
     // display error alert
     let alertMessage = `<p>Error! you can not create a blank note. <span class="pl-1"> <i class="fa-solid fa-circle-exclamation"></i></span></p>`;
     
     displayAlert(
-       mainAlerts,"black",
-      "white",alertMessage,
-      "show-main-alert",4000);
+       mainAlerts,
+       alertMessage,
+      "show-main-alert",
+      4000);
 
     // reset program
     resetAll();
@@ -293,7 +294,7 @@ function clearAllNotes(){
 				localStorage.removeItem("noteEntries");
 				clearBtn.classList.remove("show-clear-btn");
 
-				displayAlert(mainAlerts,"black","white",alertMessage,"show-main-alert",4000);
+				displayAlert(mainAlerts,alertMessage,"show-main-alert",4000);
 				//iterate and delete each card
 				noteCards.forEach((note) => {
 					note.remove();
@@ -361,7 +362,7 @@ function addCoverImage() {
   if (coverImgObj.size > 524288) {
     coverImgObj = "";
     fileUploadInput.value = "";
-    displayAlert( alerts,"transparent","red",alertMessage,"show-alert",5000);
+    displayAlert(alerts,alertMessage,"show-alert",5000);
   } else { 
     const previewImg = document.createElement("img");
     previewImg.classList.add("img-fluid", "cover-img");
@@ -389,7 +390,7 @@ function saveCoverImg(imgObj, alertElement) {
     coverImgFlag = true;
   } else {
     let message = "<p>Please, pick an image or click cancel</p>";
-    displayAlert(alertElement,"transparent","red", message,"show-alert",5000);
+    displayAlert(alertElement,message,"show-alert",5000);
   }
 }
 
@@ -405,7 +406,7 @@ function cancelCoverImgEntry() {
 // This function handles events related to a file input modal(cover image modal),
 // allowing users to select, save, or cancel cover images.
 function manageFileInputModal(event) {
-	const alerts = document.querySelector("alerts");
+	const alerts = document.querySelector(".alerts");
   if (event.target.closest(".close-modal-btn")) {
     // closes the cover image modal and cancels the cover img upload operation
     cancelCoverImgEntry();
@@ -762,9 +763,7 @@ function previewCoverImg(file,element) {
 //  @param text - is the message or text that you want to display in the specified element.
 //  @param d_class - is a CSS class that to display a visual effect.
 // @param duration - thi specifies the delay durationof the settimeout func.
-function displayAlert(element,bgColor,color,text,d_class,duration){
-  element.style.color = `${color}`;
-  element.style.backgroundColor = `${bgColor}`;
+function displayAlert(element,text,d_class,duration){
   element.innerHTML = `${text}`;
   element.classList.add(`${d_class}`);
 
@@ -904,7 +903,7 @@ function deleteNote(){
   }
   // display alert
   alertMessage ='<p>Note Deleted  <span class="pl-1"><i class="fa-solid fa-circle-xmark"></i></span></p>';
-  displayAlert(mainAlerts,"black","white",alertMessage,"show-main-alert",4000);
+ displayAlert (mainAlerts,"white",alertMessage,"show-main-alert",4000);
   deleteNoteFromLocalStorage(id)
   resetAll();
 }
@@ -983,18 +982,21 @@ function orderCards(){
 }
 
 /***** DARK MODE FUNTIONALITY ******/
+// ENABLE DARK MODE FUNC
 function enableDarkMode(){
 	const body = document.querySelector("body");
 	body.classList.add("dark-mode");
 	localStorage.setItem("theme", "dark");
 }
 
+// DISABLE DARK MODE FUNC
 function disableDarkMode(){
 	const body = document.querySelector("body");
 	body.classList.remove("dark-mode");
 	localStorage.setItem("theme", "light");
 }
 
+// THEME DETECTION FUNC
 function themeDetection(){
 	const darkModeToggle = document.getElementById("switch");
 	let theme = "light"
