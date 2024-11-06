@@ -1,7 +1,7 @@
 :root{
-    --dark:#0b2545;
-    --medium:#282828;
-    --accent:#404040;
+    --dark:#000814;
+    --medium:#001d3d;
+    --accent:#90e0ef;
     --bodyTextColorWhite: #fafbfc;
 }
 
@@ -50,31 +50,54 @@ body.dark-mode .dark{
 	line-height: 1;
   }
   
-  .input {
+.input {
 	display: none;
-  }
+}
   
-  .icon {
+.icon {
 	grid-column: 1 / 1;
 	grid-row: 1 / 1;
 	transition: transform 500ms;
-  }
+}
   
-  .icon--moon {
+.icon--moon {
 	transition-delay: 200ms;
 	color: black;
-  }
+}
   
-  .icon--sun {
+.icon--sun {
 	transform: scale(0);
 	color: yellow;
-  }
+}
   
-  #switch:checked + .icon--moon {
+#switch:checked + .icon--moon {
 	transform: rotate(360deg) scale(0);
-  }
+}
   
-  #switch:checked ~ .icon--sun {
+#switch:checked ~ .icon--sun {
 	transition-delay: 200ms;
 	transform: scale(1) rotate(360deg);
-  }
+}
+
+
+body.dark-mode .notes-container{
+    background-color: var(--dark);
+}
+
+body.dark-mode .notes-card,
+body.dark-mode header,
+body.dark-mode .cover-img-modal,
+body.dark-mode .note-modal-center{
+    background-color: var(--medium)!important;
+}
+
+body.dark-mode .notes-card{
+  border: 1px solid var(--accent);
+	border-right: 4px solid var(--border-color);
+	border-bottom: 4px solid var(--accent);
+	box-shadow: 1px 1px 0px 1px rgba(0,0,0,1);
+	-webkit-box-shadow: 1px 1px 0px 1px rgba(0,0,0,1);
+	-moz-box-shadow: 1px 1px 0px 1px rgba(0,0,0,1);
+}
+
+
