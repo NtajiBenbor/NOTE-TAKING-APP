@@ -78,7 +78,6 @@ body.dark-mode .dark{
 	transform: scale(1) rotate(360deg);
 }
 
-
 body.dark-mode .notes-container,
 body.dark-mode .notes-section{
     background-color: var(--dark);
@@ -110,7 +109,7 @@ body.dark-mode .size-4{
 
 /**** NOTE CARD SECTION ****/
 body.dark-mode .notes-card{
-  border: 1px solid #000;
+  border: 0.5px solid var(--accent);
 }
 
 body.dark-mode .notes-card button{
@@ -122,7 +121,7 @@ body.dark-mode .card-head-wrapper{
   background-color: var(--medium);
 }
 
-/**** FORM INPUT SECTION ****/
+/**** FORM INPUT SECTION  ****/
 /* the note title text input */
 body.dark-mode .title-input,
 body.dark-mode .note-input{
@@ -145,7 +144,7 @@ body.dark-mode .title-input{
 }
 
 
-/**** BUTTONS ****/
+/**** BUTTONS STYLES ****/
 body.dark-mode .show-inputs-btn i{
 	color: var(--medium) !important;
 }
@@ -173,7 +172,27 @@ body.dark-mode .app-btns:hover{
 }
 
 
+/**** MODAL STYLES ****/
+body.dark-mode .note-modal-center,
+body.dark-mode .cover-img-modal{
+	border: 3px solid var(--accent);
+}
 
+/* note display image wrapper */
+body.dark-mode .note-dp-img-wrapper{
+	border: 1px solid #000;
+}
 
+ /* Reset default styling for scroll bars on the modal */
+
+body.dark-mode .note-txt::-webkit-scrollbar {
+    width: .7em;
+    background-color: var(--dark);
+}
+
+body.dark-mode .note-txt::-webkit-scrollbar-thumb {
+    background-color: var(--accent);
+    border-radius: 10px;
+}
 
 
