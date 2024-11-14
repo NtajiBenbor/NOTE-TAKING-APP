@@ -8,6 +8,7 @@
 	--light-text:rgb(39, 37, 74);
 	--dark-text:#000000;
 	--notes-container-color:#ffffff; 
+	--btn-hover-border-col:#343a40;
 }
 
 /* ======= CSS RESET ======== */
@@ -63,8 +64,6 @@
   #root, #__next {
 	isolation: isolate;
   }
-
-
 
 
 
@@ -169,10 +168,10 @@ header{
     transition: all 300ms linear;
   }
 
-/* reducing the size of the dark mode toggle */
-div.nav-center .dark-mode-toggle{
+  /* reducing the size of the dark mode toggle */
+  div.nav-center .dark-mode-toggle{
 	transform: scale(0.7);
-}
+  }
 
 /* the main section of the page */
   main{
@@ -248,6 +247,7 @@ section.form-center {
 	background: #000;
 
 }
+
 
 
 /* style for btn that displays the input field when clicked */
@@ -536,20 +536,16 @@ img.cover-img{
 	overflow-y: auto;
 	height: 250px;
 }
-
-
- /* Reset default styling for scroll bars on the modal */
-
+/* change the default styling of the scrollbar on note display modal */
 .note-txt::-webkit-scrollbar {
     width: .7em;
     background-color: white;
 }
 
 .note-txt::-webkit-scrollbar-thumb {
-    background-color: gray;
+    background-color: #808080;
     border-radius: 10px;
 }
-
 
 /****MEDIA QUERIES****/
 /** tablet screen size **/
