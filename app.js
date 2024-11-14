@@ -13,7 +13,6 @@ document.addEventListener("readystatechange", (event) => {
 		themeDetection();
     initApp();
     loadNoteDataOnPageLoad();
-
   }
   // show loader
 });
@@ -58,10 +57,12 @@ function initApp() {
     manageNoteDisplayModal(event, noteDisplayModal);
   });
 
-
+  // Manages the theme of the app based on the users previously selected theme
 	darkModeToggle.addEventListener("change",()=>{
 		localStorage.getItem("theme") === "light"? enableDarkMode():disableDarkMode();
 	})
+
+
 
 }
 
@@ -115,7 +116,7 @@ function createNewNote(event) {
   mins < 10 ? mins = `0${mins}`: mins;
 
   if (noteTitle && noteBody && !editFlag) {
-    //create and append note card to UI
+    //create and append note card with a cover image to the UI
 		if(coverImgObj && coverImgFlag){
 
 			buildImgNoteCardsUI(
@@ -132,6 +133,7 @@ function createNewNote(event) {
 			)
 		}
 		else{
+      //create and append a note card without a cover image to the UI
 			let cardDetails = buildNoteCardsUI(
 				noteBody,
 				noteTitle,
@@ -145,7 +147,7 @@ function createNewNote(event) {
 			cardDetails.cardElement.dataset.noteId = id;
 			// append note card to UI
 			notesContainer.append(cardDetails.cardElement);
-
+     
 			makeCardsClickable();
 			//save to local storage
 			saveNoteDataToLocalStorage(
@@ -164,7 +166,7 @@ function createNewNote(event) {
 			// resets the program
 			toggleInputsContainer();
 
-
+      reOrderCards();
 		}
     // alert that note has been created
     alertMessage ='<p>Note created  <span><i class="fa-solid fa-circle-check"></i></span></p>';
@@ -177,15 +179,14 @@ function createNewNote(event) {
 
     // sets up funtionality to clear notes
     if(notesContainer.childElementCount > 0){
-      clearAllNotes();
+      manageClearAllNotes();
     }
 
-    orderCards();
   }
 	else if(noteTitle && noteBody && editFlag){
     const editedCardElement = document.querySelector(".editable-card");
     let cardId = editedCardElement.dataset.noteId;
-		// update the card that is being edited with the changed data
+		// Update the UI to reflect changes made to the currently edited card
 		UpdateEditedCards( 
 			editedCardElement,noteBody,
       noteTitle,day,date_,
@@ -227,8 +228,8 @@ function loadNoteDataOnPageLoad(){
   
   if (notesArray.length>0) {
     notesArray.forEach((note) => {
-			// handles cases where the note object retrived from local storage contains a cover image
-     if(note.flag){
+			// handles cases where the note object retrived from local storage has a cover image
+     if(note.hasImage){
 			let element = document.createElement("article");
 			element.classList.add("card","notes-card","bg-body-tertiary");
 			element.dataset.noteId = note.id; 
@@ -241,13 +242,14 @@ function loadNoteDataOnPageLoad(){
         note.hrs,
         note.mins,
         note.am_pm,
-        note.image
+        note.image,
+        note.isEdited
 			)
 
 			notesContainer.append(element);
 		 }
 		 else{
-			// handles cases where the note object returned do not have cover image
+			// handles cases where the note object returned does not have a cover image
 			let cardDetails = buildNoteCardsUI(
         note.body,
         note.title,
@@ -256,7 +258,8 @@ function loadNoteDataOnPageLoad(){
         note.month,
         note.hrs,
         note.mins,
-        note.am_pm
+        note.am_pm,
+        note.isEdited
       );
 			cardDetails.cardElement.dataset.noteId = note.id;
       // append note card to UI
@@ -264,24 +267,20 @@ function loadNoteDataOnPageLoad(){
 			 }
   	});
 
-		let noteCards = document.querySelectorAll(".notes-card");
-		// displays full details of the clicked note card
-		noteCards.forEach((noteCard) => {
-			 noteCard.addEventListener("click",(event) => {
-				viewNoteDetails(noteCard.dataset.noteId, event);
-			 });
-		 });
-
+    makeCardsClickable();
+    
     // sets up the functionality to clear notes
    if(notesContainer.childElementCount > 0){
-				clearAllNotes();
+				manageClearAllNotes();
 	 }
+  
+   reOrderCards()
   }
 }
 
 // CLEAR ALL NOTES FUNC
 // this function clears all notes from the UI, updates the display,and resets input states.
-function clearAllNotes(){
+function manageClearAllNotes(){
 	const mainAlerts = document.querySelector(".main-alerts-display");
 	const clearBtn = document.querySelector(".clear-btn");
 	let noteCards = document.querySelectorAll(".notes-card");
@@ -324,10 +323,10 @@ function toggleInputsContainer() {
 function showModals(event,modalElement,clostestElmnt) {
   if(event.target.closest(`.${clostestElmnt}`) ){
       // adds the class of to display the modal on the page
-      modalElement.classList.add("show-modal", "slide-in-bck-center");
+      modalElement.classList.add("show-modal", "slide-in-fwd-top");
 
       setTimeout(() => {
-        modalElement.classList.remove("slide-in-bck-center");
+        modalElement.classList.remove("slide-in-fwd-top");
       }, 500);
   }
 
@@ -337,11 +336,10 @@ function showModals(event,modalElement,clostestElmnt) {
 // This function hides a modal elements.
 // and controls the animation on the modal elements.
 function hideModals(modalElement) {
-  modalElement.classList.add("slide-out-bck-center");
+  modalElement.classList.add("slide-out-fwd-top");
 
   setTimeout(() => {
-    modalElement.classList.remove("show-modal");
-    modalElement.classList.remove("slide-out-bck-center");
+    modalElement.classList.remove("show-modal", "slide-out-fwd-top");
   }, 500);
 }
 
@@ -382,7 +380,7 @@ function addCoverImage() {
 // @param alertElement - The `alertElement` parameter in the `saveCoverImg` function is\
 // a message that will be displayed to the user if the `imgObj` parameter is not
 //  provided or is falsy.
-function saveCoverImg(imgObj, alertElement) {
+function saveCoverImg(imgObj,alertElement) {
   const coverImageModal = document.querySelector(".modal-bg");
 
   if (imgObj) {
@@ -524,9 +522,13 @@ function buildImgNoteCardsUI(
   mins,
   pm_am,
 	img,
-  cardId ="undefine"
+  edited=false,
+  cardId ="null"
 ) {
   let noteImg;
+  let cardPrefix;
+  // if so then upate the card UI with an edit prefix
+  edited ? cardPrefix = "Edited" : cardPrefix = "Created";
 
   // trim note body text for the card UI
   let cardText = trimUiCardText(noteBody);
@@ -542,7 +544,7 @@ function buildImgNoteCardsUI(
       // noteImg is updated with the result of the file reading
       noteImg = event.target.result;
       cardElement.innerHTML = generateCardHTMLTemplates(
-        "Created",
+        `${cardPrefix}`,
         noteTitle,
         day,
         date_,
@@ -570,13 +572,14 @@ function buildImgNoteCardsUI(
       );
       makeCardsClickable();
 			toggleInputsContainer();
+      reOrderCards();
     };
     reader.readAsDataURL(coverImgObj);
-	}else{
+	}else if(img){
     // noteImg is updated with the image data from a note object
     noteImg = img;
     return generateCardHTMLTemplates(
-      "Created",
+      `${cardPrefix}`,
       noteTitle,
       day,
       date_,
@@ -601,14 +604,19 @@ function buildNoteCardsUI(
   month,
   hrs,
   mins,
-  pm_am){
+  pm_am,
+isEdited=false){
 		const cardElement = document.createElement("article");
+    let cardPrefix;
     cardElement.classList.add("card", "notes-card", "bg-body-tertiary");
-		  // trim note body text for the card UI
-			let cardText = trimUiCardText(noteBody);
+		// trim note body text for the card UI
+		let cardText = trimUiCardText(noteBody);
+    // check if note has been edited or not,
+    // if so then upate the card UI with an edit prefix
+    isEdited ? cardPrefix = "Edited" : cardPrefix = "Created";
     // handles cases where the user creates a note without a cover image
-   cardElement.innerHTML = generateCardHTMLTemplates(
-      "Created",
+    cardElement.innerHTML = generateCardHTMLTemplates(
+      `${cardPrefix}`,
       noteTitle,
       day,
       date_,
@@ -683,7 +691,8 @@ function UpdateEditedCards(
     editInLocalStorage(
       cardId,noteTitle,noteBody,
       day,date_,hrs,mins,pm_am,
-      coverImgFlag,month
+      coverImgFlag,
+      noteImg="null",month
     );
     updateNoteBtn.textContent = "Create note";
 
@@ -723,14 +732,11 @@ function viewNoteDetails(id,event){
   noteTimeSuffix.textContent =`${noteElement.am_pm}`;
   noteBody.textContent = `${noteElement.body}`;
 
-  console.log(noteElement.id);
   // create an on the note display modal using the noteOject's id
   noteDisplayModal.dataset.noteId = noteElement.id;
 
-
-
   // if the note object has an img property update the UI with this image
-  if(noteElement.flag === true){
+  if(noteElement.hasImage === true){
   noteImgSection.innerHTML = ` <div class="col-12 note-dp-img-wrapper p-0">
       <img class="img-fluid h-100" src=${noteElement.image} alt="note display img">
   </div>`
@@ -759,12 +765,11 @@ function previewCoverImg(file,element) {
 //DISPLAY ALERT FUNC
 // displays alerts(error,info, etc) msgs when called takes by adding a class and then removing them after a specified duration.
 //  @param element - is the HTML element that you want to display the alert message in.
-//  @param color - is the color in which the text will be displayed in the alert.
-//  @param text - is the message or text that you want to display in the specified element.
+//  @param message - is the message  that you want to display in the specified element.
 //  @param d_class - is a CSS class that to display a visual effect.
 // @param duration - thi specifies the delay durationof the settimeout func.
-function displayAlert(element,text,d_class,duration){
-  element.innerHTML = `${text}`;
+function displayAlert(element,message,d_class,duration){
+  element.innerHTML = `${message}`;
   element.classList.add(`${d_class}`);
 
   setTimeout(() => {
@@ -867,7 +872,7 @@ function trimFileName(textElement, image) {
 }
 
 // TRIM UI CARD BODY TEXT FUNC
-// The function `trimUiCardText` takes a string as input and returns a
+// This function takes a string as input and returns a
 //  trimmed version of the string.
 function trimUiCardText(b_text){
   if(b_text.length > 145){
@@ -902,8 +907,8 @@ function deleteNote(){
     clearBtn.classList.remove("show-clear-btn");
   }
   // display alert
-  alertMessage ='<p>Note Deleted  <span class="pl-1"><i class="fa-solid fa-circle-xmark"></i></span></p>';
- displayAlert (mainAlerts,"white",alertMessage,"show-main-alert",4000);
+  alertMessage ='<p>Note Deleted <span class="pl-1"><i class="fa-solid fa-circle-xmark"></i></span></p>';
+ displayAlert (mainAlerts,alertMessage,"show-main-alert",4000);
   deleteNoteFromLocalStorage(id)
   resetAll();
 }
@@ -943,7 +948,7 @@ function editNote(){
     })
 
     // search for a match with the card id from the array 
-		// of object gotten from the local storage
+		// of objects gotten from local storage
     notesElement = notesElement.filter( note =>{
         if(note.id === id){
           return note;
@@ -969,15 +974,18 @@ function editNote(){
 
 // ORDER CARDS FUNC
 // This function reverses the order of the note cards on the page 
-function orderCards(){
+function reOrderCards(){
   const notesContainer = document.querySelector(".notes-container");
-	let noteCards = document.querySelectorAll(".notes-cards");
-	([...noteCards]).forEach(card =>{
+	let noteCards = document.querySelectorAll(".notes-card");
+  const cardList = [...noteCards];
+
+	noteCards.forEach(card =>{
 		card.remove();
 	})
 
-	([...noteCards]).reverse().forEach(card=>{
-		notesContainer.appendChild(card)
+ 
+  cardList.reverse().forEach(card=>{
+		notesContainer.append(card)
 	})
 }
 
@@ -1016,8 +1024,6 @@ function themeDetection(){
 	theme === "dark"? enableDarkMode():disableDarkMode();
 }
 
-
-
 /***** LOCAL STORAGE ******/
 // SAVE NOTES TO LOCAL STORAGE FUNC
 //  This function  saves note data to local storage, including an image if specified,
@@ -1042,7 +1048,7 @@ function saveNoteDataToLocalStorage(
     mins: nMins,
     am_pm: tSuffix,
     image: img_,
-    flag: noteFlag
+    hasImage: noteFlag
   };
   let notesArray;
   
@@ -1116,7 +1122,8 @@ function deleteNoteFromLocalStorage(_id){
         mins:nMins,
         am_pm:tSuffix,
         image:img_,
-        flag:noteFlag
+        hasImage:noteFlag,
+        isEdited:true
     }
     return note;
   });
