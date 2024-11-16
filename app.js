@@ -28,6 +28,7 @@ function initApp() {
   const noteDisplayModal = document.querySelector(".display-note-modal");
   const coverImageModal = document.querySelector(".modal-bg");
   const darkModeToggle = document.getElementById("switch");
+  const navToggle = document.querySelector(".nav-toggle-btn");
   const form = document.getElementById("form");
 
   /***** EVENT LISTENERS ******/
@@ -59,10 +60,13 @@ function initApp() {
 
   // Manages the theme of the app based on the users previously selected theme
 	darkModeToggle.addEventListener("change",()=>{
-		localStorage.getItem("theme") === "light"? enableDarkMode():disableDarkMode();
+		localStorage.getItem("theme") === "light"? enableDarkMode() : disableDarkMode();
 	})
 
-
+  //Manages the actions of the Navbar Toggle Button
+  navToggle.addEventListener("click",()=>{
+    manageNavOffCanavas();
+  })
 
 }
 
@@ -308,12 +312,18 @@ function manageClearAllNotes(){
 //  The function `toggleInputsContainer` toggles the visibility 
 // of the form and buttons when triggered by a click event.
 function toggleInputsContainer() {
-  const createNoteBtn = document.querySelector(".create-note-btn");
+  // const createNoteBtn = document.querySelector(".create-note-btn");
 	const addBtn = document.querySelector(".show-inputs-btn");
   form.classList.toggle("show");
-  addBtn.classList.toggle("show");
-	createNoteBtn.classList.toggle("show");
+  toggleBtnIcons(addBtn);
+  // addBtn.classList.toggle("show");
+	// createNoteBtn.classList.toggle("show");
   resetAll();
+}
+
+// TOGGLE BUTTON ICONS
+function toggleBtnIcons(btn){
+  btn.classList.toggle("show");
 }
 
 // SHOW MODALS FUNC
@@ -437,6 +447,19 @@ function manageNoteDisplayModal(event,modalElement){
       resetNoteDisplayModal();
     },1000);
   }
+}
+
+// MANAGE NAV OFF CANVAS FUNC
+function manageNavOffCanavas(){
+  const navToggle = document.querySelector(".nav-toggle-btn");
+  const offCanvas = document.querySelector(".nav-off-canvas");
+
+  toggleBtnIcons(navToggle);
+  offCanvas.classList.toggle("show-nav-off-canvas")
+
+
+
+
 }
 
 // GENERATE CARD HTML TEMPLATE FUNC
