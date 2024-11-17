@@ -455,6 +455,9 @@ function manageNoteDisplayModal(event,modalElement){
 		 setTimeout(()=>{
       resetNoteDisplayModal();
     },1000);
+  }else if(event.target.closest(".add-to-fav-btn")){
+    let id = modalElement.dataset.noteId;
+    addToFavourites(id)
   }
 }
 
@@ -462,12 +465,60 @@ function manageNoteDisplayModal(event,modalElement){
 function manageNavOffCanvas(event){
   const navToggle = document.querySelector(".nav-toggle-btn");
   const offCanvas = document.querySelector(".nav-off-canvas");
+  const notesContainer = document.querySelector(".notes-container");
+  let noteCards = document.querySelectorAll(".notes-card");
+
 
   if(event.target.closest(".close-canvas-btn")){
     toggleBtnIcons(navToggle);
     offCanvas.classList.remove("show-nav-off-canvas");
   }
-  // else if()
+  else if(event.target.closest(".fav")){
+    let notesArray = retriveFromLocalStorage();
+    noteCards.forEach(card =>{
+      card.remove();
+    })
+    notesArray= notesArray.forEach(note=>{
+      if(note.isFavourite && note.hasImage){
+        buildImgNoteCardsUI(
+          note.body,
+          note.title,
+          note.day,
+          note.date,
+          note.month,
+          note.hrs,
+          note.mins,
+          note.am_pm,
+          note.image,
+          note.isEdited,
+          note.id)
+          notesContainer.append(element);
+      }else if(note.isFavourite){
+
+        let cardDetails = buildNoteCardsUI(
+          note.body,
+          note.title,
+          note.day,
+          note.date,
+          note.month,
+          note.hrs,
+          note.mins,
+          note.am_pm,
+        note.isEdited);
+        cardDetails.cardElement.dataset.noteId = note.id;
+			// append note card to UI
+			notesContainer.append(cardDetails.cardElement);
+      }
+      
+     
+			makeCardsClickable();
+    })
+
+    if(notesContainer.childElementCount > 0){
+      manageClearAllNotes();
+ }
+
+  }
 
 
 }
@@ -556,7 +607,7 @@ function buildImgNoteCardsUI(
   pm_am,
 	img,
   edited=false,
-  cardId ="null"
+  cardId
 ) {
   let noteImg;
   let cardPrefix;
@@ -565,9 +616,10 @@ function buildImgNoteCardsUI(
 
   // trim note body text for the card UI
   let cardText = trimUiCardText(noteBody);
-  // Since file reading is a blocking operation, we need to ensure that the noteImg
-  // variable has the correct value before updating the cardElement's innerHTML.
+  // handles cases were the image blob needs to be coverted
 	if(coverImgObj){
+     // Since file reading is a blocking operation, we need to ensure that the noteImg
+    // variable has the correct value before updating the cardElement's innerHTML.
 		const notesContainer = document.querySelector(".notes-container");
 		const cardElement = document.createElement("article");
   	cardElement.classList.add("card", "notes-card", "bg-body-tertiary");
@@ -609,6 +661,7 @@ function buildImgNoteCardsUI(
     };
     reader.readAsDataURL(coverImgObj);
 	}else if(img){
+    // handles cases were note data that has been converted to a url and saved to local storage
     // noteImg is updated with the image data from a note object
     noteImg = img;
     return generateCardHTMLTemplates(
@@ -748,6 +801,7 @@ function viewNoteDetails(id,event){
   const noteTime = document.querySelector(".note-dp-time");
   const noteDpTitle = document.querySelector(".note-dp-title");
   const noteTimeSuffix = document.querySelector(".notedp-time-suffix");
+  const noteDisplayBtnsWrapper = document.querySelector(".note-controls");
   let noteElement = retriveFromLocalStorage();
   // filter out the note object whose id is a match to the id of the clicked card
   noteElement = noteElement.filter( note => {
@@ -774,7 +828,12 @@ function viewNoteDetails(id,event){
       <img class="img-fluid h-100" src=${noteElement.image} alt="note display img">
   </div>`
   }
- 
+  
+  // if the note object favourite flag is set to true then update the sate of the favourite btns
+ if(noteElement.isFavourite === true){
+  noteDisplayBtnsWrapper.classList.add("show")
+ }
+
   // display the note that has been built
   showModals(event,noteDisplayModal,"notes-card");
 
@@ -873,6 +932,8 @@ function resetModalValues() {
     const noteDpTitle = document.querySelector(".note-dp-title");
     const noteTimeSuffix = document.querySelector(".notedp-time-suffix");
     const noteDisplayModal = document.querySelector(".display-note-modal");
+    const noteDisplayBtnsWrapper = document.querySelector(".note-controls");
+   
 
     noteDpTitle.textContent = "";
     noteDay.textContent ="";
@@ -883,13 +944,14 @@ function resetModalValues() {
     noteBody.textContent = "";
     noteImgSection.innerHTML="";
     delete noteDisplayModal.dataset.noteId;
+    noteDisplayBtnsWrapper.classList.remove("show");
 
   }
 
 // TRIM FILE NAME FUNC
 // The `trimFileName` function shortens the file name of an image if it exceeds
 // 20 characters and updates the text content of a specified element with the shortened name.
-function trimFileName(textElement, image) {
+function trimFileName(textElement,image) {
   let imageTitle = image.name;
 
   if (imageTitle.length > 20) {
@@ -1005,6 +1067,40 @@ function editNote(){
 			})
 }
 
+// ADD TO FAVOURITES FUNC
+/**
+ * The function `addToFavourites` toggles a CSS class on a note display button wrapper and updates the
+ * favorite status of a note in local storage based on the button's visibility.
+ * @param noteId - The `noteId` parameter is the unique identifier of the note that you want to add to
+ * or remove from the list of favorites.
+ */
+function addToFavourites(noteId){
+  const noteDisplayBtnsWrapper = document.querySelector(".note-controls");
+  noteDisplayBtnsWrapper.classList.toggle("show");
+  
+  let notesArray = retriveFromLocalStorage();
+  if(noteDisplayBtnsWrapper.classList.contains("show")){
+    notesArray = notesArray.map(note=>{
+      if(noteId === note.id){
+        return {
+          ...note,
+          isFavourite:true
+        }
+      } return note;
+    })
+  }else if(!noteDisplayBtnsWrapper.classList.contains("show")){
+    notesArray = notesArray.map(note=>{
+      if(noteId === note.id){
+        return {
+          ...note,
+          isFavourite:false
+        }
+      } return note;
+    })
+  }
+
+  localStorage.setItem("noteEntries", JSON.stringify(notesArray));
+}
 // ORDER CARDS FUNC
 // This function reverses the order of the note cards on the page 
 function reOrderCards(){

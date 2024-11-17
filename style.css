@@ -273,15 +273,17 @@ button.show-inputs-btn{
 	transform: scale(0.9);
 	padding: 0px 8px;
 	outline: 0;
-	border: 0;
+	border: 3px solid transparent;
+	border-radius: 5px;
 	background: transparent;
+	transition: all 300ms linear;
 }
 
 .nav-toggle-btn:hover,
 .nav-toggle-btn:focus{
 	background-color: #e5e2e2;
 	border: 3px solid #808080;
-	border-radius: 5px;
+	
 }
 
 /* nav off canvas btn */
@@ -307,6 +309,16 @@ button.show-inputs-btn{
 	font-size: 2.5rem;
 	color:#000;
 
+}
+
+/* add to favourites btn */
+.add-to-fav-btn{
+	border: none;
+	color: lightslategray;
+	background: transparent;
+}
+.add-to-fav-btn i{
+	font-size: 1.5rem;
 }
 
 /* clear notes btn */
@@ -596,15 +608,16 @@ img.cover-img{
 .nav-off-canvas .title,
 .nav-off-canvas .fa-x,
 .nav-toggle button{
-	font-weight: 500;
-	font-size: 1.7rem;
+	font-weight: 400;
+	font-size: clamp(1rem,1.7rem,1.8rem);
 }
 
 
 .off-canvas-center li{
 	margin: .2rem 0;
-	padding: .5em 0;
+	padding: .5em .6em;
 	font-size: 1.1rem;
+	font-weight: 800;
 	cursor: pointer;
 	width: 226px;
 }
@@ -691,6 +704,10 @@ the card being edited */
 
 }
 
+.show .add-to-fav-btn{
+	color: rgb(255, 255, 0);
+}
+
 /*** JS animations classes ***/
 .slide-in-fwd-top {
 	-webkit-animation: slide-in-fwd-top 0.4s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
@@ -768,6 +785,10 @@ the card being edited */
 	/* off Canvas background */
 	.nav-off-canvas{
 		width: 0;
+	}
+
+	.off-canvas-center li{
+		width: 385px;
 	}
 	
 	.show-nav-off-canvas{

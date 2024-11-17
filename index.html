@@ -86,7 +86,7 @@
            <aside class="nav-off-canvas">
                <div class="container">
                    <div class="d-flex justify-content-between align-items-center px-1 mt-3 my-2">
-                       <h3 class="title">Mindful</h3><!-- off-canvas site title -->
+                       <h3 class="title display-6">Mindful</h3><!-- off-canvas site title -->
                        <button class="close-canvas-btn"><!-- off-canvas close btn -->
                            <i class="fa-solid fa-x"></i>
                        </button>
@@ -94,11 +94,13 @@
                    <!-- off canvas center start-->
                    <div class="off-canvas-center">
                     <ul>
-                        <li>Favourites <span><i class="fa-solid fa-heart"></i></span></li>
-                        <li>Sort Cards <span><i class="fa-solid fa-up-down"></i></span></li>
-                        <li>Card Layout 
-                            <span><i class="fa-solid fa-border-all"></i></span> 
-                            <span><i class="fa-solid fa-list"></i></span>
+                        <li class="fav  d-inline-flex justify-content-between">Favourites <span><i class="fa-solid fa-heart"></i></span></li>
+                        <li class="sort d-inline-flex justify-content-between">Sort Cards <span><i class="fa-solid fa-up-down"></i></span></li>
+                        <li class="lay d-inline-flex justify-content-between">Card Layout 
+                            <span>
+                                <span><i class="fa-solid fa-border-all"></i></span> 
+                                <span><i class="fa-solid fa-list"></i></span>
+                            </span>
                         </li>
                     </ul>
                    </div><!-- off canvas center end-->
@@ -231,16 +233,20 @@
            <div class="modal-bg display-note-modal">
                <article class="container note-modal-center">
                    <div class="row px-3 pt-4">
-                       <!-- note controls -->
-                       <div class="col-12 row note-controls m-0 justify-content-between px-0">
+                       <!-- note button controls -->
+                       <div class="col-12 row align-items-center note-controls m-0 justify-content-between px-0">
                            <div class="col-7">
                                <!-- back btn -->
                                <button type="button" class="btn my-0 py-1 app-btns back-btn">
                                    <i class="fa-solid fa-arrow-left "></i>
                                </button>
                            </div>
-                           <!-- edit and delete btn -->
-                           <div class="col-4 mb-2 d-flex justify-content-end">
+                           <!--favourites, edit and delete btn -->
+                           <div class=" col-5 mb-2 d-flex justify-content-end">
+                                <!--favourites btn  -->
+                               <button type="button" class=" my-0 py-1 mx-2 add-to-fav-btn">
+                                <i class="fa-solid fa-heart"></i>
+                              </button>
                                <!--edit btn  -->
                                <button type="button" class="btn my-0 py-1 mx-2 app-btns edit-btn">
                                    <i class="fa-solid fa-pen-to-square"></i>

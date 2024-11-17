@@ -173,6 +173,18 @@ body.dark-mode .app-btns:hover{
 }
 
 
+body.dark-mode .nav-toggle-btn:hover,
+body.dark-mode .nav-toggle-btn:focus{
+	background-color: var(--accent);
+	border-color: var(--medium);
+}
+
+body.dark-mode .nav-toggle-btn:focus i,
+body.dark-mode .nav-toggle-btn:hover i{ 
+	color: var(--dark)!important;
+}
+
+
 /**** MODALS ****/
 body.dark-mode .note-modal-center,
 body.dark-mode .cover-img-modal{
@@ -188,6 +200,9 @@ body.dark-mode .note-txt::-webkit-scrollbar-thumb {
     background-color:var(--accent);
 }
 
-
+body.dark-mode .nav-off-canvas{
+	background-color: color-mix(in srgb, rgba(0, 0, 0, 0.7) 80%, transparent 20%);
+	backdrop-filter: blur(10px);
+}
 
 
