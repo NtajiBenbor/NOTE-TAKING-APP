@@ -29,6 +29,7 @@ function initApp() {
   const coverImageModal = document.querySelector(".modal-bg");
   const darkModeToggle = document.getElementById("switch");
   const navToggle = document.querySelector(".nav-toggle-btn");
+  const offCanvas = document.querySelector(".nav-off-canvas");
   const form = document.getElementById("form");
 
   /***** EVENT LISTENERS ******/
@@ -65,7 +66,15 @@ function initApp() {
 
   //Manages the actions of the Navbar Toggle Button
   navToggle.addEventListener("click",()=>{
-    manageNavOffCanavas();
+    this.toggleBtnIcons(navToggle);
+    offCanvas.classList.toggle("show-nav-off-canvas")
+   
+  })
+
+  //Handles User actions on the Nav Off Canvas Element
+  offCanvas.addEventListener("click",(event)=>{
+    manageNavOffCanvas(event);
+    console.log("firing")
   })
 
 }
@@ -197,12 +206,15 @@ function createNewNote(event) {
       month,hrs,mins,pm_am,
       cardId,coverImgFlag);
 
-			let position = editedCardElement.getBoundingClientRect().top
-			window.scrollTo({
-				top:position,
-				left:0,
-				behavior:"smooth"
-			})
+      // apply this scroll effect only on mobile display
+      if(matchMedia("(max-width: 767px)").matches){
+        let position = editedCardElement.getBoundingClientRect().bottom
+        window.scrollTo({
+          top:position,
+          left:0,
+          behavior:"smooth"
+        })
+      }
 
 			
 		
@@ -312,12 +324,9 @@ function manageClearAllNotes(){
 //  The function `toggleInputsContainer` toggles the visibility 
 // of the form and buttons when triggered by a click event.
 function toggleInputsContainer() {
-  // const createNoteBtn = document.querySelector(".create-note-btn");
 	const addBtn = document.querySelector(".show-inputs-btn");
   form.classList.toggle("show");
   toggleBtnIcons(addBtn);
-  // addBtn.classList.toggle("show");
-	// createNoteBtn.classList.toggle("show");
   resetAll();
 }
 
@@ -450,14 +459,15 @@ function manageNoteDisplayModal(event,modalElement){
 }
 
 // MANAGE NAV OFF CANVAS FUNC
-function manageNavOffCanavas(){
+function manageNavOffCanvas(event){
   const navToggle = document.querySelector(".nav-toggle-btn");
   const offCanvas = document.querySelector(".nav-off-canvas");
 
-  toggleBtnIcons(navToggle);
-  offCanvas.classList.toggle("show-nav-off-canvas")
-
-
+  if(event.target.closest(".close-canvas-btn")){
+    toggleBtnIcons(navToggle);
+    offCanvas.classList.remove("show-nav-off-canvas");
+  }
+  // else if()
 
 
 }

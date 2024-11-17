@@ -78,6 +78,10 @@
 	font-size: 85%;
 }
 
+.test{
+	border: 1px solid red;
+}
+
 .dark-txt{
 	color: var(--dark-color) !important;
 }
@@ -265,7 +269,8 @@ button.show-inputs-btn{
 .nav-toggle button{
 	font-size: 1rem;
 	color: var(--dark-color);
-	width: 50px;
+	width: 45px;
+	transform: scale(0.9);
 	padding: 0px 8px;
 	outline: 0;
 	border: 0;
@@ -281,11 +286,11 @@ button.show-inputs-btn{
 
 /* nav off canvas btn */
 .nav-off-canvas button{
-	color: rgb(255, 234, 0);
-	padding: 0;
-	background: transparent;
+	padding: .2em .5em;
+	background: #b9b9b9;
 	outline: 0;
 	border: 0;
+	border-radius: 5px;
 	transform: scale(0.9);
 }
 
@@ -315,7 +320,7 @@ button.show-inputs-btn{
 
 /* dark mode toggle btn */
 div.nav-center .dark-mode-toggle{
-	transform: scale(0.9) translateY(3px);
+	transform: scale(0.9) translateY(0);
 }
 
 /***** COVER IMAGE MODAL *****/
@@ -516,7 +521,7 @@ img.cover-img{
 	border-top: 2px solid var(--dark-color);
 	padding: 0;
 	margin: 0;
-	background-color: var(--light-color);
+	background-color: var(--dark-color);
 }
 
 .card-img{
@@ -583,8 +588,8 @@ img.cover-img{
 	backdrop-filter: blur(10px);
 	position: absolute;
 	left: 0;
-	z-index: 1000;
-	transform: width 300ms linear;
+	/* z-index: 1000; */
+	transition: width 200ms linear;
 	overflow: hidden;
 }
 
@@ -597,14 +602,13 @@ img.cover-img{
 
 
 .off-canvas-center li{
-	margin: .2rem auto;
+	margin: .2rem 0;
 	padding: .5em 0;
 	font-size: 1.1rem;
-	width: 100%;
-	/* border: 1px solid red; */
 	cursor: pointer;
-	
+	width: 226px;
 }
+
 
 
 
@@ -662,6 +666,7 @@ the note title and note input itself */
 
 .show-nav-off-canvas{
 	width: 50vw;
+	overflow: visible;
 }
 
 /* displays alert on the cover image modal */
@@ -767,6 +772,7 @@ the card being edited */
 	
 	.show-nav-off-canvas{
 		width: 30vw;
+		overflow: visible;
 	}
 	
 }
