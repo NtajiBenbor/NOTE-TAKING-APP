@@ -88,7 +88,6 @@ function initApp() {
 function createNewNote(event) {
   event.preventDefault();
 
-  const notesContainer = document.querySelector(".notes-container");
   const mainAlerts = document.querySelector(".main-alerts-display");
   const weekDays = ["Sun", "Mon", "Tue", "Wed", "Thur", "Fri", "Sat"];
   const months = [
@@ -106,9 +105,9 @@ function createNewNote(event) {
     "Dec",
   ];
 	let alertMessage;
-  let noteTitle = form.elements.note_title.value.trim();
-  let noteBody = form.elements.note.value.trim();
-  let date = new Date();
+  let title = form.elements.note_title.value.trim();
+  let body = form.elements.note.value.trim();
+  let dateObj = new Date();
 	const id = Math.random().toString(16).slice(2).toString();
 
 
@@ -117,32 +116,36 @@ function createNewNote(event) {
     return dateVar.getHours() % 12 || 12;
   }
 
-  let day = weekDays[date.getDay()];
-  let month = months[date.getMonth()];
-  let date_ = date.getDate();
-  let hrs = convertTime(date);
-  let mins = date.getMinutes();
+  let day = weekDays[dateObj.getDay()];
+  let month = months[dateObj.getMonth()];
+  let date = dateObj.getDate();
+  let hrs = convertTime(dateObj);
+  let mins = dateObj.getMinutes();
   let pm_am;
 
   // check wether time is Am or PM
-  hrs < 12 ? (pm_am = "pm") : (pm_am = "am");
+  hrs < 12 ? pm_am = "pm" : pm_am = "am";
   mins < 10 ? mins = `0${mins}`: mins;
 
-  if (noteTitle && noteBody && !editFlag) {
+  if (title && body && !editFlag) {
 
-    buildImgNoteCards(
-      noteBody,
-      noteTitle,
-      day,
-      date_,
-      month,
-      hrs,
-      mins,
-      pm_am,
-      edited=false,
-      id,
-      saveNoteDataToLocalStorage
-    )
+  //data from user is used to create an object 
+  const noteData = {
+    id: id,
+    title: title,
+    body: body,
+    day: day,
+    date: date,
+    month: month,
+    hrs: hrs,
+    mins: mins,
+    pm_am: pm_am,
+    image: coverImgObj,
+    hasImage: coverImgFlag,
+    isEdited:editFlag
+  }
+
+  buildImgNoteCardUI(noteData,saveNoteDataToLocalStorage,id)
 
     // alert that note has been created
     alertMessage ='<p>Note created  <span><i class="fa-solid fa-circle-check"></i></span></p>';
@@ -154,29 +157,27 @@ function createNewNote(event) {
     );
 
   }
-	else if(noteTitle && noteBody && editFlag){
+	else if(title && body && editFlag){
     const editedCardElement = document.querySelector(".editable-card");
     let cardId = editedCardElement.dataset.noteId;
 		// Update the UI to reflect changes made to the currently edited card
 		UpdateEditedCards( 
 			editedCardElement,noteBody,
-      noteTitle,day,date_,
+      noteTitle,day,date,
       month,hrs,mins,pm_am,
       cardId,coverImgFlag);
 
-      // apply this scroll effect only on mobile display
-      if(matchMedia("(max-width: 767px)").matches){
-        let position = editedCardElement.getBoundingClientRect().bottom
-        window.scrollTo({
-          top:position,
-          left:0,
-          behavior:"smooth"
-        })
-      }
-
-			
+     // apply this scroll effect only on mobile display
+     if(matchMedia("(max-width: 767px)").matches){
+       let position = editedCardElement.getBoundingClientRect().bottom
+       window.scrollTo({
+         top:position,
+         left:0,
+         behavior:"smooth"
+       })
+     }
 		
-			// display alert
+		// display alert
 		alertMessage ='<p>Note Updated  <span class="pl-1"><i class="fa-solid fa-circle-xmark"></i></span></p>';
 		displayAlert(mainAlerts,alertMessage,"show-main-alert",4000);
   } 
@@ -196,74 +197,10 @@ function createNewNote(event) {
 }
 
 //LOAD NOTE DATA ON PAGE LOAD
-function loadNoteDataOnPageLoad(){
-  // const notesContainer = document.querySelector(".notes-container");
+function loadNoteDataOnPageLoad() {
   let notesArray = retriveFromLocalStorage();
-  
-  if (notesArray.length>0) {
-
-    notesArray.forEach(note=>{
-      buildImgNoteCards(
-        note.body,
-        note.title,
-        note.day,
-        note.date,
-        note.month,
-        note.hrs,
-        note.mins,
-        note.am_pm,
-        note.isEdited,
-        note.id
-      )
-    })
-  //   notesArray.forEach((note) => {
-	// 		// handles cases where the note object retrived from local storage has a cover image
-  //    if(note.hasImage){
-	// 		let element = document.createElement("article");
-	// 		element.classList.add("card","notes-card","bg-body-tertiary");
-	// 		element.dataset.noteId = note.id; 
-	// 		element.innerHTML = buildImgNoteCardsUI(
-	// 			note.body,
-  //       note.title,
-  //       note.day,
-  //       note.date,
-  //       note.month,
-  //       note.hrs,
-  //       note.mins,
-  //       note.am_pm,
-  //       note.image,
-  //       note.isEdited
-	// 		)
-
-	// 		notesContainer.append(element);
-	// 	 }
-	// 	 else{
-	// 		// handles cases where the note object returned does not have a cover image
-	// 		let cardDetails = buildNoteCardsUI(
-  //       note.body,
-  //       note.title,
-  //       note.day,
-  //       note.date,
-  //       note.month,
-  //       note.hrs,
-  //       note.mins,
-  //       note.am_pm,
-  //       note.isEdited
-  //     );
-	// 		cardDetails.cardElement.dataset.noteId = note.id;
-  //     // append note card to UI
-  //     notesContainer.append(cardDetails.cardElement);
-	// 		 }
-  // 	});
-
-  //   makeCardsClickable();
-    
-  //   // sets up the functionality to clear notes
-  //  if(notesContainer.childElementCount > 0){
-	// 			manageClearAllNotes();
-	//  }
-  
-  //  reOrderCards()
+  if (notesArray.length > 0) {
+    buildImgNoteCardUI(note);
   }
 }
 
@@ -312,8 +249,8 @@ function toggleBtnIcons(btn){
 // This function selects the modal element that allows the user to
 // add images to their notes.
 // it also controls the animated behiour of the modal
-function showModals(event,modalElement,clostestElmnt) {
-  if(event.target.closest(`.${clostestElmnt}`) ){
+function showModals(event,modalElement,closestElmnt) {
+  if(event.target.closest(`.${closestElmnt}`) ){
       // adds the class of to display the modal on the page
       modalElement.classList.add("show-modal", "slide-in-fwd-top");
 
@@ -566,151 +503,49 @@ function generateCardHTMLTemplates(
     }
 }
 
-// BUILD IMAGE NOTE CARD UI FUNC
-// this function builds a card on the UI based on data the user entered.
-// This handles cases where the user creates a note with a cover image.
-function buildImgNoteCardsUI(
-  noteBody,
-  noteTitle,
-  day,
-  date_,
-  month,
-  hrs,
-  mins,
-  pm_am,
-	img,
-  edited=false,
-  cardId
-) {
-  let noteImg;
-  let cardPrefix;
-  // if so then upate the card UI with an edit prefix
-  edited ? cardPrefix = "Edited" : cardPrefix = "Created";
-
-  // trim note body text for the card UI
-  let cardText = trimUiCardText(noteBody);
-  // handles cases were the image blob needs to be coverted
-	if(coverImgObj){
-     // Since file reading is a blocking operation, we need to ensure that the noteImg
-    // variable has the correct value before updating the cardElement's innerHTML.
-		const notesContainer = document.querySelector(".notes-container");
-		const cardElement = document.createElement("article");
-  	cardElement.classList.add("card", "notes-card", "bg-body-tertiary");
-		cardElement.dataset.noteId = cardId;
-		const reader = new FileReader();
-    reader.onload = (event) => {
-      // noteImg is updated with the result of the file reading
-      noteImg = event.target.result;
-      cardElement.innerHTML = generateCardHTMLTemplates(
-        `${cardPrefix}`,
-        noteTitle,
-        day,
-        date_,
-        month,
-        hrs,
-        mins,
-        pm_am,
-        cardText,
-        noteImg
-      );
-      notesContainer.append(cardElement);
-      //save to local storage
-      saveNoteDataToLocalStorage(
-        cardId,
-        noteTitle,
-        noteBody,
-        day,
-        date_,
-        hrs,
-        mins,
-        pm_am,
-        coverImgFlag,
-        coverImgObj,
-        month
-      );
-      makeCardsClickable();
-			toggleInputsContainer();
-      reOrderCards();
-    };
-    reader.readAsDataURL(coverImgObj);
-	}else if(img){
-    // handles cases were note data that has been converted to a url and saved to local storage
-    // noteImg is updated with the image data from a note object
-    noteImg = img;
-    return generateCardHTMLTemplates(
-      `${cardPrefix}`,
-      noteTitle,
-      day,
-      date_,
-      month,
-      hrs,
-      mins,
-      pm_am,
-      cardText,
-      noteImg
-    );
-  }
-}
+// BUILD NOTE CARD UI FUNC
+/**
+ * The function `buildImgNoteCardUI` is responsible for dynamically creating and initializing note
+ * cards with specific details and UI elements.
+ * @param noteDetails - The `noteDetails` parameter in the `buildImgNoteCardUI` function seems to
+ * contain three elements:
+ */
+function buildImgNoteCardUI(...noteDetails){
+  const [noteData,saveNoteDataFunc,id] = noteDetails;
 
 
-// ASYNC VERSION
-function buildImgNoteCards(
-  noteBody,
-  noteTitle,
-  day,
-  date_,
-  month,
-  hrs,
-  mins,
-  pm_am,
-  edited=false,
-  cardId,
-  saveNoteDataToLocalStorage
-){
-
-  let cardPrefix;
-  const notesContainer = document.querySelector(".notes-container");
-  const cardElement = document.createElement("article");
-  // if so then upate the card UI with an edit prefix
-  edited ? cardPrefix = "Edited" : cardPrefix = "Created";
-
-  // trim note body text for the card UI
-  let cardText = trimUiCardText(noteBody);
-  
-  async function readNoteData(saveNoteDataToLocalStorageFunc,element,cardId) {
-    element = await saveNoteDataToLocalStorageFunc(
-  cardId,
-  noteTitle,
-  noteBody,
-  day,
-  date_,
-  hrs,
-  mins,
-  pm_am,
-  coverImgFlag,
-  coverImgObj,
-  month
-    );  
-    initCard(element,cardId)
-  }
-
-  if(saveNoteDataToLocalStorage){
-      readNoteData(saveNoteDataToLocalStorage)
-  }else if(!saveNoteDataToLocalStorage){
-      initCard(note,cardId)
+  if(saveNoteDataFunc){
+      readNoteData();
+  }else if(!saveNoteDataFunc){
+    let notesArray = retriveFromLocalStorage();
+    notesArray.forEach( note=>{
+        initCard(note);
+      })
   }
   
-  function initCard(arry,cardId){
-    cardElement.classList.add("card", "notes-card", "bg-body-tertiary");
-     cardElement.dataset.noteId = cardId;
-     console.log(arry)
-     arry = arry.filter(element => {
-      if(element.id === cardId){
-        return element
+
+  async function readNoteData() {
+    let element = await saveNoteDataFunc(noteData);
+    element = element.filter(note => {
+      if(note.id === noteData.id){
+        return note
       }
-    });
-    
-    arry = arry.pop();
+    })
+    element = element.pop();
+    initCard(element)
+  }
+
+  function initCard(arry){
+    const notesContainer = document.querySelector(".notes-container");
+    let cardPrefix;
+    const cardElement = document.createElement("article");
+    // if so then upate the card UI with an edit prefix
+    noteData.isEdited ? cardPrefix = "Edited" : cardPrefix = "Created";
+    // trim note body text for the card UI
+    let cardText = trimUiCardText(arry.body);
+    cardElement.classList.add("card", "notes-card", "bg-body-tertiary");
+    id? cardId = id : cardId = arry.id ;
+    cardElement.dataset.noteId = cardId;
      cardElement.innerHTML = generateCardHTMLTemplates(
         `${cardPrefix}`,
         arry.title,
@@ -719,7 +554,7 @@ function buildImgNoteCards(
         arry.month,
         arry.hrs,
         arry.mins,
-        arry.am_pm,
+        arry.pm_am,
         cardText,
         arry.image
       );
@@ -735,44 +570,6 @@ function buildImgNoteCards(
       }
   }
 }
-
-
-// BUILD NOTE CARD UI FUNC
-// this function builds a card on the UI based on data the user entered.
-// This handles cases where the user creates a note without an image.
-function buildNoteCardsUI(
-	noteBody,
-  noteTitle,
-  day,
-  date_,
-  month,
-  hrs,
-  mins,
-  pm_am,
-isEdited=false){
-		const cardElement = document.createElement("article");
-    let cardPrefix;
-    cardElement.classList.add("card", "notes-card", "bg-body-tertiary");
-		// trim note body text for the card UI
-		let cardText = trimUiCardText(noteBody);
-    // check if note has been edited or not,
-    // if so then upate the card UI with an edit prefix
-    isEdited ? cardPrefix = "Edited" : cardPrefix = "Created";
-    // handles cases where the user creates a note without a cover image
-    cardElement.innerHTML = generateCardHTMLTemplates(
-      `${cardPrefix}`,
-      noteTitle,
-      day,
-      date_,
-      month,
-      hrs,
-      mins,
-      pm_am,
-      cardText
-    );
-
-		return {cardElement};
-  }
 
 // MAKE CARDCLICKABLE FUNC
 // This function adds click event listeners to all note card elements on the UI.
@@ -874,7 +671,7 @@ function viewNoteDetails(id,event){
   noteDate.textContent =`${noteElement.date}`;
   noteMonth.textContent =`${noteElement.month}`;
   noteTime.textContent =`${noteElement.hrs}:${noteElement.mins}`;
-  noteTimeSuffix.textContent =`${noteElement.am_pm}`;
+  noteTimeSuffix.textContent =`${noteElement.pm_am}`;
   noteBody.textContent = `${noteElement.body}`;
 
   // create an on the note display modal using the noteOject's id
@@ -1159,6 +956,7 @@ function addToFavourites(noteId){
 
   localStorage.setItem("noteEntries", JSON.stringify(notesArray));
 }
+
 // ORDER CARDS FUNC
 // This function reverses the order of the note cards on the page 
 function reOrderCards(){
@@ -1212,77 +1010,55 @@ function themeDetection(){
 }
 
 /***** LOCAL STORAGE ******/
+
 // SAVE NOTES TO LOCAL STORAGE FUNC
 //  This function  saves note data to local storage, including an image if specified,
 //  by converting it to a string using a FileReader.
-function saveNoteDataToLocalStorage(
-	noteId,nTitle,
-	nBody,nDay,nDate,
-	nHrs,nMins,
-  tSuffix,noteFlag,
-	img_,nMonth) {
-  
+//  its returned values are the processed note data(object)
+function saveNoteDataToLocalStorage(noteData) {
   let imageUrlData;
-  // object created to hold note properties
-  const noteObj = {
-    id: noteId,
-    title: nTitle,
-    body: nBody,
-    day: nDay,
-    date: nDate,
-    month:nMonth,
-    hrs: nHrs,
-    mins: nMins,
-    am_pm: tSuffix,
-    image: img_,
-    hasImage: noteFlag
-  };
-  let notesArray;
-  
   //if the flag is set to true, it coverts the coverImgObj(blob) to a string.
   //by performing a file reading operation.
-   
-  if(noteFlag === true){
-    
+  if(noteData.flag === true){ 
 
-    function resolveImageProcessing(){
+    // consume data generated from the promise that handles the image processing
+    async function retriveImageData() {
+     let data = await initImageProcessing();
+     return data;
+    }
+    
+    // Create a promise to handle image processing task asynchroneously
+    function initImageProcessing(){
       return new Promise(resolve=>{
         let fileReading = new FileReader()
         fileReading.onload = (e)=>{
           imageUrlData = e.target.result;
           // updates the noteObj (object) image property the converted blob data
-          noteObj.image = imageUrlData;
+          noteData.image = imageUrlData;
           notesArray = retriveFromLocalStorage();
-          notesArray.push(noteObj);
+          notesArray.push(noteData);
           localStorage.setItem("noteEntries", JSON.stringify(notesArray));
           resolve(retriveFromLocalStorage())
         }
-        fileReading.readAsDataURL(img_)
+        fileReading.readAsDataURL(noteData.coverImgObj)
         
       })
     }
 
-    async function processImageData() {
-     let noteData = await resolveImageProcessing();
-      
-     return noteData;
-    }
-
-    return processImageData()
-
- 
-  }else{
+    return retriveImageData()
+  }
+  else{
     notesArray = retriveFromLocalStorage();
-    notesArray.push(noteObj);
+    notesArray.push(noteData);
     localStorage.setItem("noteEntries", JSON.stringify(notesArray));
-
+    // wrap the data in a promise  
+    // so it's return values can be properly consumed
+    // in the async function where it is called.
     async function processData() {
-      let noteData = await Promise.resolve(retriveFromLocalStorage());
-       
-      return noteData;
+      let data = await Promise.resolve(retriveFromLocalStorage()); 
+      return data;
      }
-
-     return processData()
+    return processData()
   }
 
 }

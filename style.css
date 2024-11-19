@@ -78,10 +78,6 @@
 	font-size: 85%;
 }
 
-.test{
-	border: 1px solid red;
-}
-
 .dark-txt{
 	color: var(--dark-color) !important;
 }
@@ -269,8 +265,7 @@ button.show-inputs-btn{
 .nav-toggle button{
 	font-size: 1rem;
 	color: var(--dark-color);
-	width: 45px;
-	transform: scale(0.9);
+	width: 50px;
 	padding: 0px 8px;
 	outline: 0;
 	border: 0;
@@ -286,11 +281,11 @@ button.show-inputs-btn{
 
 /* nav off canvas btn */
 .nav-off-canvas button{
-	padding: .2em .5em;
-	background: #b9b9b9;
+	color: rgb(255, 234, 0);
+	padding: 0;
+	background: transparent;
 	outline: 0;
 	border: 0;
-	border-radius: 5px;
 	transform: scale(0.9);
 }
 
@@ -320,7 +315,7 @@ button.show-inputs-btn{
 
 /* dark mode toggle btn */
 div.nav-center .dark-mode-toggle{
-	transform: scale(0.9) translateY(0);
+	transform: scale(0.9) translateY(3px);
 }
 
 /***** COVER IMAGE MODAL *****/
@@ -521,7 +516,7 @@ img.cover-img{
 	border-top: 2px solid var(--dark-color);
 	padding: 0;
 	margin: 0;
-	background-color: var(--dark-color);
+	background-color: var(--light-color);
 }
 
 .card-img{
@@ -588,8 +583,7 @@ img.cover-img{
 	backdrop-filter: blur(10px);
 	position: absolute;
 	left: 0;
-	/* z-index: 1000; */
-	transition: width 200ms linear;
+	transform: width 300ms linear;
 	overflow: hidden;
 }
 
@@ -602,13 +596,14 @@ img.cover-img{
 
 
 .off-canvas-center li{
-	margin: .2rem 0;
+	margin: .2rem auto;
 	padding: .5em 0;
 	font-size: 1.1rem;
+	width: 100%;
+	/* border: 1px solid red; */
 	cursor: pointer;
-	width: 226px;
+	
 }
-
 
 
 
@@ -666,7 +661,6 @@ the note title and note input itself */
 
 .show-nav-off-canvas{
 	width: 50vw;
-	overflow: visible;
 }
 
 /* displays alert on the cover image modal */
@@ -729,23 +723,8 @@ the card being edited */
 
 	/* for alerts on main page */
 	.main-alerts-display{
-		width: 0;
+		width: 50%;
 		margin: 0 auto;
-	}
-
-	.show-main-alert p{
-		width: 0;
-	}
-
-	/* JS Class: display alert on main page */
-	.show-main-alert {
-		z-index: 10;
-		visibility: visible;
-		width: 50%;
-	}
-	/* JS Class */
-	.show-main-alert p{
-		width: 50%;
 	}
 
 /** contorls the width and orientation of the note cards **/
@@ -780,14 +759,13 @@ the card being edited */
 		transform: translate(-3px,-3px) !important;
 	}
 
-	/*JS Class off Canvas background */
+	/* off Canvas background */
 	.nav-off-canvas{
 		width: 0;
 	}
-	/* JS Class */
+	
 	.show-nav-off-canvas{
 		width: 30vw;
-		overflow: visible;
 	}
 	
 }
