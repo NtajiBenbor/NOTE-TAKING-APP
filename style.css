@@ -304,6 +304,16 @@ button.show-inputs-btn{
 
 }
 
+/* add to favourites btn */
+.add-to-fav-btn{
+	border: none;
+	color: lightslategray;
+	background: transparent;
+}
+.add-to-fav-btn i{
+	font-size: 1.5rem;
+}
+
 /* clear notes btn */
 .clear-btn{
 	background: linear-gradient(
@@ -583,7 +593,7 @@ img.cover-img{
 	backdrop-filter: blur(10px);
 	position: absolute;
 	left: 0;
-	transform: width 300ms linear;
+	transition: width 300ms linear;
 	overflow: hidden;
 }
 
@@ -675,7 +685,7 @@ the note title and note input itself */
 /* class that are applied when a note is being edited */
 .editable-card{
 	background-color: skyblue !important;
-	transform: scale(1.1) !important;
+	/* transform: scale(1.1) !important; */
 	
 }
 /*styling to indicate that this cards are disabled when the edit class has been applied to 
@@ -683,6 +693,10 @@ the card being edited */
 .disabled-cards .notes-card{
 	transform: scale(0.9);
 
+}
+
+.show .add-to-fav-btn{
+	color: red;
 }
 
 /*** JS animations classes ***/

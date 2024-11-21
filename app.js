@@ -14,7 +14,6 @@ document.addEventListener("readystatechange", (event) => {
     initApp();
     loadNoteDataOnPageLoad();
   }
-  // show loader
 });
 
 /***** FUNCTIONS ******/
@@ -158,6 +157,7 @@ function createNewNote(event) {
 	else if(title && body && editFlag){
     const editedCardElement = document.querySelector(".editable-card");
     let cardId = editedCardElement.dataset.noteId;
+    noteData.id = cardId;
 		// Update the UI to reflect changes made to the currently edited card
 		UpdateEditedCards(noteData,editedCardElement,cardId);
      // apply this scroll effect only on mobile display
@@ -359,7 +359,7 @@ function manageNoteDisplayModal(event,modalElement){
     },1000);
   }else if(event.target.closest(".add-to-fav-btn")){
     let id = modalElement.dataset.noteId;
-    addToFavourites(id)
+    addToFavourites(id);
   }
 }
 
@@ -369,8 +369,7 @@ function manageNavOffCanvas(event){
   const offCanvas = document.querySelector(".nav-off-canvas");
   const notesContainer = document.querySelector(".notes-container");
   let noteCards = document.querySelectorAll(".notes-card");
-
-
+  let element;
   if(event.target.closest(".close-canvas-btn")){
     toggleBtnIcons(navToggle);
     offCanvas.classList.remove("show-nav-off-canvas");
@@ -380,50 +379,19 @@ function manageNavOffCanvas(event){
     noteCards.forEach(card =>{
       card.remove();
     })
-    notesArray= notesArray.forEach(note=>{
-      if(note.isFavourite && note.hasImage){
-        buildImgNoteCardsUI(
-          note.body,
-          note.title,
-          note.day,
-          note.date,
-          note.month,
-          note.hrs,
-          note.mins,
-          note.am_pm,
-          note.image,
-          note.isEdited,
-          note.id)
-          notesContainer.append(element);
-      }else if(note.isFavourite){
 
-        let cardDetails = buildNoteCardsUI(
-          note.body,
-          note.title,
-          note.day,
-          note.date,
-          note.month,
-          note.hrs,
-          note.mins,
-          note.am_pm,
-        note.isEdited);
-        cardDetails.cardElement.dataset.noteId = note.id;
-			// append note card to UI
-			notesContainer.append(cardDetails.cardElement);
-      }
+    notesArray= notesArray.forEach(note =>{
+      // note.isFavourite ? buildImgNoteCardUI: element = buildImgNoteCardUI();
+      // notesContainer.append(element)
       
-     
-			makeCardsClickable();
-    })
-
-    if(notesContainer.childElementCount > 0){
-      manageClearAllNotes();
- }
-
+      if(note.isFavourite){
+        element = buildImgNoteCardUI(note)
+          notesContainer.append(element);
+      }})
+    }  
   }
 
 
-}
 
 // GENERATE CARD HTML TEMPLATE FUNC
 // This function  generates HTML code for a note card with specified content and styling.
@@ -517,21 +485,19 @@ function buildImgNoteCardUI(...noteDetails){
     const notesContainer = document.querySelector(".notes-container");
     const cardElement = document.createElement("article");
     // if so then upate the card UI with an edit prefix
-    noteData.isEdited ? cardPrefix = "Edited" : cardPrefix = "Created";
+    arry.isEdited === true ? cardPrefix = "Edited" : cardPrefix = "Created";
     // trim note body text for the card UI
     let cardText = trimUiCardText(arry.body);
     cardElement.classList.add("card", "notes-card", "bg-body-tertiary");
     id? cardId = id : cardId = arry.id ;
     cardElement.dataset.noteId = cardId;
-    cardElement.innerHTML = generateCardHTMLTemplates( `${cardPrefix}`,arry,cardText);
-
+    cardElement.innerHTML = generateCardHTMLTemplates(cardPrefix,arry,cardText);
     notesContainer.append(cardElement);
     makeCardsClickable();
-		toggleInputsContainer();
     if(!editFlag){
       reOrderCards();
     }
-
+    toggleInputsContainer();
     // sets up the functionality to clear notes
     if(notesContainer.childElementCount > 0){
       manageClearAllNotes();
@@ -540,7 +506,9 @@ function buildImgNoteCardUI(...noteDetails){
   // READ NOTE DATA FUNC
   //Processed data from then retrived and used to Populate cards in the UI
   async function readNoteData() {
+    console.log(noteData)
     let element = await saveNoteDataFunc(noteData);
+    console.log(element)
     element = element.filter(note => {
       if(note.id === noteData.id){
         return note
@@ -564,7 +532,6 @@ function makeCardsClickable() {
 	})
 }
 
-
 // UPDATE EDITED CARDS FUNC
 // this function updates the card data on the UI based on data the user entered.
 function UpdateEditedCards(...cardDetails){
@@ -573,13 +540,12 @@ function UpdateEditedCards(...cardDetails){
 	// trim note body text for the card UI
 	let cardText = trimUiCardText(noteData.body);
 		if (editFlag && (coverImgObj || coverImgFlag)) {
-
+      // handles cases where the user edits the note and includes a cover image
         (async ()=>{
             let processedImg = await retriveImageData();
-            console.log("i am updating card data")
             noteData.image = processedImg;
             element.innerHTML = generateCardHTMLTemplates( "Edited",noteData,cardText);
-            editInLocalStorage(noteData);
+            editInLocalStorage(noteData,cardId);
             updateNoteBtn.textContent = "Create note";
             // hide form inputs and reset the app
             toggleInputsContainer();
@@ -593,7 +559,7 @@ function UpdateEditedCards(...cardDetails){
 	else if (editFlag && (!coverImgObj || !coverImgFlag)) {
 		// handles cases where the user edits the note and does not includes a cover image
     element.innerHTML = generateCardHTMLTemplates( "Edited",noteData,cardText);
-    editInLocalStorage(noteData);
+    editInLocalStorage(noteData,cardId);
     updateNoteBtn.textContent = "Create note";
     // hide form inputs and reset the app
     toggleInputsContainer();
@@ -685,7 +651,7 @@ function displayAlert(element,message,d_class,duration){
 }
 
 //RESET ALL FUNC
-// This function essentially resets the app to its default state.
+// This function resets the app to its default state.
 function resetAll() {
   const notesContainer = document.querySelector(".notes-container");
   const noteCards = document.querySelectorAll(".notes-card");
@@ -789,7 +755,6 @@ function trimUiCardText(b_text){
   }else{
     return b_text;
   }
-
 }
 
 // DELETE NOTE FUNC
@@ -882,16 +847,9 @@ function editNote(){
 }
 
 // ADD TO FAVOURITES FUNC
-/**
- * The function `addToFavourites` toggles a CSS class on a note display button wrapper and updates the
- * favorite status of a note in local storage based on the button's visibility.
- * @param noteId - The `noteId` parameter is the unique identifier of the note that you want to add to
- * or remove from the list of favorites.
- */
 function addToFavourites(noteId){
   const noteDisplayBtnsWrapper = document.querySelector(".note-controls");
   noteDisplayBtnsWrapper.classList.toggle("show");
-  
   let notesArray = retriveFromLocalStorage();
   if(noteDisplayBtnsWrapper.classList.contains("show")){
     notesArray = notesArray.map(note=>{
@@ -912,7 +870,6 @@ function addToFavourites(noteId){
       } return note;
     })
   }
-
   localStorage.setItem("noteEntries", JSON.stringify(notesArray));
 }
 
@@ -922,12 +879,10 @@ function reOrderCards(){
   const notesContainer = document.querySelector(".notes-container");
 	let noteCards = document.querySelectorAll(".notes-card");
   const cardList = [...noteCards];
-
 	noteCards.forEach(card =>{
 		card.remove();
 	})
 
- 
   cardList.reverse().forEach(card=>{
 		notesContainer.append(card)
 	})
@@ -976,25 +931,30 @@ function themeDetection(){
 function saveNoteDataToLocalStorage(noteData) {
   //if the flag is set to true, it coverts the coverImgObj(blob) to a string.
   //by performing a file reading operation.
+  let data;
   if(noteData.hasImage){ 
     // consume data generated from the promise that handles the image processing
     async function retriveImageData() {
-     let data = await initImageProcessing(noteData);
-     return data;
+      data = await initImageProcessing(noteData);
+      return data;
     }
     return retriveImageData();
   }
   else{
     notesArray = retriveFromLocalStorage();
     notesArray.push(noteData);
+    console.log(noteData);
     localStorage.setItem("noteEntries", JSON.stringify(notesArray));
     // wrap the data in a promise  
     // so it's return values can be properly consumed
     // in the async function where it is called.
-    (async ()=>{
-      let data = await Promise.resolve(retriveFromLocalStorage()); 
+    
+    async function processData(){
+      data = await Promise.resolve(retriveFromLocalStorage()); 
+      console.log(data);
       return data;
-     })()
+     }
+     return processData()
   }
 
 }
@@ -1008,16 +968,12 @@ function initImageProcessing(noteObj){
     fileReading.onload = (e)=>{
       noteObj.image = e.target.result;
       // updates the noteObj (object) image property the converted blob data
-      // noteObj.image = URLstring;
       if(editFlag){
-        console.log("i run during edits");
-        console.log(noteObj.image)
         resolve(noteObj.image);
       }else{
         let notesArray = retriveFromLocalStorage();
         notesArray.push(noteObj);
         localStorage.setItem("noteEntries", JSON.stringify(notesArray));
-        console.log("i run on fresh creation")
         resolve(retriveFromLocalStorage());
       }
     }
@@ -1028,7 +984,7 @@ function initImageProcessing(noteObj){
 
 // RETRIVE NOTE DATA FORM LOCAL STORAGE FUNC
 function retriveFromLocalStorage() {
-  return JSON.parse(localStorage.getItem("noteEntries")) || [];
+ return JSON.parse(localStorage.getItem("noteEntries")) || [];
 }
 
 // DELETE NOTE DATA FROM LOCAL STORAGE FUNC
@@ -1044,38 +1000,26 @@ function deleteNoteFromLocalStorage(_id){
   localStorage.setItem("noteEntries", JSON.stringify(notesArray));
 }
 
-// editId,nTitle,nBody,
-// nDay,nDate,nHrs,
-// nMins,tSuffix,noteFlag,
-// img_,nMonth
+
 // EDIT NOTE DATA IN LOCAL STORAGE FUNC
 // This function updates a specific note in local storage with new values.
- function editInLocalStorage(dataObj){
-
-  let notesArray = retriveFromLocalStorage();
+function editInLocalStorage(...editDetails){
+const [dataObj,editId] = editDetails
+ let notesArray = retriveFromLocalStorage();
 // map through each note in the notes array
 // if the current note's ID matches the editId, create a new note object with all original properties.
 // update this new object with the function arguments (new values)
 // if there's a match, return the updated note; otherwise, return the original note
 // map creates a new array of notes, with only the matched note updated
 // the original notesArray is replaced with this new mapped array
-   notesArray = notesArray.map(note=>{
-    if(dataObj.id === note.id)
-      return {
-        ...note,
-        title:dataObj.title,
-        body:dataObj.body,
-        day:dataObj.day,
-        date:dataObj.date,
-        month:dataObj.month,
-        hrs:dataObj.hrs,
-        mins:dataObj.mins,
-        pm_am:dataObj.pm_am,
-        image:dataObj.image,
-        hasImage:dataObj.hasImage,
-        isEdited:true
-    }
-    return note;
-  });
-  localStorage.setItem("noteEntries", JSON.stringify(notesArray));
+  notesArray = notesArray.map(note=>{
+   if(editId === note.id)
+     return {
+       ...note,
+       ...dataObj,
+       isEdited:true
+   }
+   return note;
+ });
+ localStorage.setItem("noteEntries", JSON.stringify(notesArray));
 }
