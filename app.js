@@ -74,7 +74,6 @@ function initApp() {
   //Handles User actions on the Nav Off Canvas Element
   offCanvas.addEventListener("click",(event)=>{
     manageNavOffCanvas(event);
-    console.log("firing")
   })
 
 }
@@ -87,7 +86,6 @@ function initApp() {
 // and handling alerts for successful or unsuccessful creation.
 function createNewNote(event) {
   event.preventDefault();
-
   const mainAlerts = document.querySelector(".main-alerts-display");
   const weekDays = ["Sun", "Mon", "Tue", "Wed", "Thur", "Fri", "Sat"];
   const months = [
@@ -127,8 +125,6 @@ function createNewNote(event) {
   hrs < 12 ? pm_am = "pm" : pm_am = "am";
   mins < 10 ? mins = `0${mins}`: mins;
 
-  if (title && body && !editFlag) {
-
   //data from user is used to create an object 
   const noteData = {
     id: id,
@@ -142,10 +138,12 @@ function createNewNote(event) {
     pm_am: pm_am,
     image: coverImgObj,
     hasImage: coverImgFlag,
-    isEdited:editFlag
+    isEdited:false
   }
 
-  buildImgNoteCardUI(noteData,saveNoteDataToLocalStorage,id)
+  if (title && body && !editFlag) {
+
+    buildImgNoteCardUI(noteData,saveNoteDataToLocalStorage,id)
 
     // alert that note has been created
     alertMessage ='<p>Note created  <span><i class="fa-solid fa-circle-check"></i></span></p>';
@@ -161,12 +159,7 @@ function createNewNote(event) {
     const editedCardElement = document.querySelector(".editable-card");
     let cardId = editedCardElement.dataset.noteId;
 		// Update the UI to reflect changes made to the currently edited card
-		UpdateEditedCards( 
-			editedCardElement,noteBody,
-      noteTitle,day,date,
-      month,hrs,mins,pm_am,
-      cardId,coverImgFlag);
-
+		UpdateEditedCards(noteData,editedCardElement,cardId);
      // apply this scroll effect only on mobile display
      if(matchMedia("(max-width: 767px)").matches){
        let position = editedCardElement.getBoundingClientRect().bottom
@@ -176,14 +169,13 @@ function createNewNote(event) {
          behavior:"smooth"
        })
      }
-		
 		// display alert
 		alertMessage ='<p>Note Updated  <span class="pl-1"><i class="fa-solid fa-circle-xmark"></i></span></p>';
 		displayAlert(mainAlerts,alertMessage,"show-main-alert",4000);
   } 
 	else {
     // display error alert
-    let alertMessage = `<p>Error! you can not create a blank note. <span class="pl-1"> <i class="fa-solid fa-circle-exclamation"></i></span></p>`;
+    alertMessage = `<p>Error! you can not create a blank note. <span class="pl-1"> <i class="fa-solid fa-circle-exclamation"></i></span></p>`;
     
     displayAlert(
        mainAlerts,
@@ -436,24 +428,21 @@ function manageNavOffCanvas(event){
 // GENERATE CARD HTML TEMPLATE FUNC
 // This function  generates HTML code for a note card with specified content and styling.
 // returns an HTML string that represents a note card UI.
-function generateCardHTMLTemplates(
-	introText,title,
-	day,date,mnth,
-	hours,mins,timeSuffix
-	,cardBody,imge){
-    if (imge) {
+function generateCardHTMLTemplates(...cardDetails){
+  const [introText,cardData,cardBody] = cardDetails
+    if (cardData.image) {
         return `<!-- note card element with picture start-->
           <div class="row g-0 note-card-center">
               <!-- note card image -->
               <div class="card-head-wrapper">
-                  <img src="${imge}" class="img-fluid card-img" alt="note cover img">
+                  <img src="${cardData.image}" class="img-fluid card-img" alt="note cover img">
               </div>
               <!-- card body -->
               <div class="card-body-wrappper">
                   <div class="card-body">
                       <div class="d-flex justify-content-between">
                           <!-- card title -->
-                          <h5 class="card-title">${title}</h5>
+                          <h5 class="card-title">${cardData.title}</h5>
                           <!-- card btn -->
                           <button type="button" class="btn my-0 py-0">
                               <i class="fa-solid fa-arrow-right note-btn"></i>
@@ -461,11 +450,11 @@ function generateCardHTMLTemplates(
                       </div>
                       <!-- card subtitle -->
                       <h6 class="card-subtitle mb-3 mt-1 text-body-secondary light-txt">
-                          <span>${introText}</span> on <span class="note-day">${day}</span>
-                        <span class="note-date">${date}</span>  
-                        <span class="note-month">${mnth}</span> 
-                        <span class="note-time">${hours}:${mins}</span> 
-                        <span class="note-time-suffix">${timeSuffix}.</span>
+                          <span>${introText}</span> on <span class="note-day">${cardData.day}</span>
+                        <span class="note-date">${cardData.date}</span>  
+                        <span class="note-month">${cardData.month}</span> 
+                        <span class="note-time">${cardData.hrs}:${cardData.mins}</span> 
+                        <span class="note-time-suffix">${cardData.pm_am}.</span>
                       </h6>
                       <!-- card text -->
                       <p class="card-text dark-txt line-h card-txt-color">${cardBody}</p>
@@ -481,7 +470,7 @@ function generateCardHTMLTemplates(
                 <div class="card-body">
                     <div class="d-flex justify-content-between">
                         <!-- card title -->
-                        <h5 class="card-title">${title}</h5>
+                        <h5 class="card-title">${cardData.title}</h5>
                         <!-- card btn -->
                         <button type="button" class="btn my-0 py-0">
                             <i class="fa-solid fa-arrow-right note-btn"></i>
@@ -489,11 +478,11 @@ function generateCardHTMLTemplates(
                     </div>
                     <!-- card subtitle -->
                     <h6 class="card-subtitle mb-3 mt-1 text-body-secondary light-txt">
-                        <span>${introText}</span> on <span class="note-day">${day}</span>
-                        <span class="note-date">${date}</span>  
-                        <span class="note-month">${mnth}</span> 
-                        <span class="note-time">${hours}:${mins}</span> 
-                        <span class="note-time-suffix">${timeSuffix}.</span>
+                        <span>${introText}</span> on <span class="note-day">${cardData.day}</span>
+                        <span class="note-date">${cardData.date}</span>  
+                        <span class="note-month">${cardData.month}</span> 
+                        <span class="note-time">${cardData.hrs}:${cardData.mins}</span> 
+                        <span class="note-time-suffix">${cardData.pm_am}.</span>
                     </h6>
                     <!-- card text -->
                     <p class="card-text dark-txt line-h card-txt-color">${cardBody}</p>
@@ -504,26 +493,52 @@ function generateCardHTMLTemplates(
 }
 
 // BUILD NOTE CARD UI FUNC
-/**
- * The function `buildImgNoteCardUI` is responsible for dynamically creating and initializing note
- * cards with specific details and UI elements.
- * @param noteDetails - The `noteDetails` parameter in the `buildImgNoteCardUI` function seems to
- * contain three elements:
- */
+// this function saves the note data to local storage.
+// the data is then processed(image-blob, is converted to a URLstring and saved in LS).
+// the data is used to build cards in the UI when the user create a note entry or when the app is initialized.
 function buildImgNoteCardUI(...noteDetails){
   const [noteData,saveNoteDataFunc,id] = noteDetails;
-
-
+  // handles card creation when the user creates a new note
   if(saveNoteDataFunc){
       readNoteData();
-  }else if(!saveNoteDataFunc){
+  }
+  else if(!saveNoteDataFunc){
+    // handles card creation when the app is initilized by loading data from local storage
     let notesArray = retriveFromLocalStorage();
     notesArray.forEach( note=>{
         initCard(note);
       })
   }
-  
 
+  // INIT CARD FUNCTION
+  // This function uses data from array parameter to create a new card element in the DOM.
+  function initCard(arry){
+    let cardPrefix;
+    const notesContainer = document.querySelector(".notes-container");
+    const cardElement = document.createElement("article");
+    // if so then upate the card UI with an edit prefix
+    noteData.isEdited ? cardPrefix = "Edited" : cardPrefix = "Created";
+    // trim note body text for the card UI
+    let cardText = trimUiCardText(arry.body);
+    cardElement.classList.add("card", "notes-card", "bg-body-tertiary");
+    id? cardId = id : cardId = arry.id ;
+    cardElement.dataset.noteId = cardId;
+    cardElement.innerHTML = generateCardHTMLTemplates( `${cardPrefix}`,arry,cardText);
+
+    notesContainer.append(cardElement);
+    makeCardsClickable();
+		toggleInputsContainer();
+    if(!editFlag){
+      reOrderCards();
+    }
+
+    // sets up the functionality to clear notes
+    if(notesContainer.childElementCount > 0){
+      manageClearAllNotes();
+    }
+  }
+  // READ NOTE DATA FUNC
+  //Processed data from then retrived and used to Populate cards in the UI
   async function readNoteData() {
     let element = await saveNoteDataFunc(noteData);
     element = element.filter(note => {
@@ -533,41 +548,6 @@ function buildImgNoteCardUI(...noteDetails){
     })
     element = element.pop();
     initCard(element)
-  }
-
-  function initCard(arry){
-    const notesContainer = document.querySelector(".notes-container");
-    let cardPrefix;
-    const cardElement = document.createElement("article");
-    // if so then upate the card UI with an edit prefix
-    noteData.isEdited ? cardPrefix = "Edited" : cardPrefix = "Created";
-    // trim note body text for the card UI
-    let cardText = trimUiCardText(arry.body);
-    cardElement.classList.add("card", "notes-card", "bg-body-tertiary");
-    id? cardId = id : cardId = arry.id ;
-    cardElement.dataset.noteId = cardId;
-     cardElement.innerHTML = generateCardHTMLTemplates(
-        `${cardPrefix}`,
-        arry.title,
-        arry.day,
-        arry.date,
-        arry.month,
-        arry.hrs,
-        arry.mins,
-        arry.pm_am,
-        cardText,
-        arry.image
-      );
-
-      notesContainer.append(cardElement);
-      makeCardsClickable();
-			toggleInputsContainer();
-      reOrderCards();
-
-      // sets up the functionality to clear notes
-      if(notesContainer.childElementCount > 0){
-        manageClearAllNotes();
-      }
   }
 }
 
@@ -584,61 +564,40 @@ function makeCardsClickable() {
 	})
 }
 
+
 // UPDATE EDITED CARDS FUNC
 // this function updates the card data on the UI based on data the user entered.
-function UpdateEditedCards(
-	element,noteBody,
-	noteTitle,day,date_,
-	month,hrs,mins,pm_am,
-	cardId,coverImgFlag
-){
-	const updateNoteBtn = document.querySelector(".create-note-btn");
+function UpdateEditedCards(...cardDetails){
+  const [noteData,element,cardId]= cardDetails;
+  const updateNoteBtn = document.querySelector(".create-note-btn");
 	// trim note body text for the card UI
-	let cardText = trimUiCardText(noteBody);
+	let cardText = trimUiCardText(noteData.body);
 		if (editFlag && (coverImgObj || coverImgFlag)) {
-	 
-		// handles cases where the user edits the note and includes a cover image
-    const reader = new FileReader();
-    reader.onload = (event) => {
-      // noteImg is updated with the result of the file reading
-      noteImg = event.target.result;
-      element.innerHTML = generateCardHTMLTemplates(
-				"Edited",noteTitle,day,
-				date_,month,hrs,mins,
-				pm_am,cardText,noteImg
-			);
-      // edit in local storage
-      editInLocalStorage(
-        cardId,noteTitle,
-        noteBody,day,date_,
-        hrs,mins,pm_am,
-        coverImgFlag,
-        noteImg,month
-			);
-      updateNoteBtn.textContent = "Create note";
-			// hide form inputs and reset the app
-      toggleInputsContainer();
-    };
-    reader.readAsDataURL(coverImgObj);
+
+        (async ()=>{
+            let processedImg = await retriveImageData();
+            console.log("i am updating card data")
+            noteData.image = processedImg;
+            element.innerHTML = generateCardHTMLTemplates( "Edited",noteData,cardText);
+            editInLocalStorage(noteData);
+            updateNoteBtn.textContent = "Create note";
+            // hide form inputs and reset the app
+            toggleInputsContainer();
+        })();
+
+        async function retriveImageData() {
+          let data = await initImageProcessing(noteData);
+          return data;
+        }
   } 
 	else if (editFlag && (!coverImgObj || !coverImgFlag)) {
 		// handles cases where the user edits the note and does not includes a cover image
-    element.innerHTML = generateCardHTMLTemplates(
-      "Edited",noteTitle,day,
-      date_,month,hrs,
-      mins,pm_am,cardText
-    );
-    // edit in local storage
-    editInLocalStorage(
-      cardId,noteTitle,noteBody,
-      day,date_,hrs,mins,pm_am,
-      coverImgFlag,
-      noteImg="null",month
-    );
+    element.innerHTML = generateCardHTMLTemplates( "Edited",noteData,cardText);
+    editInLocalStorage(noteData);
     updateNoteBtn.textContent = "Create note";
-
+    // hide form inputs and reset the app
     toggleInputsContainer();
-  } 
+  }
 }
 
 // VIEW NOTES DETAILS FUNC
@@ -1010,42 +969,20 @@ function themeDetection(){
 }
 
 /***** LOCAL STORAGE ******/
-
 // SAVE NOTES TO LOCAL STORAGE FUNC
 //  This function  saves note data to local storage, including an image if specified,
 //  by converting it to a string using a FileReader.
 //  its returned values are the processed note data(object)
 function saveNoteDataToLocalStorage(noteData) {
-  let imageUrlData;
   //if the flag is set to true, it coverts the coverImgObj(blob) to a string.
   //by performing a file reading operation.
-  if(noteData.flag === true){ 
-
+  if(noteData.hasImage){ 
     // consume data generated from the promise that handles the image processing
     async function retriveImageData() {
-     let data = await initImageProcessing();
+     let data = await initImageProcessing(noteData);
      return data;
     }
-    
-    // Create a promise to handle image processing task asynchroneously
-    function initImageProcessing(){
-      return new Promise(resolve=>{
-        let fileReading = new FileReader()
-        fileReading.onload = (e)=>{
-          imageUrlData = e.target.result;
-          // updates the noteObj (object) image property the converted blob data
-          noteData.image = imageUrlData;
-          notesArray = retriveFromLocalStorage();
-          notesArray.push(noteData);
-          localStorage.setItem("noteEntries", JSON.stringify(notesArray));
-          resolve(retriveFromLocalStorage())
-        }
-        fileReading.readAsDataURL(noteData.coverImgObj)
-        
-      })
-    }
-
-    return retriveImageData()
+    return retriveImageData();
   }
   else{
     notesArray = retriveFromLocalStorage();
@@ -1054,13 +991,39 @@ function saveNoteDataToLocalStorage(noteData) {
     // wrap the data in a promise  
     // so it's return values can be properly consumed
     // in the async function where it is called.
-    async function processData() {
+    (async ()=>{
       let data = await Promise.resolve(retriveFromLocalStorage()); 
       return data;
-     }
-    return processData()
+     })()
   }
 
+}
+
+// INIT IMAGE PROCESSING FUNC
+// This function processes an image file, updates a note object with the image
+// data, and either saves the note to local storage or returns it based on an edit flag.
+function initImageProcessing(noteObj){
+  return new Promise(resolve=>{
+    let fileReading = new FileReader()
+    fileReading.onload = (e)=>{
+      noteObj.image = e.target.result;
+      // updates the noteObj (object) image property the converted blob data
+      // noteObj.image = URLstring;
+      if(editFlag){
+        console.log("i run during edits");
+        console.log(noteObj.image)
+        resolve(noteObj.image);
+      }else{
+        let notesArray = retriveFromLocalStorage();
+        notesArray.push(noteObj);
+        localStorage.setItem("noteEntries", JSON.stringify(notesArray));
+        console.log("i run on fresh creation")
+        resolve(retriveFromLocalStorage());
+      }
+    }
+    fileReading.readAsDataURL(noteObj.image)
+    
+  })
 }
 
 // RETRIVE NOTE DATA FORM LOCAL STORAGE FUNC
@@ -1081,16 +1044,15 @@ function deleteNoteFromLocalStorage(_id){
   localStorage.setItem("noteEntries", JSON.stringify(notesArray));
 }
 
+// editId,nTitle,nBody,
+// nDay,nDate,nHrs,
+// nMins,tSuffix,noteFlag,
+// img_,nMonth
 // EDIT NOTE DATA IN LOCAL STORAGE FUNC
 // This function updates a specific note in local storage with new values.
- function editInLocalStorage(
-	editId,nTitle,nBody,
-	nDay,nDate,nHrs,
-	nMins,tSuffix,noteFlag,
-	img_,nMonth){
+ function editInLocalStorage(dataObj){
 
   let notesArray = retriveFromLocalStorage();
-
 // map through each note in the notes array
 // if the current note's ID matches the editId, create a new note object with all original properties.
 // update this new object with the function arguments (new values)
@@ -1098,19 +1060,19 @@ function deleteNoteFromLocalStorage(_id){
 // map creates a new array of notes, with only the matched note updated
 // the original notesArray is replaced with this new mapped array
    notesArray = notesArray.map(note=>{
-    if(editId === note.id)
+    if(dataObj.id === note.id)
       return {
         ...note,
-        title:nTitle,
-        body:nBody,
-        day:nDay,
-        date:nDate,
-        month:nMonth,
-        hrs:nHrs,
-        mins:nMins,
-        am_pm:tSuffix,
-        image:img_,
-        hasImage:noteFlag,
+        title:dataObj.title,
+        body:dataObj.body,
+        day:dataObj.day,
+        date:dataObj.date,
+        month:dataObj.month,
+        hrs:dataObj.hrs,
+        mins:dataObj.mins,
+        pm_am:dataObj.pm_am,
+        image:dataObj.image,
+        hasImage:dataObj.hasImage,
         isEdited:true
     }
     return note;
