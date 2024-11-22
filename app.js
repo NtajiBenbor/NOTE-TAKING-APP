@@ -1,7 +1,8 @@
-/***** VARIABLES ******/
+// /***** VARIABLES ******/
 // GLOBAL variables
 let editFlag = false;
 let coverImgFlag = false;
+let showFavs = false;
 let coverImgObj;
 let editedObj;
 
@@ -101,12 +102,11 @@ function createNewNote(event) {
     "Nov",
     "Dec",
   ];
-	let alertMessage;
+	let alrtMsg;
   let title = form.elements.note_title.value.trim();
   let body = form.elements.note.value.trim();
   let dateObj = new Date();
 	const id = Math.random().toString(16).slice(2).toString();
-
 
   // convert time to 12 hrs formart
   function convertTime(dateVar) {
@@ -141,18 +141,10 @@ function createNewNote(event) {
   }
 
   if (title && body && !editFlag) {
-
-    buildImgNoteCardUI(noteData,saveNoteDataToLocalStorage,id)
-
+    buildNoteCardUI(noteData,saveNoteDataToLocalStorage,id)
     // alert that note has been created
-    alertMessage ='<p>Note created  <span><i class="fa-solid fa-circle-check"></i></span></p>';
-    displayAlert(
-      mainAlerts,
-      alertMessage,
-      "show-main-alert",
-      4000
-    );
-
+    alrtMsg ='<p>Note created  <span><i class="fa-solid fa-circle-check"></i></span></p>';
+    displayAlert( mainAlerts,alrtMsg,"show-main-alert",4000);
   }
 	else if(title && body && editFlag){
     const editedCardElement = document.querySelector(".editable-card");
@@ -161,7 +153,7 @@ function createNewNote(event) {
 		// Update the UI to reflect changes made to the currently edited card
 		UpdateEditedCards(noteData,editedCardElement,cardId);
      // apply this scroll effect only on mobile display
-     if(matchMedia("(max-width: 767px)").matches){
+     if(window.matchMedia("(max-width: 767px)").matches){
        let position = editedCardElement.getBoundingClientRect().bottom
        window.scrollTo({
          top:position,
@@ -170,19 +162,13 @@ function createNewNote(event) {
        })
      }
 		// display alert
-		alertMessage ='<p>Note Updated  <span class="pl-1"><i class="fa-solid fa-circle-xmark"></i></span></p>';
-		displayAlert(mainAlerts,alertMessage,"show-main-alert",4000);
+		alrtMsg ='<p>Note Updated  <span class="pl-1"> <i class="fa-solid fa-circle-exclamation"></i></span></p>';
+		displayAlert(mainAlerts,alrtMsg,"show-main-alert",4000);
   } 
 	else {
     // display error alert
-    alertMessage = `<p>Error! you can not create a blank note. <span class="pl-1"> <i class="fa-solid fa-circle-exclamation"></i></span></p>`;
-    
-    displayAlert(
-       mainAlerts,
-       alertMessage,
-      "show-main-alert",
-      4000);
-
+    alrtMsg = `<p>Error! you can not create a blank note. <span class="pl-1"> <i class="fa-solid fa-circle-exclamation"></i></span></p>`;
+    displayAlert(mainAlerts,alrtMsg,"show-main-alert",4000);
     // reset program
     resetAll();
   }
@@ -192,7 +178,7 @@ function createNewNote(event) {
 function loadNoteDataOnPageLoad() {
   let notesArray = retriveFromLocalStorage();
   if (notesArray.length > 0) {
-    buildImgNoteCardUI(note);
+    buildNoteCardUI(note);
   }
 }
 
@@ -202,7 +188,7 @@ function manageClearAllNotes(){
 	const mainAlerts = document.querySelector(".main-alerts-display");
 	const clearBtn = document.querySelector(".clear-btn");
 	let noteCards = document.querySelectorAll(".notes-card");
-	alertMessage =
+	alrtMsg =
 	'<p>Note list cleared <span><i class="fa-solid fa-circle-xmark"></i></span></p>';
 
 	clearBtn.classList.add("show-clear-btn");
@@ -211,7 +197,7 @@ function manageClearAllNotes(){
 				localStorage.removeItem("noteEntries");
 				clearBtn.classList.remove("show-clear-btn");
 
-				displayAlert(mainAlerts,alertMessage,"show-main-alert",4000);
+				displayAlert(mainAlerts,alrtMsg,"show-main-alert",4000);
 				//iterate and delete each card
 				noteCards.forEach((note) => {
 					note.remove();
@@ -272,7 +258,7 @@ function addCoverImage() {
   const previewImgTitle = document.querySelector(".img-preview-caption");
   const alerts = document.querySelector(".alerts");
   const fileUploadInput = document.getElementById("cover-photo-input");
-  let alertMessage = "<p>File is too large. Enter a file less than 500mb</p>";
+  let alrtMsg = "<p>File is too large. Enter a file less than 500mb</p>";
 
   coverImgObj = fileUploadInput.files[0];
   // Checks if the size of the image is greater than 500kb
@@ -281,7 +267,7 @@ function addCoverImage() {
   if (coverImgObj.size > 524288) {
     coverImgObj = "";
     fileUploadInput.value = "";
-    displayAlert(alerts,alertMessage,"show-alert",5000);
+    displayAlert(alerts,alrtMsg,"show-alert",5000);
   } else { 
     const previewImg = document.createElement("img");
     previewImg.classList.add("img-fluid", "cover-img");
@@ -375,23 +361,20 @@ function manageNavOffCanvas(event){
     offCanvas.classList.remove("show-nav-off-canvas");
   }
   else if(event.target.closest(".fav")){
-    let notesArray = retriveFromLocalStorage();
+    // let notesArray = retriveFromLocalStorage();
+    showFavs = true;
     noteCards.forEach(card =>{
       card.remove();
     })
+    buildNoteCardUI();
 
-    notesArray= notesArray.forEach(note =>{
-      // note.isFavourite ? buildImgNoteCardUI: element = buildImgNoteCardUI();
-      // notesContainer.append(element)
-      
-      if(note.isFavourite){
-        element = buildImgNoteCardUI(note)
-          notesContainer.append(element);
-      }})
-    }  
-  }
-
-
+    // notesArray.forEach(note =>{
+    //   if(note.isFavourite){
+    //     element = buildNoteCardUI(note)
+    //       notesContainer.append(element);
+    //   }})
+  }  
+}
 
 // GENERATE CARD HTML TEMPLATE FUNC
 // This function  generates HTML code for a note card with specified content and styling.
@@ -464,8 +447,9 @@ function generateCardHTMLTemplates(...cardDetails){
 // this function saves the note data to local storage.
 // the data is then processed(image-blob, is converted to a URLstring and saved in LS).
 // the data is used to build cards in the UI when the user create a note entry or when the app is initialized.
-function buildImgNoteCardUI(...noteDetails){
+function buildNoteCardUI(...noteDetails){
   const [noteData,saveNoteDataFunc,id] = noteDetails;
+  const addBtn = document.querySelector(".show-inputs-btn");
   // handles card creation when the user creates a new note
   if(saveNoteDataFunc){
       readNoteData();
@@ -473,9 +457,16 @@ function buildImgNoteCardUI(...noteDetails){
   else if(!saveNoteDataFunc){
     // handles card creation when the app is initilized by loading data from local storage
     let notesArray = retriveFromLocalStorage();
-    notesArray.forEach( note=>{
-        initCard(note);
+    notesArray.forEach(note =>{
+      initCard(note);
       })
+  }else if(showFavs){
+    let notesArray = retriveFromLocalStorage();
+    notesArray.forEach(note =>{
+      if(note.isFavourite)
+        {console.log(note)}
+      // initCard(note);
+       })
   }
 
   // INIT CARD FUNCTION
@@ -498,6 +489,11 @@ function buildImgNoteCardUI(...noteDetails){
       reOrderCards();
     }
     toggleInputsContainer();
+    
+    if(form.classList.contains("show")){
+      toggleBtnIcons(addBtn);
+      form.classList.remove("show")
+    }
     // sets up the functionality to clear notes
     if(notesContainer.childElementCount > 0){
       manageClearAllNotes();
@@ -506,9 +502,7 @@ function buildImgNoteCardUI(...noteDetails){
   // READ NOTE DATA FUNC
   //Processed data from then retrived and used to Populate cards in the UI
   async function readNoteData() {
-    console.log(noteData)
     let element = await saveNoteDataFunc(noteData);
-    console.log(element)
     element = element.filter(note => {
       if(note.id === noteData.id){
         return note
@@ -702,7 +696,7 @@ function resetModalValues() {
 // RESET NOTE DISPLAY MODAL FUNC
 // This function clears the content of various elements within the note display modal.
 // after the user has viewed a note.
-  function resetNoteDisplayModal(){
+function resetNoteDisplayModal(){
     const noteImgSection = document.querySelector(".note-dp-img-container");
     const noteBody = document.querySelector(".note-dp-txt");
     const noteDay = document.querySelector(".note-dp-day");
@@ -726,7 +720,7 @@ function resetModalValues() {
     delete noteDisplayModal.dataset.noteId;
     noteDisplayBtnsWrapper.classList.remove("show");
 
-  }
+}
 
 // TRIM FILE NAME FUNC
 // The `trimFileName` function shortens the file name of an image if it exceeds
@@ -781,8 +775,8 @@ function deleteNote(){
     clearBtn.classList.remove("show-clear-btn");
   }
   // display alert
-  alertMessage ='<p>Note Deleted <span class="pl-1"><i class="fa-solid fa-circle-xmark"></i></span></p>';
- displayAlert (mainAlerts,alertMessage,"show-main-alert",4000);
+  alrtMsg ='<p>Note Deleted <span class="pl-1"><i class="fa-solid fa-circle-xmark"></i></span></p>';
+ displayAlert (mainAlerts,alrtMsg,"show-main-alert",4000);
   deleteNoteFromLocalStorage(id)
   resetAll();
 }
@@ -912,7 +906,7 @@ function themeDetection(){
 
 		theme = localStorage.getItem("theme");
 
-	}else if(matchMedia && matchMedia("(prefares-color-scheme: dark)").matches){
+	}else if(window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches){
 		theme = "dark"
 	}
 
@@ -943,15 +937,12 @@ function saveNoteDataToLocalStorage(noteData) {
   else{
     notesArray = retriveFromLocalStorage();
     notesArray.push(noteData);
-    console.log(noteData);
     localStorage.setItem("noteEntries", JSON.stringify(notesArray));
     // wrap the data in a promise  
     // so it's return values can be properly consumed
     // in the async function where it is called.
-    
     async function processData(){
       data = await Promise.resolve(retriveFromLocalStorage()); 
-      console.log(data);
       return data;
      }
      return processData()
@@ -999,7 +990,6 @@ function deleteNoteFromLocalStorage(_id){
   })
   localStorage.setItem("noteEntries", JSON.stringify(notesArray));
 }
-
 
 // EDIT NOTE DATA IN LOCAL STORAGE FUNC
 // This function updates a specific note in local storage with new values.

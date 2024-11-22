@@ -1,10 +1,11 @@
+@media only screen and (min-width: 0rem) {
 :root{
-    --dark:#000814;
-    --medium:#00132d;
-    --accent:#90e0ef;
-    --bodyTextColorWhite: #eff0f1;
+		--dark:#000814;
+		--medium:#00132d;
+		--accent:#90e0ef;
+		--bodyTextColorWhite: #eff0f1;
+	}
 }
-
 
 body.dark-mode{
  background-color: var(--dark);   
