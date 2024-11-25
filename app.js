@@ -3,8 +3,10 @@
 let editFlag = false;
 let coverImgFlag = false;
 let showFavs = false;
+let isAscending = false;
 let coverImgObj;
 let editedObj;
+
 
 /***** EVENT LISTENERS ******/
 // Waits for the document to fully load, 
@@ -102,11 +104,11 @@ function createNewNote(event) {
     "Nov",
     "Dec",
   ];
-	let alrtMsg;
+  let alrtMsg;
   let title = form.elements.note_title.value.trim();
   let body = form.elements.note.value.trim();
   let dateObj = new Date();
-	const id = Math.random().toString(16).slice(2).toString();
+  const id = Math.random().toString(16).slice(2).toString();
 
   // convert time to 12 hrs formart
   function convertTime(dateVar) {
@@ -121,10 +123,10 @@ function createNewNote(event) {
   let pm_am;
 
   // check wether time is Am or PM
-  hrs < 12 ? pm_am = "pm" : pm_am = "am";
-  mins < 10 ? mins = `0${mins}`: mins;
+  hrs < 12 ? (pm_am = "pm") : (pm_am = "am");
+  mins < 10 ? (mins = `0${mins}`) : mins;
 
-  //data from user is used to create an object 
+  //data from user is used to create an object
   const noteData = {
     id: id,
     title: title,
@@ -137,38 +139,39 @@ function createNewNote(event) {
     pm_am: pm_am,
     image: coverImgObj,
     hasImage: coverImgFlag,
-    isEdited:false
-  }
+    isEdited: false,
+    isFavourite: false
+  };
 
   if (title && body && !editFlag) {
-    buildNoteCardUI(noteData,saveNoteDataToLocalStorage,id)
+    buildNoteCardUI(noteData, saveNoteDataToLocalStorage, id);
     // alert that note has been created
-    alrtMsg ='<p>Note created  <span><i class="fa-solid fa-circle-check"></i></span></p>';
-    displayAlert( mainAlerts,alrtMsg,"show-main-alert",4000);
-  }
-	else if(title && body && editFlag){
+    alrtMsg =
+      '<p>Note created  <span><i class="fa-solid fa-circle-check"></i></span></p>';
+    displayAlert(mainAlerts, alrtMsg, "show-main-alert", 4000);
+  } else if (title && body && editFlag) {
     const editedCardElement = document.querySelector(".editable-card");
     let cardId = editedCardElement.dataset.noteId;
     noteData.id = cardId;
-		// Update the UI to reflect changes made to the currently edited card
-		UpdateEditedCards(noteData,editedCardElement,cardId);
-     // apply this scroll effect only on mobile display
-     if(window.matchMedia("(max-width: 767px)").matches){
-       let position = editedCardElement.getBoundingClientRect().bottom
-       window.scrollTo({
-         top:position,
-         left:0,
-         behavior:"smooth"
-       })
-     }
-		// display alert
-		alrtMsg ='<p>Note Updated  <span class="pl-1"> <i class="fa-solid fa-circle-exclamation"></i></span></p>';
-		displayAlert(mainAlerts,alrtMsg,"show-main-alert",4000);
-  } 
-	else {
+    // Update the UI to reflect changes made to the currently edited card
+    UpdateEditedCards(noteData, editedCardElement, cardId);
+    // apply this scroll effect only on mobile display
+    if (window.matchMedia("(max-width: 767px)").matches) {
+      let position = editedCardElement.getBoundingClientRect().bottom;
+      window.scrollTo({
+        top: position,
+        left: 0,
+        behavior: "smooth",
+      });
+    }
+    // display alert
+    alrtMsg =
+      '<p>Note Updated  <span class="pl-1"> <i class="fa-solid fa-circle-exclamation"></i></span></p>';
+    displayAlert(mainAlerts, alrtMsg, "show-main-alert", 4000);
+  } else {
     // display error alert
     alrtMsg = `<p>Error! you can not create a blank note. <span class="pl-1"> <i class="fa-solid fa-circle-exclamation"></i></span></p>`;
-    displayAlert(mainAlerts,alrtMsg,"show-main-alert",4000);
+    displayAlert(mainAlerts, alrtMsg, "show-main-alert", 4000);
     // reset program
     resetAll();
   }
@@ -178,34 +181,35 @@ function createNewNote(event) {
 function loadNoteDataOnPageLoad() {
   let notesArray = retriveFromLocalStorage();
   if (notesArray.length > 0) {
-    buildNoteCardUI(note);
+    buildNoteCardUI();
   }
+  // else{
+
+  // }
 }
 
 // CLEAR ALL NOTES FUNC
 // this function clears all notes from the UI, updates the display,and resets input states.
-function manageClearAllNotes(){
-	const mainAlerts = document.querySelector(".main-alerts-display");
-	const clearBtn = document.querySelector(".clear-btn");
-	let noteCards = document.querySelectorAll(".notes-card");
-	alrtMsg =
-	'<p>Note list cleared <span><i class="fa-solid fa-circle-xmark"></i></span></p>';
+function manageClearAllNotes() {
+  const mainAlerts = document.querySelector(".main-alerts-display");
+  const clearBtn = document.querySelector(".clear-btn");
+  let noteCards = document.querySelectorAll(".notes-card");
+  alrtMsg =
+    '<p>Note list cleared <span><i class="fa-solid fa-circle-xmark"></i></span></p>';
 
-	clearBtn.classList.add("show-clear-btn");
-
-	clearBtn.addEventListener("click", function removeNotes(){
-				localStorage.removeItem("noteEntries");
-				clearBtn.classList.remove("show-clear-btn");
-
-				displayAlert(mainAlerts,alrtMsg,"show-main-alert",4000);
-				//iterate and delete each card
-				noteCards.forEach((note) => {
-					note.remove();
-				});
-				// reset the state of the input to their default
-				resetAll();
-				clearBtn.removeEventListener("click", removeNotes);
-		});
+  clearBtn.classList.add("show-clear-btn");
+  clearBtn.addEventListener("click", function removeNotes() {
+    localStorage.removeItem("noteEntries");
+    clearBtn.classList.remove("show-clear-btn");
+    displayAlert(mainAlerts, alrtMsg, "show-main-alert", 4000);
+    //iterate and delete each card
+    noteCards.forEach((note) => {
+      note.remove();
+    });
+    // reset the state of the input to their default
+    resetAll();
+    clearBtn.removeEventListener("click", removeNotes);
+  });
 }
 
 // TOGGLE INPUT CONTAINER FUNC
@@ -227,16 +231,15 @@ function toggleBtnIcons(btn){
 // This function selects the modal element that allows the user to
 // add images to their notes.
 // it also controls the animated behiour of the modal
-function showModals(event,modalElement,closestElmnt) {
-  if(event.target.closest(`.${closestElmnt}`) ){
-      // adds the class of to display the modal on the page
-      modalElement.classList.add("show-modal", "slide-in-fwd-top");
+function showModals(event, modalElement, closestElmnt) {
+  if (event.target.closest(`.${closestElmnt}`)) {
+    // adds the class of to display the modal on the page
+    modalElement.classList.add("show-modal", "slide-in-fwd-top");
 
-      setTimeout(() => {
-        modalElement.classList.remove("slide-in-fwd-top");
-      }, 500);
+    setTimeout(() => {
+      modalElement.classList.remove("slide-in-fwd-top");
+    }, 500);
   }
-
 }
 
 // HIDE MODAL FUNC
@@ -351,38 +354,73 @@ function manageNoteDisplayModal(event,modalElement){
 
 // MANAGE NAV OFF CANVAS FUNC
 function manageNavOffCanvas(event){
+  const notesSection = document.querySelector(".notes-section");
   const navToggle = document.querySelector(".nav-toggle-btn");
   const offCanvas = document.querySelector(".nav-off-canvas");
-  const notesContainer = document.querySelector(".notes-container");
+  const heartSymbol = document.querySelector(".fa-heart");
+  const sortSymbol = document.querySelector(".fa-up-down");
+  const layOut = document.querySelector(".lay");
+  const feedBackTxt = document.querySelector(".feedback-icon");
   let noteCards = document.querySelectorAll(".notes-card");
-  let element;
+
   if(event.target.closest(".close-canvas-btn")){
+    // handles cases where the close button is clicked
     toggleBtnIcons(navToggle);
     offCanvas.classList.remove("show-nav-off-canvas");
   }
   else if(event.target.closest(".fav")){
-    // let notesArray = retriveFromLocalStorage();
-    showFavs = true;
-    noteCards.forEach(card =>{
-      card.remove();
-    })
-    buildNoteCardUI();
-
-    // notesArray.forEach(note =>{
-    //   if(note.isFavourite){
-    //     element = buildNoteCardUI(note)
-    //       notesContainer.append(element);
-    //   }})
-  }  
+    // handles cases where the fav button is clicked 
+    // UI is updated with cards that have been added to favourites list
+    let favsArry = retriveFavsDataLocalStorage();
+    !showFavs? showFavs = true : showFavs = false;
+    noteCards.forEach(card =>{card.remove()});
+    if(showFavs){
+      // update the state of the heart element in the UI
+      // then display the notes that have been added to the fav list
+      heartSymbol.classList.toggle("show-fa-heart");
+      feedBackTxt.innerHTML = 
+      `<span>Important notes</span>`;
+      if(favsArry.length > 0){ buildNoteCardUI(favsArry)}
+    }else{
+      // revert back to displaying all card elements
+      let notesArray = retriveFromLocalStorage();
+      heartSymbol.classList.toggle("show-fa-heart");
+      feedBackTxt.innerHTML = "<span>All notes</span>";
+      if(notesArray.length > 0){ buildNoteCardUI()}
+    }
+  }
+  else if(event.target.closest(".sort")){
+    // updates the order of the cards being displayed 
+    // in ascending or decending order
+      !isAscending? isAscending = true: isAscending = false;
+      if(!isAscending){
+        sortSymbol.classList.remove("show-fa-heart");
+        reOrderCards();
+      }else if(isAscending){
+        sortSymbol.classList.add("show-fa-heart");
+        reOrderCards();
+      }
+  }
+  else if(event.target.closest(".lay")){
+    // displays the cards in either rows of grid layout
+      layOut.classList.toggle("show");
+      notesSection.classList.toggle("change-layout");
+      !layOut.classList.contains("show")? 
+      feedBackTxt.innerHTML=`<span><i class="fa-solid fa-border-all"></i></span>`:
+      feedBackTxt.innerHTML=`<span><i class="fa-solid fa-list" style="display: inline-block">`;
+  }
+  // close the off canvas element
+  navToggle.classList.remove("show");
+  offCanvas.classList.remove("show-nav-off-canvas");
 }
 
 // GENERATE CARD HTML TEMPLATE FUNC
 // This function  generates HTML code for a note card with specified content and styling.
 // returns an HTML string that represents a note card UI.
-function generateCardHTMLTemplates(...cardDetails){
-  const [introText,cardData,cardBody] = cardDetails
-    if (cardData.image) {
-        return `<!-- note card element with picture start-->
+function generateCardHTMLTemplates(...cardDetails) {
+  const [introText, cardData, cardBody] = cardDetails;
+  if (cardData.image) {
+    return `<!-- note card element with picture start-->
           <div class="row g-0 note-card-center">
               <!-- note card image -->
               <div class="card-head-wrapper">
@@ -413,8 +451,8 @@ function generateCardHTMLTemplates(...cardDetails){
               </div>
           </div>
  <!-- note card element with picture end-->`;
-    } else {
-        return `
+  } else {
+    return `
         <div class="row g-0 py-0">
             <!-- card body -->
             <div class="col-12">
@@ -439,63 +477,54 @@ function generateCardHTMLTemplates(...cardDetails){
                     <p class="card-text dark-txt line-h card-txt-color">${cardBody}</p>
                 </div>
             </div>
-        </div>`
-    }
+        </div>`;
+  }
 }
 
 // BUILD NOTE CARD UI FUNC
 // this function saves the note data to local storage.
 // the data is then processed(image-blob, is converted to a URLstring and saved in LS).
 // the data is used to build cards in the UI when the user create a note entry or when the app is initialized.
-function buildNoteCardUI(...noteDetails){
-  const [noteData,saveNoteDataFunc,id] = noteDetails;
+function buildNoteCardUI(...noteDetails) {
+  const [noteData, saveNoteDataFunc, id] = noteDetails;
   const addBtn = document.querySelector(".show-inputs-btn");
   // handles card creation when the user creates a new note
-  if(saveNoteDataFunc){
-      readNoteData();
-  }
-  else if(!saveNoteDataFunc){
+  if (saveNoteDataFunc && noteData) {
+    readNoteData();
+  } else if (!saveNoteDataFunc && !noteData) {
     // handles card creation when the app is initilized by loading data from local storage
     let notesArray = retriveFromLocalStorage();
-    notesArray.forEach(note =>{
-      initCard(note);
-      })
-  }else if(showFavs){
-    let notesArray = retriveFromLocalStorage();
-    notesArray.forEach(note =>{
-      if(note.isFavourite)
-        {console.log(note)}
-      // initCard(note);
-       })
+    notesArray.forEach(note => {initCard(note)});
+  } 
+  else if(noteData && !saveNoteDataFunc){
+    // handles card creation when the user selects favourites
+    noteData.forEach(note => {initCard(note)});
   }
 
   // INIT CARD FUNCTION
   // This function uses data from array parameter to create a new card element in the DOM.
-  function initCard(arry){
+  function initCard(arry) {
     let cardPrefix;
     const notesContainer = document.querySelector(".notes-container");
     const cardElement = document.createElement("article");
     // if so then upate the card UI with an edit prefix
-    arry.isEdited === true ? cardPrefix = "Edited" : cardPrefix = "Created";
+    arry.isEdited === true ? (cardPrefix = "Edited") : (cardPrefix = "Created");
     // trim note body text for the card UI
     let cardText = trimUiCardText(arry.body);
     cardElement.classList.add("card", "notes-card", "bg-body-tertiary");
-    id? cardId = id : cardId = arry.id ;
+    id ? (cardId = id) : (cardId = arry.id);
     cardElement.dataset.noteId = cardId;
     cardElement.innerHTML = generateCardHTMLTemplates(cardPrefix,arry,cardText);
     notesContainer.append(cardElement);
     makeCardsClickable();
-    if(!editFlag){
-      reOrderCards();
-    }
+    if (!editFlag) {reOrderCards();}
     toggleInputsContainer();
-    
-    if(form.classList.contains("show")){
+    if (form.classList.contains("show")) {
       toggleBtnIcons(addBtn);
-      form.classList.remove("show")
+      form.classList.remove("show");
     }
     // sets up the functionality to clear notes
-    if(notesContainer.childElementCount > 0){
+    if (notesContainer.childElementCount > 0) {
       manageClearAllNotes();
     }
   }
@@ -503,13 +532,13 @@ function buildNoteCardUI(...noteDetails){
   //Processed data from then retrived and used to Populate cards in the UI
   async function readNoteData() {
     let element = await saveNoteDataFunc(noteData);
-    element = element.filter(note => {
-      if(note.id === noteData.id){
-        return note
+    element = element.filter((note) => {
+      if (note.id === noteData.id) {
+        return note;
       }
-    })
+    });
     element = element.pop();
-    initCard(element)
+    initCard(element);
   }
 }
 
@@ -533,22 +562,22 @@ function UpdateEditedCards(...cardDetails){
   const updateNoteBtn = document.querySelector(".create-note-btn");
 	// trim note body text for the card UI
 	let cardText = trimUiCardText(noteData.body);
-		if (editFlag && (coverImgObj || coverImgFlag)) {
-      // handles cases where the user edits the note and includes a cover image
-        (async ()=>{
-            let processedImg = await retriveImageData();
-            noteData.image = processedImg;
-            element.innerHTML = generateCardHTMLTemplates( "Edited",noteData,cardText);
-            editInLocalStorage(noteData,cardId);
-            updateNoteBtn.textContent = "Create note";
-            // hide form inputs and reset the app
-            toggleInputsContainer();
-        })();
+	if (editFlag && (coverImgObj || coverImgFlag)) {
+     // handles cases where the user edits the note and includes a cover image
+      (async ()=>{
+          let processedImg = await retriveImageData();
+          noteData.image = processedImg;
+          element.innerHTML = generateCardHTMLTemplates( "Edited",noteData,cardText);
+          editInLocalStorage(noteData,cardId);
+          updateNoteBtn.textContent = "Create note";
+          // hide form inputs and reset the app
+          toggleInputsContainer();
+      })();
 
-        async function retriveImageData() {
-          let data = await initImageProcessing(noteData);
-          return data;
-        }
+      async function retriveImageData() {
+        let data = await initImageProcessing(noteData);
+        return data;
+      }
   } 
 	else if (editFlag && (!coverImgObj || !coverImgFlag)) {
 		// handles cases where the user edits the note and does not includes a cover image
@@ -577,12 +606,9 @@ function viewNoteDetails(id,event){
   const noteTimeSuffix = document.querySelector(".notedp-time-suffix");
   const noteDisplayBtnsWrapper = document.querySelector(".note-controls");
   let noteElement = retriveFromLocalStorage();
+
   // filter out the note object whose id is a match to the id of the clicked card
-  noteElement = noteElement.filter( note => {
-      if(note.id === id){
-          return note;
-      }
-  })
+  noteElement = noteElement.filter(note => {if(note.id === id){return note;}})
   noteElement = noteElement.pop();
   // update the note display UI with data from the note object
   noteDpTitle.textContent = `${noteElement.title}`;
@@ -595,22 +621,18 @@ function viewNoteDetails(id,event){
 
   // create an on the note display modal using the noteOject's id
   noteDisplayModal.dataset.noteId = noteElement.id;
-
   // if the note object has an img property update the UI with this image
-  if(noteElement.hasImage === true){
-  noteImgSection.innerHTML = ` <div class="col-12 note-dp-img-wrapper p-0">
+  if(noteElement.hasImage){
+  noteImgSection.innerHTML = `<div class="col-12 note-dp-img-wrapper p-0">
       <img class="img-fluid h-100" src=${noteElement.image} alt="note display img">
   </div>`
   }
-  
-  // if the note object favourite flag is set to true then update the sate of the favourite btns
- if(noteElement.isFavourite === true){
-  noteDisplayBtnsWrapper.classList.add("show")
- }
-
+  // if the note object favourite flag is set to true then update the state of the favourite btns
+  if(noteElement.isFavourite){
+    noteDisplayBtnsWrapper.classList.add("show")
+  }
   // display the note that has been built
   showModals(event,noteDisplayModal,"notes-card");
-
 }
 
 // PREVIEW COVER IMAGE FUNC
@@ -708,7 +730,6 @@ function resetNoteDisplayModal(){
     const noteDisplayModal = document.querySelector(".display-note-modal");
     const noteDisplayBtnsWrapper = document.querySelector(".note-controls");
    
-
     noteDpTitle.textContent = "";
     noteDay.textContent ="";
     noteDate.textContent ="";
@@ -723,7 +744,7 @@ function resetNoteDisplayModal(){
 }
 
 // TRIM FILE NAME FUNC
-// The `trimFileName` function shortens the file name of an image if it exceeds
+// This function shortens the file name of an image if it exceeds
 // 20 characters and updates the text content of a specified element with the shortened name.
 function trimFileName(textElement,image) {
   let imageTitle = image.name;
@@ -843,28 +864,30 @@ function editNote(){
 // ADD TO FAVOURITES FUNC
 function addToFavourites(noteId){
   const noteDisplayBtnsWrapper = document.querySelector(".note-controls");
+  // update the state of the heart element in the UI
   noteDisplayBtnsWrapper.classList.toggle("show");
+  // retrive notes and favourites data from local storage
   let notesArray = retriveFromLocalStorage();
+  let favsArry = retriveFavsDataLocalStorage();
   if(noteDisplayBtnsWrapper.classList.contains("show")){
+    // handles cases where the note has been added to favourites
     notesArray = notesArray.map(note=>{
-      if(noteId === note.id){
-        return {
-          ...note,
-          isFavourite:true
-        }
-      } return note;
-    })
-  }else if(!noteDisplayBtnsWrapper.classList.contains("show")){
-    notesArray = notesArray.map(note=>{
-      if(noteId === note.id){
-        return {
-          ...note,
-          isFavourite:false
-        }
-      } return note;
-    })
+      if(noteId === note.id){ return {...note,isFavourite:true}};
+          return note;});
+    localStorage.setItem("noteEntries", JSON.stringify(notesArray));
+    notesArray = notesArray.filter(note=>{if(noteId === note.id){return note}})
+    notesArray = notesArray.pop(); favsArry.push(notesArray);
+    localStorage.setItem("favNotes", JSON.stringify(favsArry));
   }
-  localStorage.setItem("noteEntries", JSON.stringify(notesArray));
+  else if(!noteDisplayBtnsWrapper.classList.contains("show")){
+    // handles cases where the note has been removed from favourites
+    favsArry = favsArry.filter(note=>{if(noteId !== note.id){return note}});
+    notesArray = notesArray.map(note=>
+      {if(noteId === note.id){return{...note,isFavourite:false}}
+        return note});
+    localStorage.setItem("noteEntries", JSON.stringify(notesArray));
+    localStorage.setItem("favNotes", JSON.stringify(favsArry));
+  }
 }
 
 // ORDER CARDS FUNC
@@ -878,8 +901,8 @@ function reOrderCards(){
 	})
 
   cardList.reverse().forEach(card=>{
-		notesContainer.append(card)
-	})
+    notesContainer.append(card);
+  })
 }
 
 /***** DARK MODE FUNTIONALITY ******/
@@ -903,9 +926,7 @@ function themeDetection(){
 	let theme = "light"
 
 	if(localStorage.getItem("theme")){
-
 		theme = localStorage.getItem("theme");
-
 	}else if(window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches){
 		theme = "dark"
 	}
@@ -913,7 +934,6 @@ function themeDetection(){
 	if(theme === "dark"){
 		darkModeToggle.checked = true;
 	} 
-	
 	theme === "dark"? enableDarkMode():disableDarkMode();
 }
 
@@ -976,6 +996,10 @@ function initImageProcessing(noteObj){
 // RETRIVE NOTE DATA FORM LOCAL STORAGE FUNC
 function retriveFromLocalStorage() {
  return JSON.parse(localStorage.getItem("noteEntries")) || [];
+}
+// RETRIVE FAVOURITES DATA FORM LOCAL STORAGE FUNC
+function retriveFavsDataLocalStorage() {
+ return JSON.parse(localStorage.getItem("favNotes")) || [];
 }
 
 // DELETE NOTE DATA FROM LOCAL STORAGE FUNC

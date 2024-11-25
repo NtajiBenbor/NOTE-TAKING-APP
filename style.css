@@ -473,6 +473,10 @@ img.cover-img{
 	background-color: var(--light-accent);
 }
 
+.feedback-icon{
+	color: var(--dark-color);
+	font-weight: 800;
+}
 /* wrapper element that contains the card element */
 .notes-container{
 	display: flex;
@@ -606,17 +610,32 @@ img.cover-img{
 	font-size: clamp(1rem,1.7rem,1.8rem);
 }
 
-
 .off-canvas-center li{
 	margin: .2rem 0;
 	padding: .5em .6em;
 	font-size: 1.1rem;
 	font-weight: 800;
 	cursor: pointer;
-	
+	width: 0;
 }
 
 
+
+/** nav off canvas link icons **/
+/* indicate grid diplsy for card */
+.fa-border-all{
+	display: inline-block;
+}
+
+/* indicate list display for icons */
+.fa-list{
+	display: none;
+}
+
+/* nav link(li) to toggle card layout */
+ul .lay{
+	display:none !important;
+}
 
 /****JS STYLES *****/
 /* this class is applied with js to display the form input for
@@ -670,9 +689,6 @@ the note title and note input itself */
 	z-index: 1000;
 }
 
-.show-nav-off-canvas{
-	width: 50vw;
-}
 
 /* displays alert on the cover image modal */
 .show-alert{
@@ -686,7 +702,6 @@ the note title and note input itself */
 /* class that are applied when a note is being edited */
 .editable-card{
 	background-color: skyblue !important;
-	/* transform: scale(1.1) !important; */
 	
 }
 /*styling to indicate that this cards are disabled when the edit class has been applied to 
@@ -696,9 +711,26 @@ the card being edited */
 
 }
 
+/* class that upates UI to show card has been added to favourite */
 .show .add-to-fav-btn{
 	color: red;
 }
+
+/* updates UI when fav, sort or layout icons when nav link is clicked */
+.show-fa-heart,
+.show-fa-sort {
+	color: yellow;
+}
+
+/* updates UI icons for when user switches the card layout(grid/list icons) */
+.show .fa-border-all{
+	display: none;
+}
+.show .fa-list{
+	display: inline-block;
+}
+
+
 
 /*** JS animations classes ***/
 .slide-in-fwd-top {
@@ -779,6 +811,7 @@ the card being edited */
 		width: 0;
 	}
 
+	.show-nav-off-canvas 
 	.off-canvas-center li{
 		width: 385px;
 	}
@@ -809,8 +842,47 @@ the card being edited */
 	.notes-card{
 		width: 49%;
 	}	
+
+	/* nav link(li) to toggle card layout */
+	ul .lay{
+		display: inline-flex !important;
+	}
+
 }
 
+/** media query that controls layout changes(grid/list) for the cards when (Applies JS Classes)**/
+@media only screen and (max-width: 1000px){
+	/* toggle card layou from grid to rows */
+	.change-layout .notes-container{
+		flex-direction: column;
+	}
+	
+	.change-layout .notes-card{
+		width: 100%;
+	}
+}
+
+@media only screen and (min-width: 500px){
+	.show-nav-off-canvas{
+		width: 70vw;
+	}
+	
+	.show-nav-off-canvas 
+	.off-canvas-center li{
+		width: 100%;
+	}
+}
+
+@media only screen and (max-width: 501px ) and (min-width: 767px){
+	.show-nav-off-canvas{
+		width: 50vw;
+	}
+	
+	.show-nav-off-canvas 
+	.off-canvas-center li{
+		width: 100%;
+	}
+}
 
 /***** ANIMATIONS *****/
 /** rotate animation **/

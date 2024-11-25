@@ -114,6 +114,9 @@ body.dark-mode .notes-card{
   border: 1px solid var(--accent);
 }
 
+body.dark-mode .feedback-icon i{
+	color: var(--accent) !important;
+}
 body.dark-mode .notes-card button{
 	color: var(--bodyTextColorWhite);
 }
