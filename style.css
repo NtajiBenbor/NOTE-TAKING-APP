@@ -473,9 +473,24 @@ img.cover-img{
 	background-color: var(--light-accent);
 }
 
-.feedback-icon{
+/* this show the feed back text on the notes container */
+.note-fb-section{
 	color: var(--dark-color);
-	font-weight: 800;
+	font-weight: 800 !important;
+}
+
+/* place holder text on the notes container section */
+.note-place-holder{
+	position: absolute;
+	width: 100%;
+	top: 25vh;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	font-weight: 400;
+	font-size: clamp(16px, 5vw, 1.5rem);
+	font-style: italic;
+	animation: slide-in-fwd-top 600ms 100ms cubic-bezier(0.215, 0.610, 0.355, 1) forwards;
 }
 /* wrapper element that contains the card element */
 .notes-container{
@@ -502,7 +517,9 @@ img.cover-img{
 	-webkit-box-shadow: 1px 1px 0px 1px rgba(0,0,0,1);
 	-moz-box-shadow: 1px 1px 0px 1px rgba(0,0,0,1);
 	cursor: pointer;
+	/* animation: slide-in-fwd-top 600ms 100ms cubic-bezier(0.215, 0.610, 0.355, 1) forwards; */
 	transition: transform 300ms linear !important;
+	
 }
 
 /* flex container for the card text and card image */
@@ -622,13 +639,16 @@ img.cover-img{
 
 
 /** nav off canvas link icons **/
-/* indicate grid diplsy for card */
-.fa-border-all{
+/* indicate grid display for card and sortby newest  */
+.fa-border-all ,
+.fa-arrow-down{
 	display: inline-block;
 }
 
-/* indicate list display for icons */
-.fa-list{
+/* indicate list display for icons and sort by oldest */
+.fa-list,
+.fa-arrow-up
+{
 	display: none;
 }
 
@@ -694,6 +714,7 @@ the note title and note input itself */
 .show-alert{
 	visibility: visible;
 }
+
 /* displays the clear notes btn */
 .show-clear-btn{
 	display: block;
@@ -717,16 +738,21 @@ the card being edited */
 }
 
 /* updates UI when fav, sort or layout icons when nav link is clicked */
-.show-fa-heart,
-.show-fa-sort {
+.show-fa-heart {
 	color: yellow;
 }
 
-/* updates UI icons for when user switches the card layout(grid/list icons) */
-.show .fa-border-all{
+
+
+/* updates UI icons for when user switches the card layout(grid/list icons)
+and icons for the sort funtionality(arrow up/down) */
+.show .fa-border-all,
+.show .fa-arrow-down{
 	display: none;
 }
-.show .fa-list{
+
+.show .fa-list,
+.show .fa-arrow-up{
 	display: inline-block;
 }
 
@@ -851,7 +877,7 @@ the card being edited */
 }
 
 /** media query that controls layout changes(grid/list) for the cards when (Applies JS Classes)**/
-@media only screen and (max-width: 1000px){
+@media only screen and (min-width: 1000px){
 	/* toggle card layou from grid to rows */
 	.change-layout .notes-container{
 		flex-direction: column;

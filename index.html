@@ -94,9 +94,16 @@
                    <!-- off canvas center start-->
                    <div class="off-canvas-center">
                     <ul>
-                        <li class="fav  d-flex justify-content-between">Important <span><i class="fa-solid fa-heart"></i></span></li>
-                        <li class="sort d-flex justify-content-between">Sort <span><i class="fa-solid fa-up-down"></i></span></li>
-                        <li class="lay d-flex justify-content-between">Layout 
+                        <li class="fav  d-flex justify-content-between">
+                            Important <span><i class="fa-solid fa-heart"></i></span>
+                        </li>
+                        <li class="sort d-flex justify-content-between">Sort by newest 
+                            <span>
+                                <span><i class="fa-solid fa-arrow-up"></i></span>
+                                <span><i class="fa-solid fa-arrow-down"></i></span>
+                            </span>
+                        </li>
+                        <li class="lay d-flex justify-content-between"> Grid Layout 
                             <span>
                                 <span><i class="fa-solid fa-border-all"></i></span> 
                                 <span><i class="fa-solid fa-list"></i></span>
@@ -218,10 +225,16 @@
 
        <!-- NOTE CARDS SECTION START-->
        <section class="notes-section">
-            <div class="d-flex justify-content-end"> <p class="feedback-icon"><span>All notes</span></p></div>
+            <div class="d-flex note-fb-section justify-content-between">
+                <!-- give visual feedback to the user on the note card in the UI -->
+                 <p class="feedback-text"><span></span></p>
+                <p class="feedback-icon">
+                    <span class="icon-1 px-2"><i class="fa-solid" style="display: inline-block;"></i></span>
+                    <span class="icon-2"><i class="fa-solid" style="display: inline-block;"></i></span>
+                </p>
+                </div>
            <!-- main container for note cards -->
            <div class="notes-container">
-
 
            </div>
    

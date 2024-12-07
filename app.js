@@ -6,6 +6,17 @@ let showFavs = false;
 let isAscending = false;
 let coverImgObj;
 let editedObj;
+// const feedBackData = {
+//   fbText: "All Notes",
+//   fbIcon1: "fa-border-all",
+//   fbIcon2: "fa-arrow-down"
+// };
+
+const feedBackData = {
+  fbText: "",
+  fbIcon1: "",
+  fbIcon2: ""
+};
 
 
 /***** EVENT LISTENERS ******/
@@ -89,6 +100,8 @@ function initApp() {
 function createNewNote(event) {
   event.preventDefault();
   const mainAlerts = document.querySelector(".main-alerts-display");
+  const feedBackTxt = document.querySelector(".feedback-icon");
+  const emptyNotesPlaceHolder = document.querySelector(".note-place-holder");
   const weekDays = ["Sun", "Mon", "Tue", "Wed", "Thur", "Fri", "Sat"];
   const months = [
     "Jan",
@@ -144,6 +157,12 @@ function createNewNote(event) {
   };
 
   if (title && body && !editFlag) {
+    // if the place holder text is there it removes it and 
+    // updates the feedback icons text.
+    if(emptyNotesPlaceHolder){
+      emptyNotesPlaceHolder.remove();
+      feedBackTxt.innerHTML = "All Notes";
+    }
     buildNoteCardUI(noteData, saveNoteDataToLocalStorage, id);
     // alert that note has been created
     alrtMsg =
@@ -179,14 +198,37 @@ function createNewNote(event) {
 
 //LOAD NOTE DATA ON PAGE LOAD
 function loadNoteDataOnPageLoad() {
+
   let notesArray = retriveFromLocalStorage();
   if (notesArray.length > 0) {
+    // if note data is available the build the note cards using data from Local storage
     buildNoteCardUI();
+    // update the icons and text on the within the notes container component
+    // to give visual feedback to users.
+    notesContainerFeedback();
+    // "All Notes","fa-border-all","fa-arrow-up"
   }
-  // else{
-
-  // }
+  else if (notesArray.length <= 0){
+    // if note data(note list) is empty generate a place holder text
+    buildEmptyNotePlaceHolder();
+  }
 }
+
+
+// NOTE CONTAINER FEEDBACK
+// this func uses the icons and text within the notes container component
+// to give visual feed back on what sort of preference selections they have made
+function notesContainerFeedback(...fbDetails){
+  const {fbText="All Notes",fbIcon1="fa-border-all", fbIcon2="fa-arrow-down"} = fbDetails;
+  const feedBackTxt = document.querySelector(".feedback-text");
+  const gridListIcon = document.querySelector(".feedback-icon .icon-1 i");
+  const upDownIcon = document.querySelector(".feedback-icon .icon-2 i");
+
+  feedBackTxt.textContent = fbText;
+  gridListIcon.classList.add(`${fbIcon1}`);
+  upDownIcon.classList.add(`${fbIcon2}`);
+}
+
 
 // CLEAR ALL NOTES FUNC
 // this function clears all notes from the UI, updates the display,and resets input states.
@@ -198,8 +240,16 @@ function manageClearAllNotes() {
     '<p>Note list cleared <span><i class="fa-solid fa-circle-xmark"></i></span></p>';
 
   clearBtn.classList.add("show-clear-btn");
-  clearBtn.addEventListener("click", function removeNotes() {
+  clearBtn.addEventListener("click", removeNotes);
+
+  // REMOVE NOTES FUNCTION
+  // this func clears all the note and fav data in local storage
+  // deletes each card from the UI and resets the UI to an empty state
+  function removeNotes() {
+    // clear every note entry from Local storage
     localStorage.removeItem("noteEntries");
+    // clear all fav data from Local storage
+    localStorage.removeItem("favNotes");
     clearBtn.classList.remove("show-clear-btn");
     displayAlert(mainAlerts, alrtMsg, "show-main-alert", 4000);
     //iterate and delete each card
@@ -209,7 +259,9 @@ function manageClearAllNotes() {
     // reset the state of the input to their default
     resetAll();
     clearBtn.removeEventListener("click", removeNotes);
-  });
+    // add the placeholder when the card list is empty
+    buildEmptyNotePlaceHolder();
+  }
 }
 
 // TOGGLE INPUT CONTAINER FUNC
@@ -358,9 +410,10 @@ function manageNavOffCanvas(event){
   const navToggle = document.querySelector(".nav-toggle-btn");
   const offCanvas = document.querySelector(".nav-off-canvas");
   const heartSymbol = document.querySelector(".fa-heart");
-  const sortSymbol = document.querySelector(".fa-up-down");
+  const sortSymbol = document.querySelector(".sort");
   const layOut = document.querySelector(".lay");
-  const feedBackTxt = document.querySelector(".feedback-icon");
+  const gridListIcon = document.querySelector(".feedback-icon .icon-1 i");
+  const upDownIcon = document.querySelector(".feedback-icon .icon-2 i");
   let noteCards = document.querySelectorAll(".notes-card");
 
   if(event.target.closest(".close-canvas-btn")){
@@ -374,43 +427,50 @@ function manageNavOffCanvas(event){
     let favsArry = retriveFavsDataLocalStorage();
     !showFavs? showFavs = true : showFavs = false;
     noteCards.forEach(card =>{card.remove()});
-    if(showFavs){
+    if(showFavs && favsArry.length > 0){
       // update the state of the heart element in the UI
-      // then display the notes that have been added to the fav list
-      heartSymbol.classList.toggle("show-fa-heart");
-      feedBackTxt.innerHTML = 
-      `<span>Important notes</span>`;
-      if(favsArry.length > 0){ buildNoteCardUI(favsArry)}
+      // then display the notes that have been added to the fav list on the UI
+      heartSymbol.classList.add("show-fa-heart");
+      notesContainerFeedback({...feedBackData,fbText:"Important Notes"});
+      buildNoteCardUI(favsArry);
     }else{
       // revert back to displaying all card elements
       let notesArray = retriveFromLocalStorage();
-      heartSymbol.classList.toggle("show-fa-heart");
-      feedBackTxt.innerHTML = "<span>All notes</span>";
-      if(notesArray.length > 0){ buildNoteCardUI()}
+      heartSymbol.classList.remove("show-fa-heart");
+      notesContainerFeedback(feedBackData.fbText="All Notes");
+      buildNoteCardUI(notesArray);
     }
   }
   else if(event.target.closest(".sort")){
     // updates the order of the cards being displayed 
     // in ascending or decending order
-      !isAscending? isAscending = true: isAscending = false;
-      if(!isAscending){
-        sortSymbol.classList.remove("show-fa-heart");
-        reOrderCards();
-      }else if(isAscending){
-        sortSymbol.classList.add("show-fa-heart");
-        reOrderCards();
+      upDownIcon.classList.remove("fa-arrow-down","fa-arrow-up");
+      if(isAscending === false){
+        sortSymbol.classList.toggle("show");
+        notesContainerFeedback({...feedBackData,fbIcon2:"fa-arrow-up"});
+        reOrderCards("newest");
+      }else if(isAscending === true){
+        sortSymbol.classList.toggle("show");
+        notesContainerFeedback(feedBackData);
+        reOrderCards("oldest");
       }
+      isAscending? isAscending = false: isAscending = true;
   }
   else if(event.target.closest(".lay")){
-    // displays the cards in either rows of grid layout
+    // displays the cards in either rows of grid layout base on user interactions
       layOut.classList.toggle("show");
       notesSection.classList.toggle("change-layout");
-      !layOut.classList.contains("show")? 
-      feedBackTxt.innerHTML=`<span><i class="fa-solid fa-border-all"></i></span>`:
-      feedBackTxt.innerHTML=`<span><i class="fa-solid fa-list" style="display: inline-block">`;
+      gridListIcon.classList.remove("fa-list","fa-border-all")
+      // update the feedback icons based on user interactions
+      // layOut.classList.contains("show")? 
+      // notesContainerFeedback({...feedBackData,fbIcon1:"fa-list"}):
+      // notesContainerFeedback(feedBackData);
+      layOut.classList.contains("show")? 
+      notesContainerFeedback({...feedBackData,fbIcon2:"fa-list"}):
+      notesContainerFeedback();
   }
   // close the off canvas element
-  navToggle.classList.remove("show");
+  navToggle.classList.remove("show"); 
   offCanvas.classList.remove("show-nav-off-canvas");
 }
 
@@ -517,7 +577,10 @@ function buildNoteCardUI(...noteDetails) {
     cardElement.innerHTML = generateCardHTMLTemplates(cardPrefix,arry,cardText);
     notesContainer.append(cardElement);
     makeCardsClickable();
-    if (!editFlag) {reOrderCards();}
+    if (!editFlag) {
+      // isAscending?reOrderCards("newest"): reOrderCards("oldest");
+      reOrderCards("newest")
+    }
     toggleInputsContainer();
     if (form.classList.contains("show")) {
       toggleBtnIcons(addBtn);
@@ -540,6 +603,25 @@ function buildNoteCardUI(...noteDetails) {
     element = element.pop();
     initCard(element);
   }
+}
+
+// BUILD EMPTY NOTE PLACEHOLDER FUNC
+// this func returns the app to its default state when note data is has been created
+// or the note data has been cleard
+function buildEmptyNotePlaceHolder() {
+  const notesContainer = document.querySelector(".notes-container");
+  const feedBackTxt = document.querySelector(".feedback-icon");
+  const emptyNotesPlaceHolder = document.createElement("article");
+  const gridListIcon = document.querySelector(".feedback-icon .icon-1 i");
+  const upDownIcon = document.querySelector(".feedback-icon .icon-2 i");
+
+  emptyNotesPlaceHolder.classList.add("note-place-holder");
+  emptyNotesPlaceHolder.innerHTML = `<p><span class="px-3"><i class="fa-regular fa-circle-plus"></i></span><span>No Notes Yet!</span></p>`;
+  // reset all the feedback element to an empty state
+  feedBackTxt.textContent = "";
+  gridListIcon.classList.remove("fa-border-all,fa-list");
+  upDownIcon.classList.remove("fa-arrow-up, fa-arrow-down");
+  notesContainer.append(emptyNotesPlaceHolder);
 }
 
 // MAKE CARDCLICKABLE FUNC
@@ -892,7 +974,7 @@ function addToFavourites(noteId){
 
 // ORDER CARDS FUNC
 // This function reverses the order of the note cards on the page 
-function reOrderCards(){
+function reOrderCards(ans){
   const notesContainer = document.querySelector(".notes-container");
 	let noteCards = document.querySelectorAll(".notes-card");
   const cardList = [...noteCards];
@@ -900,9 +982,16 @@ function reOrderCards(){
 		card.remove();
 	})
 
-  cardList.reverse().forEach(card=>{
-    notesContainer.append(card);
-  })
+  if(ans === "newest"){
+    cardList.reverse().forEach(card=>{
+      notesContainer.append(card);
+    })
+  }
+  else if(ans === "oldest"){
+    cardList.forEach(card=>{
+      notesContainer.append(card);
+    })
+  }
 }
 
 /***** DARK MODE FUNTIONALITY ******/
