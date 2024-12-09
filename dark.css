@@ -111,7 +111,7 @@ body.dark-mode .size-4{
 
 /**** NOTE CARD SECTION ****/
 body.dark-mode .notes-card{
-  border: 1px solid var(--accent);
+  border: none;
 }
 
 body.dark-mode .feedback-icon i{

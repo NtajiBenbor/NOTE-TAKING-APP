@@ -250,14 +250,14 @@ button.show-inputs-btn{
 }
 
 /* default style for secondary-btn icon */
-.show-inputs-btn .primary-btn-icon,
-.nav-toggle-btn .primary-btn-icon{
+.primary-btn-icon,
+.primary-btn-icon{
 	display: inline-block;
 }
 
 /* default style for primary-btn icon */
-.show-inputs-btn .secondary-btn-icon,
-.nav-toggle-btn .secondary-btn-icon{
+.secondary-btn-icon,
+.secondary-btn-icon{
 	display: none;
 }
 
@@ -640,17 +640,17 @@ img.cover-img{
 
 /** nav off canvas link icons **/
 /* indicate grid display for card and sortby newest  */
-.fa-border-all ,
+/* .fa-border-all ,
 .fa-arrow-down{
 	display: inline-block;
-}
+} */
 
 /* indicate list display for icons and sort by oldest */
-.fa-list,
+/* .fa-list,
 .fa-arrow-up
 {
 	display: none;
-}
+} */
 
 /* nav link(li) to toggle card layout */
 ul .lay{
@@ -746,7 +746,7 @@ the card being edited */
 
 /* updates UI icons for when user switches the card layout(grid/list icons)
 and icons for the sort funtionality(arrow up/down) */
-.show .fa-border-all,
+/* .show .fa-border-all,
 .show .fa-arrow-down{
 	display: none;
 }
@@ -754,7 +754,7 @@ and icons for the sort funtionality(arrow up/down) */
 .show .fa-list,
 .show .fa-arrow-up{
 	display: inline-block;
-}
+} */
 
 
 
@@ -871,7 +871,7 @@ and icons for the sort funtionality(arrow up/down) */
 
 	/* nav link(li) to toggle card layout */
 	ul .lay{
-		display: inline-flex !important;
+		display: inline-block !important;
 	}
 
 }

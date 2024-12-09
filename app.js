@@ -3,20 +3,14 @@
 let editFlag = false;
 let coverImgFlag = false;
 let showFavs = false;
-let isAscending = false;
 let coverImgObj;
 let editedObj;
-// const feedBackData = {
-//   fbText: "All Notes",
-//   fbIcon1: "fa-border-all",
-//   fbIcon2: "fa-arrow-down"
-// };
-
-const feedBackData = {
+const feedbackObj = {
   fbText: "",
-  fbIcon1: "",
-  fbIcon2: ""
-};
+  gridLayout: true,
+  ascending: true
+}
+
 
 
 /***** EVENT LISTENERS ******/
@@ -103,20 +97,7 @@ function createNewNote(event) {
   const feedBackTxt = document.querySelector(".feedback-icon");
   const emptyNotesPlaceHolder = document.querySelector(".note-place-holder");
   const weekDays = ["Sun", "Mon", "Tue", "Wed", "Thur", "Fri", "Sat"];
-  const months = [
-    "Jan",
-    "Feb",
-    "Mar",
-    "Apr",
-    "May",
-    "Jun",
-    "Jul",
-    "Aug",
-    "Sep",
-    "Oct",
-    "Nov",
-    "Dec",
-  ];
+  const months = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
   let alrtMsg;
   let title = form.elements.note_title.value.trim();
   let body = form.elements.note.value.trim();
@@ -168,7 +149,8 @@ function createNewNote(event) {
     alrtMsg =
       '<p>Note created  <span><i class="fa-solid fa-circle-check"></i></span></p>';
     displayAlert(mainAlerts, alrtMsg, "show-main-alert", 4000);
-  } else if (title && body && editFlag) {
+  } 
+  else if (title && body && editFlag) {
     const editedCardElement = document.querySelector(".editable-card");
     let cardId = editedCardElement.dataset.noteId;
     noteData.id = cardId;
@@ -187,7 +169,8 @@ function createNewNote(event) {
     alrtMsg =
       '<p>Note Updated  <span class="pl-1"> <i class="fa-solid fa-circle-exclamation"></i></span></p>';
     displayAlert(mainAlerts, alrtMsg, "show-main-alert", 4000);
-  } else {
+  } 
+  else {
     // display error alert
     alrtMsg = `<p>Error! you can not create a blank note. <span class="pl-1"> <i class="fa-solid fa-circle-exclamation"></i></span></p>`;
     displayAlert(mainAlerts, alrtMsg, "show-main-alert", 4000);
@@ -205,8 +188,8 @@ function loadNoteDataOnPageLoad() {
     buildNoteCardUI();
     // update the icons and text on the within the notes container component
     // to give visual feedback to users.
-    notesContainerFeedback();
-    // "All Notes","fa-border-all","fa-arrow-up"
+    feedbackObj.fbText = "All Notes"
+    notesContainerFeedback(feedbackObj);
   }
   else if (notesArray.length <= 0){
     // if note data(note list) is empty generate a place holder text
@@ -217,16 +200,24 @@ function loadNoteDataOnPageLoad() {
 
 // NOTE CONTAINER FEEDBACK
 // this func uses the icons and text within the notes container component
-// to give visual feed back on what sort of preference selections they have made
-function notesContainerFeedback(...fbDetails){
-  const {fbText="All Notes",fbIcon1="fa-border-all", fbIcon2="fa-arrow-down"} = fbDetails;
+// to give visual feed back on what sort of preference selections in terms of 
+// Notes UI layout and how the Cards are sorted(ascending or decsending order)
+function notesContainerFeedback(feedbackObj){
   const feedBackTxt = document.querySelector(".feedback-text");
-  const gridListIcon = document.querySelector(".feedback-icon .icon-1 i");
-  const upDownIcon = document.querySelector(".feedback-icon .icon-2 i");
+  const gridListIcon = document.querySelector(".icon-1");
+  const upDownIcon = document.querySelector(".icon-2");
 
-  feedBackTxt.textContent = fbText;
-  gridListIcon.classList.add(`${fbIcon1}`);
-  upDownIcon.classList.add(`${fbIcon2}`);
+  feedBackTxt.textContent = feedbackObj.fbText;
+  // dynamically update the grid/list icon on the notes container UI
+  feedbackObj.gridLayout
+    ?gridListIcon.classList.remove("show")
+    :gridListIcon.classList.add("show");
+
+  // dynamically update the up/down icon on the notes container UI
+  feedbackObj.ascending
+    ?upDownIcon.classList.remove("show")
+    :upDownIcon.classList.add("show");
+
 }
 
 
@@ -409,11 +400,12 @@ function manageNavOffCanvas(event){
   const notesSection = document.querySelector(".notes-section");
   const navToggle = document.querySelector(".nav-toggle-btn");
   const offCanvas = document.querySelector(".nav-off-canvas");
+  const feedBackTxt = document.querySelector(".feedback-text");
   const heartSymbol = document.querySelector(".fa-heart");
-  const sortSymbol = document.querySelector(".sort");
+  const sortCards = document.querySelector(".sort");
+  const sortTxt = document.querySelector(".sort-txt");
   const layOut = document.querySelector(".lay");
-  const gridListIcon = document.querySelector(".feedback-icon .icon-1 i");
-  const upDownIcon = document.querySelector(".feedback-icon .icon-2 i");
+  const layoutTxt = document.querySelector(".lay-txt");
   let noteCards = document.querySelectorAll(".notes-card");
 
   if(event.target.closest(".close-canvas-btn")){
@@ -425,53 +417,62 @@ function manageNavOffCanvas(event){
     // handles cases where the fav button is clicked 
     // UI is updated with cards that have been added to favourites list
     let favsArry = retriveFavsDataLocalStorage();
-    !showFavs? showFavs = true : showFavs = false;
+    showFavs? showFavs = false : showFavs = true;
     noteCards.forEach(card =>{card.remove()});
     if(showFavs && favsArry.length > 0){
       // update the state of the heart element in the UI
       // then display the notes that have been added to the fav list on the UI
       heartSymbol.classList.add("show-fa-heart");
-      notesContainerFeedback({...feedBackData,fbText:"Important Notes"});
+      feedbackObj.fbText = "Important notes";
+      notesContainerFeedback(feedbackObj);
       buildNoteCardUI(favsArry);
     }else{
       // revert back to displaying all card elements
       let notesArray = retriveFromLocalStorage();
       heartSymbol.classList.remove("show-fa-heart");
-      notesContainerFeedback(feedBackData.fbText="All Notes");
+      feedbackObj.fbText = "All notes"
+      notesContainerFeedback(feedbackObj);
       buildNoteCardUI(notesArray);
     }
   }
   else if(event.target.closest(".sort")){
-    // updates the order of the cards being displayed 
-    // in ascending or decending order
-      upDownIcon.classList.remove("fa-arrow-down","fa-arrow-up");
-      if(isAscending === false){
-        sortSymbol.classList.toggle("show");
-        notesContainerFeedback({...feedBackData,fbIcon2:"fa-arrow-up"});
-        reOrderCards("newest");
-      }else if(isAscending === true){
-        sortSymbol.classList.toggle("show");
-        notesContainerFeedback(feedBackData);
+      sortCards.classList.toggle("show");
+      //update the nav sort element text dynamically 
+      sortCards.classList.contains("show")
+        ?sortTxt.textContent = "Sort by Newest"
+        :sortTxt.textContent = "Sort by Oldest";
+     // updates the order of the cards being displayed 
+     // in ascending or decending order
+      if(sortCards.classList.contains("show")){
+        feedbackObj.ascending= false;
+        notesContainerFeedback(feedbackObj);
         reOrderCards("oldest");
+      }else {
+        notesContainerFeedback(feedbackObj);
+        reOrderCards("newest");
       }
-      isAscending? isAscending = false: isAscending = true;
   }
   else if(event.target.closest(".lay")){
     // displays the cards in either rows of grid layout base on user interactions
       layOut.classList.toggle("show");
       notesSection.classList.toggle("change-layout");
-      gridListIcon.classList.remove("fa-list","fa-border-all")
-      // update the feedback icons based on user interactions
-      // layOut.classList.contains("show")? 
-      // notesContainerFeedback({...feedBackData,fbIcon1:"fa-list"}):
-      // notesContainerFeedback(feedBackData);
-      layOut.classList.contains("show")? 
-      notesContainerFeedback({...feedBackData,fbIcon2:"fa-list"}):
-      notesContainerFeedback();
+      // change the text on the nav off canvas for the layout option
+      layOut.classList.contains("show")
+        ? (layoutTxt.textContent = "Grid Layout")
+        : (layoutTxt.textContent = "List Layout"); 
+      // maintain the text on the feedback text element
+      feedbackObj.fbText = feedBackTxt.textContent;
+      // Update the layout based on the state of the layout property in feedbackobject
+      if(layOut.classList.contains("show")){
+        feedbackObj.gridLayout = false;
+        notesContainerFeedback(feedbackObj);
+      }else{
+        notesContainerFeedback(feedbackObj);
+      }
   }
-  // close the off canvas element
-  navToggle.classList.remove("show"); 
-  offCanvas.classList.remove("show-nav-off-canvas");
+  // reset the parts of thre feedback object
+  feedbackObj.gridLayout = true;
+  feedbackObj.ascending = true;
 }
 
 // GENERATE CARD HTML TEMPLATE FUNC
@@ -567,7 +568,7 @@ function buildNoteCardUI(...noteDetails) {
     let cardPrefix;
     const notesContainer = document.querySelector(".notes-container");
     const cardElement = document.createElement("article");
-    // if so then upate the card UI with an edit prefix
+    // if so then update the card UI with an edit prefix
     arry.isEdited === true ? (cardPrefix = "Edited") : (cardPrefix = "Created");
     // trim note body text for the card UI
     let cardText = trimUiCardText(arry.body);
@@ -578,7 +579,6 @@ function buildNoteCardUI(...noteDetails) {
     notesContainer.append(cardElement);
     makeCardsClickable();
     if (!editFlag) {
-      // isAscending?reOrderCards("newest"): reOrderCards("oldest");
       reOrderCards("newest")
     }
     toggleInputsContainer();
@@ -591,6 +591,7 @@ function buildNoteCardUI(...noteDetails) {
       manageClearAllNotes();
     }
   }
+
   // READ NOTE DATA FUNC
   //Processed data from then retrived and used to Populate cards in the UI
   async function readNoteData() {
@@ -679,6 +680,8 @@ function UpdateEditedCards(...cardDetails){
 function viewNoteDetails(id,event){
   const noteDisplayModal = document.querySelector(".display-note-modal");
   const noteImgSection = document.querySelector(".note-dp-img-container");
+  const offCanvas = document.querySelector(".nav-off-canvas");
+  const navToggle = document.querySelector(".nav-toggle-btn");
   const noteBody = document.querySelector(".note-dp-txt");
   const noteDay = document.querySelector(".note-dp-day");
   const noteDate = document.querySelector(".note-dp-date");
@@ -688,6 +691,9 @@ function viewNoteDetails(id,event){
   const noteTimeSuffix = document.querySelector(".notedp-time-suffix");
   const noteDisplayBtnsWrapper = document.querySelector(".note-controls");
   let noteElement = retriveFromLocalStorage();
+  // when the nav-off-canvas component is open close it
+  toggleBtnIcons(navToggle);
+  offCanvas.classList.remove("show-nav-off-canvas");
 
   // filter out the note object whose id is a match to the id of the clicked card
   noteElement = noteElement.filter(note => {if(note.id === id){return note;}})
@@ -979,18 +985,15 @@ function reOrderCards(ans){
 	let noteCards = document.querySelectorAll(".notes-card");
   const cardList = [...noteCards];
 	noteCards.forEach(card =>{
-		card.remove();
-	})
+		card.remove()});
 
   if(ans === "newest"){
     cardList.reverse().forEach(card=>{
-      notesContainer.append(card);
-    })
+      notesContainer.append(card)})
   }
   else if(ans === "oldest"){
-    cardList.forEach(card=>{
-      notesContainer.append(card);
-    })
+    cardList.reverse().forEach(card=>{
+      notesContainer.append(card)})
   }
 }
 

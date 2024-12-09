@@ -94,20 +94,23 @@
                    <!-- off canvas center start-->
                    <div class="off-canvas-center">
                     <ul>
-                        <li class="fav  d-flex justify-content-between">
-                            Important <span><i class="fa-solid fa-heart"></i></span>
+                        <li class="fav justify-content-between">
+                            <span><i class="fa-solid fa-heart"></i></span>
+                            <span>Important</span>
                         </li>
-                        <li class="sort d-flex justify-content-between">Sort by newest 
+                        <li class="sort justify-content-between"> 
                             <span>
-                                <span><i class="fa-solid fa-arrow-up"></i></span>
-                                <span><i class="fa-solid fa-arrow-down"></i></span>
+                                <span class="primary-btn-icon"><i class="fa-solid fa-arrow-up"></i></span>
+                                <span class="secondary-btn-icon"><i class="fa-solid fa-arrow-down"></i></span>
                             </span>
+                            <span class="sort-txt">Sort by Oldest</span>
                         </li>
-                        <li class="lay d-flex justify-content-between"> Grid Layout 
+                        <li class="lay justify-content-between">
                             <span>
-                                <span><i class="fa-solid fa-border-all"></i></span> 
-                                <span><i class="fa-solid fa-list"></i></span>
+                                <span class="primary-btn-icon"><i class="fa-solid fa-list"></i></span> 
+                                <span class=" secondary-btn-icon"><i class="fa-solid fa-border-all"></i></span>
                             </span>
+                            <span class="lay-txt">List Layout</span> 
                         </li>
                     </ul>
                    </div><!-- off canvas center end-->
@@ -227,12 +230,18 @@
        <section class="notes-section">
             <div class="d-flex note-fb-section justify-content-between">
                 <!-- give visual feedback to the user on the note card in the UI -->
-                 <p class="feedback-text"><span></span></p>
+                <p class="feedback-text"><span></span></p>
                 <p class="feedback-icon">
-                    <span class="icon-1 px-2"><i class="fa-solid" style="display: inline-block;"></i></span>
-                    <span class="icon-2"><i class="fa-solid" style="display: inline-block;"></i></span>
+                    <span class="icon-1 px-2">
+                        <span class="primary-btn-icon"><i class="fa-solid fa-border-all"></i></span>
+                        <span class="secondary-btn-icon"><i class="fa-solid fa-list"></i></span>
+                    </span>
+                    <span class="icon-2">
+                        <span class="primary-btn-icon"><i class="fa-solid fa-arrow-down"></i></span>
+                        <span class="secondary-btn-icon"><i class="fa-solid fa-arrow-up"></i></span>
+                    </span>
                 </p>
-                </div>
+            </div>
            <!-- main container for note cards -->
            <div class="notes-container">
 
