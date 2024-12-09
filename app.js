@@ -229,8 +229,6 @@ function manageClearAllNotes() {
   let noteCards = document.querySelectorAll(".notes-card");
   alrtMsg =
     '<p>Note list cleared <span><i class="fa-solid fa-circle-xmark"></i></span></p>';
-
-  clearBtn.classList.add("show-clear-btn");
   clearBtn.addEventListener("click", removeNotes);
 
   // REMOVE NOTES FUNCTION
@@ -241,7 +239,6 @@ function manageClearAllNotes() {
     localStorage.removeItem("noteEntries");
     // clear all fav data from Local storage
     localStorage.removeItem("favNotes");
-    clearBtn.classList.remove("show-clear-btn");
     displayAlert(mainAlerts, alrtMsg, "show-main-alert", 4000);
     //iterate and delete each card
     noteCards.forEach((note) => {
@@ -611,17 +608,17 @@ function buildNoteCardUI(...noteDetails) {
 // or the note data has been cleard
 function buildEmptyNotePlaceHolder() {
   const notesContainer = document.querySelector(".notes-container");
-  const feedBackTxt = document.querySelector(".feedback-icon");
+  const feedBackTxt = document.querySelector(".feedback-text");
+  const gridListIcon = document.querySelector(".icon-1");
+  const upDownIcon = document.querySelector(".icon-2");
   const emptyNotesPlaceHolder = document.createElement("article");
-  const gridListIcon = document.querySelector(".feedback-icon .icon-1 i");
-  const upDownIcon = document.querySelector(".feedback-icon .icon-2 i");
 
   emptyNotesPlaceHolder.classList.add("note-place-holder");
   emptyNotesPlaceHolder.innerHTML = `<p><span class="px-3"><i class="fa-regular fa-circle-plus"></i></span><span>No Notes Yet!</span></p>`;
   // reset all the feedback element to an empty state
   feedBackTxt.textContent = "";
-  gridListIcon.classList.remove("fa-border-all,fa-list");
-  upDownIcon.classList.remove("fa-arrow-up, fa-arrow-down");
+  gridListIcon.classList.remove("fa-list","fa-border-all");
+  upDownIcon.classList.remove("fa-arrow-up","fa-arrow-down");
   notesContainer.append(emptyNotesPlaceHolder);
 }
 
@@ -865,29 +862,29 @@ function trimUiCardText(b_text){
 //  and removes the clear button if there are no more notes in the container,
 //  while also deleting the note from localstorage.
 function deleteNote(){
+  const notesContainer = document.querySelector(".notes-container")
   const noteDisplayModal = document.querySelector(".display-note-modal");
   const noteCards = document.querySelectorAll(".notes-card");
-  const notesContainer = document.querySelector(".notes-container");
-  const clearBtn = document.querySelector(".clear-btn");
   const mainAlerts = document.querySelector(".main-alerts-display");
   let id = noteDisplayModal.dataset.noteId;
 
-  //deletes card that matches the noteId from the UI. 
-  noteCards.forEach(card =>{
-    if(id === card.dataset.noteId){
-       card.remove();
-    }
-  })
+  //deletes card that matches the noteId from the UI.
+  noteCards.forEach((card) => {
+    if (id === card.dataset.noteId) {
+      card.remove()}
+    });
   hideModals(noteDisplayModal);
-  // remove the btn from the display 
-  if (notesContainer.childElementCount === 0) {
-    clearBtn.classList.remove("show-clear-btn");
-  }
   // display alert
-  alrtMsg ='<p>Note Deleted <span class="pl-1"><i class="fa-solid fa-circle-xmark"></i></span></p>';
- displayAlert (mainAlerts,alrtMsg,"show-main-alert",4000);
-  deleteNoteFromLocalStorage(id)
+  alrtMsg =
+    '<p>Note Deleted <span class="pl-1"><i class="fa-solid fa-circle-xmark"></i></span></p>';
+  displayAlert(mainAlerts, alrtMsg, "show-main-alert", 4000);
+  deleteNoteFromLocalStorage(id);
   resetAll();
+
+  // remove the btn from the display
+  if (notesContainer.childElementCount === 0) {
+    buildEmptyNotePlaceHolder();
+  }
 }
 
 // EDIT NOTE FUNC

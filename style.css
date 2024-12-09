@@ -65,7 +65,7 @@
    /*
 	9. Remove lists default styling
   */
-  ul{
+  li,ul{
 	list-style: none;
 	padding: 0;
 	margin: 0;
@@ -155,6 +155,10 @@ label{
 
 /***** LAYOUT *****/
 /* header element that contains the site title and dark mode toggle */
+body{
+	width: 100%;
+	min-height: 100vh;
+}
 header{
     background-color: var(--light-color);
     padding-top: .3rem;
@@ -317,13 +321,13 @@ button.show-inputs-btn{
 }
 
 /* clear notes btn */
-.clear-btn{
+/* .clear-btn{
 	background: linear-gradient(
 	45deg,rgb(255, 47, 0) 50%,
 	rgb(238, 132, 19));
 	color: var(--light-color);
 	display:none;
-}
+} */
 
 /* dark mode toggle btn */
 div.nav-center .dark-mode-toggle{
@@ -609,15 +613,17 @@ img.cover-img{
 /* off Canvas background */
 .nav-off-canvas{
 	width: 0;
+	padding: 0;
 	height: 100vh;
 	height: 100dvh;
 	color: var(--light-color);
 	background-color: color-mix(in srgb, rgb(0, 0, 0) 90%, transparent 10%);
 	backdrop-filter: blur(10px);
-	position: absolute;
-	left: 0;
+	position: fixed;
+	top: 0;
 	transition: width 300ms linear;
 	overflow: hidden;
+	
 }
 
 .nav-off-canvas .title,
@@ -628,33 +634,34 @@ img.cover-img{
 }
 
 .off-canvas-center li{
-	margin: .2rem 0;
-	padding: .5em .6em;
-	font-size: 1.1rem;
-	font-weight: 800;
+	margin: .6rem 0;
+	font-weight: 600;
 	cursor: pointer;
-	width: 0;
+	/* display: none;
+	transition: all 300ms linear; */
 }
 
-
-
-/** nav off canvas link icons **/
-/* indicate grid display for card and sortby newest  */
-/* .fa-border-all ,
-.fa-arrow-down{
-	display: inline-block;
-} */
-
-/* indicate list display for icons and sort by oldest */
-/* .fa-list,
-.fa-arrow-up
-{
-	display: none;
-} */
 
 /* nav link(li) to toggle card layout */
 ul .lay{
 	display:none !important;
+}
+
+.off-canvas-center li p{
+	padding: .5em .1rem;
+	margin: 0;
+    font-size: 1.1rem;
+    transition: padding-left 300ms 100ms, 
+    font-size 300ms 100ms, 
+    background-color 300ms 100ms,
+	backdrop-filter 300ms 100ms;
+}
+
+li:hover p{
+padding:.5rem 0 .5rem 20px;
+font-size: 1rem;
+background-color: color-mix(in srgb, rgba(0, 0, 0, 0.7) 80%, transparent 20%);
+backdrop-filter: blur(20px);
 }
 
 /****JS STYLES *****/
@@ -716,9 +723,9 @@ the note title and note input itself */
 }
 
 /* displays the clear notes btn */
-.show-clear-btn{
+/* .show-clear-btn{
 	display: block;
-}
+} */
 
 /* class that are applied when a note is being edited */
 .editable-card{
@@ -744,19 +751,6 @@ the card being edited */
 
 
 
-/* updates UI icons for when user switches the card layout(grid/list icons)
-and icons for the sort funtionality(arrow up/down) */
-/* .show .fa-border-all,
-.show .fa-arrow-down{
-	display: none;
-}
-
-.show .fa-list,
-.show .fa-arrow-up{
-	display: inline-block;
-} */
-
-
 
 /*** JS animations classes ***/
 .slide-in-fwd-top {
@@ -774,7 +768,8 @@ and icons for the sort funtionality(arrow up/down) */
 }
 
 /****MEDIA QUERIES****/
-/** tablet screen size **/
+
+/** TABLET screen size **/
 @media only screen and (min-width: 768px) {
 
 	img{
@@ -832,23 +827,11 @@ and icons for the sort funtionality(arrow up/down) */
 		transform: translate(-3px,-3px) !important;
 	}
 
-	/* off Canvas background */
-	.nav-off-canvas{
-		width: 0;
-	}
 
-	.show-nav-off-canvas 
-	.off-canvas-center li{
-		width: 385px;
-	}
-	
-	.show-nav-off-canvas{
-		width: 30vw;
-	}
 	
 }
 
-/** large and X-large screens size **/
+/** LARGE and X-LARGE screens size **/
 @media only screen and (min-width: 992px) {
 	/* modal box for adding cover img */
 	.cover-img-modal{
@@ -871,12 +854,12 @@ and icons for the sort funtionality(arrow up/down) */
 
 	/* nav link(li) to toggle card layout */
 	ul .lay{
-		display: inline-block !important;
+		display: block !important;
 	}
 
 }
 
-/** media query that controls layout changes(grid/list) for the cards when (Applies JS Classes)**/
+/** controls layout changes(grid/list) for the cards(Applies JS Classes) **/
 @media only screen and (min-width: 1000px){
 	/* toggle card layou from grid to rows */
 	.change-layout .notes-container{
@@ -888,26 +871,41 @@ and icons for the sort funtionality(arrow up/down) */
 	}
 }
 
-@media only screen and (min-width: 500px){
+/** THE MEDIA QUERIES BELOW CONTROL THE WIDTH OF THE NAV-OFF-CANVAS AT DIFF SCREEN SIZES **/
+@media only screen and (min-width: 0) and (max-width: 767px){
 	.show-nav-off-canvas{
 		width: 70vw;
+		overflow: visible;
 	}
 	
-	.show-nav-off-canvas 
+	/* .show-nav-off-canvas 
 	.off-canvas-center li{
-		width: 100%;
-	}
+		display: block;
+	} */
 }
 
-@media only screen and (max-width: 501px ) and (min-width: 767px){
+@media only screen and (min-width: 768px) and (max-width: 991px){
 	.show-nav-off-canvas{
 		width: 50vw;
+		overflow: visible;
 	}
 	
-	.show-nav-off-canvas 
+	/* .show-nav-off-canvas 
 	.off-canvas-center li{
-		width: 100%;
+		display: block;
+	} */
+}
+
+@media only screen and (min-width: 992px) {
+	.show-nav-off-canvas{
+		width: 30vw;
+		overflow: visible;
 	}
+	
+	/* .show-nav-off-canvas 
+	.off-canvas-center li{
+		display: block;
+	} */
 }
 
 /***** ANIMATIONS *****/
