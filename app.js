@@ -6,7 +6,7 @@ let showFavs = false;
 let coverImgObj;
 let editedObj;
 const feedbackObj = {
-  fbText: "",
+  fbText: "All notes",
   gridLayout: true,
   ascending: true
 }
@@ -94,8 +94,8 @@ function initApp() {
 function createNewNote(event) {
   event.preventDefault();
   const mainAlerts = document.querySelector(".main-alerts-display");
-  const feedBackTxt = document.querySelector(".feedback-icon");
   const emptyNotesPlaceHolder = document.querySelector(".note-place-holder");
+  const feedBackTxt = document.querySelector(".feedback-text");
   const weekDays = ["Sun", "Mon", "Tue", "Wed", "Thur", "Fri", "Sat"];
   const months = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
   let alrtMsg;
@@ -142,8 +142,9 @@ function createNewNote(event) {
     // updates the feedback icons text.
     if(emptyNotesPlaceHolder){
       emptyNotesPlaceHolder.remove();
-      feedBackTxt.innerHTML = "All Notes";
+      notesContainerFeedback(feedbackObj);
     }
+    // save note data to storageand the create a note card on UI
     buildNoteCardUI(noteData, saveNoteDataToLocalStorage, id);
     // alert that note has been created
     alrtMsg =
@@ -227,9 +228,16 @@ function manageClearAllNotes() {
   const mainAlerts = document.querySelector(".main-alerts-display");
   const clearBtn = document.querySelector(".clear-btn");
   let noteCards = document.querySelectorAll(".notes-card");
+  const navToggle = document.querySelector(".nav-toggle-btn");
+  const offCanvas = document.querySelector(".nav-off-canvas");
+
   alrtMsg =
     '<p>Note list cleared <span><i class="fa-solid fa-circle-xmark"></i></span></p>';
   clearBtn.addEventListener("click", removeNotes);
+
+  // close the nav-off-canvas component
+  toggleBtnIcons(navToggle);
+  offCanvas.classList.remove("show-nav-off-canvas");
 
   // REMOVE NOTES FUNCTION
   // this func clears all the note and fav data in local storage

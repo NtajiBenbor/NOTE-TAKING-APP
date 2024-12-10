@@ -620,6 +620,7 @@ img.cover-img{
 	background-color: color-mix(in srgb, rgb(0, 0, 0) 90%, transparent 10%);
 	backdrop-filter: blur(10px);
 	position: fixed;
+	cursor: pointer;
 	top: 0;
 	transition: width 300ms linear;
 	overflow: hidden;
@@ -651,17 +652,15 @@ ul .lay{
 	padding: .5em .1rem;
 	margin: 0;
     font-size: 1.1rem;
-    transition: padding-left 300ms 100ms, 
-    font-size 300ms 100ms, 
-    background-color 300ms 100ms,
-	backdrop-filter 300ms 100ms;
+    transition: padding-left 300ms 100ms linear, 
+    font-size 300ms 100ms linear;
 }
 
 li:hover p{
 padding:.5rem 0 .5rem 20px;
 font-size: 1rem;
-background-color: color-mix(in srgb, rgba(0, 0, 0, 0.7) 80%, transparent 20%);
-backdrop-filter: blur(20px);
+/* background-color: color-mix(in srgb, rgba(0, 0, 0, 0.7) 80%, transparent 20%); */
+/* backdrop-filter: blur(20px); */
 }
 
 /****JS STYLES *****/
