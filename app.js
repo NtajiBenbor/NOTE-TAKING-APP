@@ -96,7 +96,6 @@ function createNewNote(event) {
   const mainAlerts = document.querySelector(".main-alerts-display");
   const feedBackTxt = document.querySelector(".feedback-text");
   const emptyNotesPlaceHolder = document.querySelector(".note-place-holder");
-  const feedBackTxt = document.querySelector(".feedback-text");
   const weekDays = ["Sun", "Mon", "Tue", "Wed", "Thur", "Fri", "Sat"];
   const months = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
   let alrtMsg;
@@ -195,7 +194,9 @@ function loadNoteDataOnPageLoad() {
     buildNoteCardUI();
     // update the icons and text on the within the notes container component
     // to give visual feedback to users.
+
     feedbackObj.fbText = "All Notes"
+    console.log(feedbackObj )
     notesContainerFeedback(feedbackObj);
   }
   else if (notesArray.length <= 0){
@@ -237,6 +238,8 @@ function manageClearAllNotes() {
   const mainAlerts = document.querySelector(".main-alerts-display");
   const clearBtn = document.querySelector(".clear-btn");
   let noteCards = document.querySelectorAll(".notes-card");
+  const navToggle = document.querySelector(".nav-toggle-btn");
+  const offCanvas = document.querySelector(".nav-off-canvas");
 
   alrtMsg =
     `<p>Note list cleared <span>
@@ -244,7 +247,7 @@ function manageClearAllNotes() {
   clearBtn.addEventListener("click", removeNotes);
 
   // close the nav-off-canvas component
-  toggleBtnIcons(navToggle);
+  navToggle.classList.remove("show");
   offCanvas.classList.remove("show-nav-off-canvas");
 
   // REMOVE NOTES FUNCTION
@@ -277,6 +280,8 @@ function manageClearAllNotes() {
 function toggleInputsContainer() {
   // TODO LIST
   // TODO: Dynamically create and remove the input boxes
+  // TODO: add an alert for when a note gets aded or removed from favs
+  // TODO:  update ui when user is in fav and removes or adds a note accordingly
 	const addBtn = document.querySelector(".show-inputs-btn");
   form.classList.toggle("show");
   toggleBtnIcons(addBtn);
