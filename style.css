@@ -621,7 +621,7 @@ img.cover-img{
 	backdrop-filter: blur(10px);
 	position: fixed;
 	top: 0;
-	transition: width 300ms linear;
+	transition: width 300ms;
 	overflow: hidden;
 	
 }
@@ -630,15 +630,19 @@ img.cover-img{
 .nav-off-canvas .fa-x,
 .nav-toggle button{
 	font-weight: 400;
-	font-size: clamp(1rem,1.7rem,1.8rem);
+	font-size: clamp(1rem,5vw,1.8rem);
+}
+
+.off-canvas-center{
+	width: 0;
 }
 
 .off-canvas-center li{
 	margin: .6rem 0;
-	font-weight: 600;
+	font-weight: 800;
+	font-size: 1.1rem;
 	cursor: pointer;
-	/* display: none;
-	transition: all 300ms linear; */
+
 }
 
 
@@ -650,18 +654,13 @@ ul .lay{
 .off-canvas-center li p{
 	padding: .5em .1rem;
 	margin: 0;
-    font-size: 1.1rem;
-    transition: padding-left 300ms 100ms, 
-    font-size 300ms 100ms, 
-    background-color 300ms 100ms,
-	backdrop-filter 300ms 100ms;
+    transition: color 300ms linear,
+	padding-left 300ms !important;
 }
 
-li:hover p{
-padding:.5rem 0 .5rem 20px;
-font-size: 1rem;
-background-color: color-mix(in srgb, rgba(0, 0, 0, 0.7) 80%, transparent 20%);
-backdrop-filter: blur(20px);
+.off-canvas-center  li:hover p{
+color: yellow !important;
+padding-left: 20px;
 }
 
 /****JS STYLES *****/
@@ -745,11 +744,14 @@ the card being edited */
 }
 
 /* updates UI when fav, sort or layout icons when nav link is clicked */
-.show-fa-heart {
-	color: yellow;
+.active {
+	border-left: 4px solid yellow !important;
 }
 
-
+/* hides the show input button when user has click to view their important notes */
+.hide .show-inputs-btn{
+	display: none;
+}
 
 
 /*** JS animations classes ***/
@@ -874,38 +876,37 @@ the card being edited */
 /** THE MEDIA QUERIES BELOW CONTROL THE WIDTH OF THE NAV-OFF-CANVAS AT DIFF SCREEN SIZES **/
 @media only screen and (min-width: 0) and (max-width: 767px){
 	.show-nav-off-canvas{
-		width: 70vw;
-		overflow: visible;
+		width: 350px;
+	}
+
+	.off-canvas-center{
+		width: 350px;
 	}
 	
-	/* .show-nav-off-canvas 
-	.off-canvas-center li{
-		display: block;
-	} */
 }
 
 @media only screen and (min-width: 768px) and (max-width: 991px){
 	.show-nav-off-canvas{
-		width: 50vw;
-		overflow: visible;
+		width: 550px;
+	}
+
+	.off-canvas-center{
+		width: 550px;
 	}
 	
-	/* .show-nav-off-canvas 
-	.off-canvas-center li{
-		display: block;
-	} */
+
 }
 
 @media only screen and (min-width: 992px) {
 	.show-nav-off-canvas{
-		width: 30vw;
-		overflow: visible;
+		width: 300px;
+		
+	}
+
+	.off-canvas-center{
+		width: 300px;
 	}
 	
-	/* .show-nav-off-canvas 
-	.off-canvas-center li{
-		display: block;
-	} */
 }
 
 /***** ANIMATIONS *****/

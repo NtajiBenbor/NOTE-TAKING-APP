@@ -94,7 +94,7 @@ function initApp() {
 function createNewNote(event) {
   event.preventDefault();
   const mainAlerts = document.querySelector(".main-alerts-display");
-  const feedBackTxt = document.querySelector(".feedback-icon");
+  const feedBackTxt = document.querySelector(".feedback-text");
   const emptyNotesPlaceHolder = document.querySelector(".note-place-holder");
   const weekDays = ["Sun", "Mon", "Tue", "Wed", "Thur", "Fri", "Sat"];
   const months = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
@@ -142,12 +142,15 @@ function createNewNote(event) {
     // updates the feedback icons text.
     if(emptyNotesPlaceHolder){
       emptyNotesPlaceHolder.remove();
-      feedBackTxt.innerHTML = "All Notes";
+      feedBackTxt.textContent === ""
+        ?feedBackTxt.textContent ="All notes"
+        :feedBackTxt.textContent = feedBackTxt.textContent
     }
     buildNoteCardUI(noteData, saveNoteDataToLocalStorage, id);
     // alert that note has been created
     alrtMsg =
-      '<p>Note created  <span><i class="fa-solid fa-circle-check"></i></span></p>';
+      `<p>Note created  <span>
+      <i class="fa-solid fa-circle-check"></i></span></p>`;
     displayAlert(mainAlerts, alrtMsg, "show-main-alert", 4000);
   } 
   else if (title && body && editFlag) {
@@ -167,12 +170,14 @@ function createNewNote(event) {
     }
     // display alert
     alrtMsg =
-      '<p>Note Updated  <span class="pl-1"> <i class="fa-solid fa-circle-exclamation"></i></span></p>';
+      `<p>Note Updated <span class="pl-1"> 
+      <i class="fa-solid fa-circle-exclamation"></i></span></p>`;
     displayAlert(mainAlerts, alrtMsg, "show-main-alert", 4000);
   } 
   else {
     // display error alert
-    alrtMsg = `<p>Error! you can not create a blank note. <span class="pl-1"> <i class="fa-solid fa-circle-exclamation"></i></span></p>`;
+    alrtMsg = `<p>Error! you can not create a blank note. 
+    <span class="pl-1"> <i class="fa-solid fa-circle-exclamation"></i></span></p>`;
     displayAlert(mainAlerts, alrtMsg, "show-main-alert", 4000);
     // reset program
     resetAll();
@@ -193,7 +198,10 @@ function loadNoteDataOnPageLoad() {
   }
   else if (notesArray.length <= 0){
     // if note data(note list) is empty generate a place holder text
-    buildEmptyNotePlaceHolder();
+    let text = 
+    `<p><span class="px-3"><i class="fa-regular fa-circle-plus"></i></span>
+    <span>No Notes Yet!</span></p>`;
+    buildEmptyNotePlaceHolder(text);
   }
 }
 
@@ -227,8 +235,10 @@ function manageClearAllNotes() {
   const mainAlerts = document.querySelector(".main-alerts-display");
   const clearBtn = document.querySelector(".clear-btn");
   let noteCards = document.querySelectorAll(".notes-card");
+
   alrtMsg =
-    '<p>Note list cleared <span><i class="fa-solid fa-circle-xmark"></i></span></p>';
+    `<p>Note list cleared <span>
+    <i class="fa-solid fa-circle-xmark"></i></span></p>`;
   clearBtn.addEventListener("click", removeNotes);
 
   // REMOVE NOTES FUNCTION
@@ -248,7 +258,10 @@ function manageClearAllNotes() {
     resetAll();
     clearBtn.removeEventListener("click", removeNotes);
     // add the placeholder when the card list is empty
-    buildEmptyNotePlaceHolder();
+    let text = 
+    `<p><span class="px-3"><i class="fa-regular fa-circle-plus"></i></span>
+    <span>No Notes Yet!</span></p>`;
+    buildEmptyNotePlaceHolder(text);
   }
 }
 
@@ -256,6 +269,8 @@ function manageClearAllNotes() {
 //  The function `toggleInputsContainer` toggles the visibility 
 // of the form and buttons when triggered by a click event.
 function toggleInputsContainer() {
+  // TODO LIST
+  // TODO: Dynamically create and remove the input boxes
 	const addBtn = document.querySelector(".show-inputs-btn");
   form.classList.toggle("show");
   toggleBtnIcons(addBtn);
@@ -393,20 +408,24 @@ function manageNoteDisplayModal(event,modalElement){
 }
 
 // MANAGE NAV OFF CANVAS FUNC
+// handles user intraction the sort,important and layout options on the off-canvas element
 function manageNavOffCanvas(event){
+  // TODO: refactor to use switch satements from if/else statement in main func logic
   const notesSection = document.querySelector(".notes-section");
   const navToggle = document.querySelector(".nav-toggle-btn");
   const offCanvas = document.querySelector(".nav-off-canvas");
   const feedBackTxt = document.querySelector(".feedback-text");
-  const heartSymbol = document.querySelector(".fa-heart");
-  const sortCards = document.querySelector(".sort");
+  const favsElement= document.querySelector(".fav");
+  const sortElement = document.querySelector(".sort");
   const sortTxt = document.querySelector(".sort-txt");
-  const layOut = document.querySelector(".lay");
+  const layoutElement = document.querySelector(".lay");
   const layoutTxt = document.querySelector(".lay-txt");
   let noteCards = document.querySelectorAll(".notes-card");
+  const addBtn = document.querySelector(".show-inputs-btn");
+  const placeholderElement = document.querySelector(".note-place-holder")
 
-  if(event.target.closest(".close-canvas-btn")){
-    // handles cases where the close button is clicked
+  if(event.target.closest(".close-canvas-btn") || event.target.closest(".clear-btn")){
+    // handles cases where the close button or delete element is clicked
     toggleBtnIcons(navToggle);
     offCanvas.classList.remove("show-nav-off-canvas");
   }
@@ -416,31 +435,49 @@ function manageNavOffCanvas(event){
     let favsArry = retriveFavsDataLocalStorage();
     showFavs? showFavs = false : showFavs = true;
     noteCards.forEach(card =>{card.remove()});
-    if(showFavs && favsArry.length > 0){
-      // update the state of the heart element in the UI
+    if(showFavs){
+      // update the state of the heart element and fav-text in the UI
       // then display the notes that have been added to the fav list on the UI
-      heartSymbol.classList.add("show-fa-heart");
+      favsElement.classList.add("active");
       feedbackObj.fbText = "Important notes";
       notesContainerFeedback(feedbackObj);
-      buildNoteCardUI(favsArry);
+      addBtn.parentElement.classList.add("hide");
+      // if importan cards exist then show them else dispalay a feedback message to the user
+      if (favsArry.length > 0) {
+        buildNoteCardUI(favsArry);
+      }else{
+        let text = 
+        `<p><span class="px-3"><i class="fa-regular fa-heart"></i></span><span>
+        No note has been added as important</span></p>`;
+        buildEmptyNotePlaceHolder(text);
+      }
     }else{
       // revert back to displaying all card elements
       let notesArray = retriveFromLocalStorage();
-      heartSymbol.classList.remove("show-fa-heart");
+      favsElement.classList.remove("active");
       feedbackObj.fbText = "All notes"
       notesContainerFeedback(feedbackObj);
       buildNoteCardUI(notesArray);
+      addBtn.parentElement.classList.remove("hide");
+      // If the place holder element is there then remove it
+      placeholderElement && placeholderElement.remove();
     }
+    toggleBtnIcons(navToggle);
+    offCanvas.classList.remove("show-nav-off-canvas")
   }
   else if(event.target.closest(".sort")){
-      sortCards.classList.toggle("show");
+    // handles interactions with the sort element
+    // update the elements icons
+      sortElement.classList.toggle("show");
+      // update the elements text color
+      sortElement.classList.toggle("active");
       //update the nav sort element text dynamically 
-      sortCards.classList.contains("show")
+      sortElement.classList.contains("show")
         ?sortTxt.textContent = "Sort by Newest"
         :sortTxt.textContent = "Sort by Oldest";
      // updates the order of the cards being displayed 
      // in ascending or decending order
-      if(sortCards.classList.contains("show")){
+      if(sortElement.classList.contains("show")){
         feedbackObj.ascending= false;
         notesContainerFeedback(feedbackObj);
         reOrderCards("oldest");
@@ -451,26 +488,31 @@ function manageNavOffCanvas(event){
   }
   else if(event.target.closest(".lay")){
     // displays the cards in either rows of grid layout base on user interactions
-      layOut.classList.toggle("show");
+      // update the elements icons
+      layoutElement.classList.toggle("show");
+      // update the elements text color
+      layoutElement.classList.toggle("active");
       notesSection.classList.toggle("change-layout");
       // change the text on the nav off canvas for the layout option
-      layOut.classList.contains("show")
+      layoutElement.classList.contains("show")
         ? (layoutTxt.textContent = "Grid Layout")
         : (layoutTxt.textContent = "List Layout"); 
       // maintain the text on the feedback text element
       feedbackObj.fbText = feedBackTxt.textContent;
       // Update the layout based on the state of the layout property in feedbackobject
-      if(layOut.classList.contains("show")){
+      if(layoutElement.classList.contains("show")){
         feedbackObj.gridLayout = false;
         notesContainerFeedback(feedbackObj);
       }else{
         notesContainerFeedback(feedbackObj);
       }
   }
+
   // reset the parts of thre feedback object
   feedbackObj.gridLayout = true;
   feedbackObj.ascending = true;
 }
+
 
 // GENERATE CARD HTML TEMPLATE FUNC
 // This function  generates HTML code for a note card with specified content and styling.
@@ -606,7 +648,7 @@ function buildNoteCardUI(...noteDetails) {
 // BUILD EMPTY NOTE PLACEHOLDER FUNC
 // this func returns the app to its default state when note data is has been created
 // or the note data has been cleard
-function buildEmptyNotePlaceHolder() {
+function buildEmptyNotePlaceHolder(placeholderTxt) {
   const notesContainer = document.querySelector(".notes-container");
   const feedBackTxt = document.querySelector(".feedback-text");
   const gridListIcon = document.querySelector(".icon-1");
@@ -614,7 +656,7 @@ function buildEmptyNotePlaceHolder() {
   const emptyNotesPlaceHolder = document.createElement("article");
 
   emptyNotesPlaceHolder.classList.add("note-place-holder");
-  emptyNotesPlaceHolder.innerHTML = `<p><span class="px-3"><i class="fa-regular fa-circle-plus"></i></span><span>No Notes Yet!</span></p>`;
+  emptyNotesPlaceHolder.innerHTML = placeholderTxt;
   // reset all the feedback element to an empty state
   feedBackTxt.textContent = "";
   gridListIcon.classList.remove("fa-list","fa-border-all");
@@ -689,7 +731,7 @@ function viewNoteDetails(id,event){
   const noteDisplayBtnsWrapper = document.querySelector(".note-controls");
   let noteElement = retriveFromLocalStorage();
   // when the nav-off-canvas component is open close it
-  toggleBtnIcons(navToggle);
+  navToggle.classList.remove("show");
   offCanvas.classList.remove("show-nav-off-canvas");
 
   // filter out the note object whose id is a match to the id of the clicked card
@@ -883,7 +925,8 @@ function deleteNote(){
 
   // remove the btn from the display
   if (notesContainer.childElementCount === 0) {
-    buildEmptyNotePlaceHolder();
+    let text =  `<p><span class="px-3"><i class="fa-regular fa-circle-plus"></i></span><span>No Notes Yet!</span></p>`;
+    buildEmptyNotePlaceHolder(text);
   }
 }
 
@@ -961,7 +1004,8 @@ function addToFavourites(noteId){
           return note;});
     localStorage.setItem("noteEntries", JSON.stringify(notesArray));
     notesArray = notesArray.filter(note=>{if(noteId === note.id){return note}})
-    notesArray = notesArray.pop(); favsArry.push(notesArray);
+    notesArray = notesArray.pop(); 
+    favsArry.push(notesArray);
     localStorage.setItem("favNotes", JSON.stringify(favsArry));
   }
   else if(!noteDisplayBtnsWrapper.classList.contains("show")){

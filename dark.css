@@ -200,13 +200,16 @@ body.dark-mode .note-txt::-webkit-scrollbar {
     background-color: var(--dark);
 }
 
+/* scroll bar */
 body.dark-mode .note-txt::-webkit-scrollbar-thumb {
     background-color:var(--accent);
 }
 
+/**** OFF CANVAS ****/
 body.dark-mode .nav-off-canvas{
 	background-color: color-mix(in srgb, rgba(0, 0, 0, 0.7) 80%, transparent 20%);
 	backdrop-filter: blur(10px);
 }
+
 
 

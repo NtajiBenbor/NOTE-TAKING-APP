@@ -84,46 +84,49 @@
        <nav>
            <!-- NAV OFF-CANVAS START -->
            <aside class="nav-off-canvas">
-               <div class="container">
-                   <div class="d-flex justify-content-between align-items-center px-1 mt-3 my-2">
-                       <h3 class="title display-6">Mindful</h3><!-- off-canvas site title -->
-                       <button class="close-canvas-btn"><!-- off-canvas close btn -->
-                           <i class="fa-solid fa-x"></i>
-                       </button>
+               <div>
+                    <div class="d-flex justify-content-between ps-1 pt-0 mt-3 mb-2">
+                        <h3 class="title display-6">Mindful</h3><!-- off-canvas site title -->
+                        <button class="close-canvas-btn mb-3 me-3"><!-- off-canvas close btn -->
+                            <i class="fa-solid fa-x"></i>
+                        </button>
                    </div>
                    <!-- off canvas center start-->
-                   <div class="off-canvas-center">
+                <div class="off-canvas-center">
                     <ul>
-                        <li class="fav">
+                        <li class=" ps-2 fav">
                             <p>
-                                <span class="pr-5"><i class="fa-solid fa-heart"></i> </span>  
-                                <span>  Important</span>
+                                <span class="me-2"><i class="fa-solid fa-heart"></i> </span>
+                                <span class="fav-text"> Important</span>
                             </p>
                         </li>
-                        <li class="sort"> 
+                        <li class="ps-2 sort">
                             <p>
-                                <span class="mr-1">
+                                <span class="me-2">
                                     <span class="primary-btn-icon"><i class="fa-solid fa-arrow-up"></i> </span>
                                     <span class="secondary-btn-icon"><i class="fa-solid fa-arrow-down"></i> </span>
-                                </span>  
-                                <span class="sort-txt">  Sort by Oldest</span>
+                                </span>
+                                <span class="sort-txt"> Sort by Oldest</span>
                             </p>
                         </li>
-                        <li class="lay">
+                        <li class=" ps-2 lay">
                             <p>
-                                <span class="mr-1">
+                                <span class="me-2">
                                     <span class="primary-btn-icon"><i class="fa-solid fa-list"></i> </span>
                                     <span class=" secondary-btn-icon"><i class="fa-solid fa-border-all"></i></span>
-                                </span>  
-                                <span class="lay-txt">  List Layout</span>
-                            </p> 
+                                </span>
+                                <span class="lay-txt"> List Layout</span>
+                            </p>
                         </li>
-                        <li><hr></li>
-                        <li class="clear-btn">
-                            <p><span><i class="fa-solid fa-trash fa-bounce" style="color: #f40101;"></i></span> Clear notes</p>
+                        <li class="ps-2 pe-2">
+                            <hr class="border">
+                        </li>
+                        <li class="ps-2 clear-btn">
+                            <p><span class="me-2"><i class="fa-solid fa-trash fa-bounce" style="color: #f40101;"></i></span> Delete
+                                notes</p>
                         </li>
                     </ul>
-                   </div><!-- off canvas center end-->
+                </div><!-- off canvas center end-->
                </div>
             </as><!-- NAV OFF-CANVAS END -->
        </nav> <!-- NAV END -->
@@ -151,7 +154,7 @@
                </button>
            </div><!-- create/back note button wrapper end-->
 
-           <!-- FORM SECTION START -->
+           <!-- FORM ELEMENT START -->
            <form id="form" class="mt-2"><!-- FORM SECTION START -->
                <section class="form-center mb-5">
                    <!-- COVER IMAGE & NOTE TITLE START -->
@@ -231,7 +234,7 @@
                        <button type="submit" class="app-btns create-note-btn">Create Note</button>
                    </div>
                </section>
-           </form> <!-- FORM END -->
+           </form> <!-- FORM ELEMENT END -->
        </section>
        <!-- FORM SECTION END -->
 
