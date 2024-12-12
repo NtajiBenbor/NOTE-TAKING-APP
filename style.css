@@ -722,10 +722,6 @@ the note title and note input itself */
 	visibility: visible;
 }
 
-/* displays the clear notes btn */
-/* .show-clear-btn{
-	display: block;
-} */
 
 /* class that are applied when a note is being edited */
 .editable-card{

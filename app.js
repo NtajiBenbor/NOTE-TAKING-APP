@@ -282,6 +282,7 @@ function toggleInputsContainer() {
   // TODO: Dynamically create and remove the input boxes
   // TODO: add an alert for when a note gets aded or removed from favs
   // TODO:  update ui when user is in fav and removes or adds a note accordingly
+  // TODO:  add animations to card when they are appended, and when the layout is adjusted
 	const addBtn = document.querySelector(".show-inputs-btn");
   form.classList.toggle("show");
   toggleBtnIcons(addBtn);
