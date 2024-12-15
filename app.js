@@ -38,15 +38,14 @@ function initApp() {
   const navToggle = document.querySelector(".nav-toggle-btn");
   const offCanvas = document.querySelector(".nav-off-canvas");
   const form = document.getElementById("form");
+  const formModal = document.querySelector(".form-modal");
   
 
   /***** EVENT LISTENERS ******/
   // Displays the Form inputs modal
   showInputsBtn.addEventListener("click", (event)=>{
-    const addBtn = document.querySelector(".show-inputs-btn");
-    const formModal = document.querySelector(".form-modal");
+    // const formModal = document.querySelector(".form-modal");
     showModals(event, formModal, "show-inputs-btn");
-    toggleBtnIcons(addBtn);
     resetAll();
   });
 
@@ -89,6 +88,14 @@ function initApp() {
   offCanvas.addEventListener("click",(event)=>{
     manageNavOffCanvas(event);
   })
+
+  // Closes the note input modal when the user clicks the close btn
+ formModal.addEventListener("click", (event) => {
+   if (event.target.closest(".close-btn")) {
+     resetAll();
+     hideModals(formModal);
+   }
+ });
 
 }
 
@@ -291,6 +298,9 @@ function manageClearAllNotes() {
   // TODO: update ui when user is in fav and removes or adds a note accordingly
   // TODO: add animations to card when they are appended, and when the layout is adjusted
   // TODO: undo areas where you changed toggleInputsContaine() to comments back to code
+  // TODO: Make app buttons responsive especially on mobile displays.
+  // TODO: Relocate nightmode btn to nav off canvas on mobile displays
+  
 
 // TOGGLE INPUT CONTAINER FUNC
 //  The function `toggleInputsContainer` toggles the visibility 

@@ -242,14 +242,14 @@ header{
 
 /* click effect styling on the btns */
 .app-btns:active{
-	color: #000;
-	background:#fff;
+	color: var(--dark-color);
+	background:var(--light-color);
 }
 
 /* hover effect styling on the btns */
 .app-btns:hover{
-	color: #fff;
-	background: #000;
+	color: var(--light-color);
+	background: var(--dark-color);
 }
 
 /* style for btn that displays the input field when clicked */
@@ -283,7 +283,7 @@ button.show-inputs-btn{
 	transition: all 300ms linear;
 }
 
-.nav-toggle-btn:hover,
+
 .nav-toggle-btn:focus{
 	background-color: #e5e2e2;
 	border: 3px solid #808080;
@@ -314,7 +314,19 @@ button.show-inputs-btn{
 
 /* dark mode toggle btn */
 div.nav-center .dark-mode-toggle{
-	transform: scale(0.9) translateY(3px);
+	transform: scale(0.6) translate(35px, -3px);
+}
+
+/* button for adding notes */
+.show-inputs-btn{
+	position: fixed;
+	right: 10px;
+	top: 80%;
+	z-index: 10;
+	border-radius: 50%;
+	box-shadow: 0 0 5px 1px rgba(0, 0, 0, 0.5);
+	background: linear-gradient(90deg,rgb(255, 234, 0) 45%,rgb(255, 255, 0));
+	border: 0;
 }
 
 /***** COVER IMAGE MODAL *****/
@@ -440,19 +452,6 @@ img.cover-img{
 	padding: .2rem;
 }
 
-/* .form-center{
-	width: 100%;
-	position: absolute;
-	border: 1px solid black;
-	z-index: 1200;
-} */
-
-/* class that controls the sizing on the text area element */
-/* .input-txt-area-container{
-	height: auto;
-	overflow: hidden;
-	transition: all 500ms ease-in-out;
-} */
 
 /* the note text area */
 .note-input{
@@ -615,6 +614,7 @@ textarea.note-input{
 	overflow-y: auto;
 	height: 250px;
 }
+
 /* change the default styling of the scrollbar on note display modal */
 .note-txt::-webkit-scrollbar {
     width: .7em;
@@ -639,6 +639,7 @@ textarea.note-input{
 	position: fixed;
 	cursor: pointer;
 	top: 0;
+	z-index: 1000;
 	transition: width 300ms;
 	overflow: hidden;
 	
@@ -682,17 +683,6 @@ padding-left: 20px;
 }
 
 /****JS STYLES *****/
-/* this class is applied with js to display the form input for
-the note title and note input itself */
-/* .show .form-center{
-	height: 292px;
-	overflow: visible;
-} */
-
-.show .input-txt-area-container{
-	height:auto;
-	overflow: visible;
-}
 
 /* display alert on main page */
 .show-main-alert {
@@ -793,9 +783,16 @@ the card being edited */
 		object-fit: cover;
 	}
 
+	/* general styling for all the buttons */
 	.app-btns{
 		padding: .5em .8em;
 	}
+
+	/* dark mode toggle btn */
+	div.nav-center .dark-mode-toggle{
+		transform: scale(0.9) translate(3px);
+	}
+
 	/* main area of the cover image modal */
 	.cover-img-modal{
 		width: 500px;
@@ -861,6 +858,24 @@ the card being edited */
 
 /** contorls the width and orientation of the note cards **/
 @media only screen and (min-width: 990px) {
+
+	.show-inputs-btn{
+		position: relative;
+		right: unset;
+		top: unset;
+		border-radius: 0;
+		box-shadow: none;
+		background: linear-gradient(90deg,rgb(255, 234, 0) 45%,rgb(255, 255, 0));
+		border: 3px solid var(--dark-color);
+		transition: background 300ms linear;
+	}
+
+	.show-inputs-btn:hover,
+	.show-inputs-btn:focus,
+	.show-inputs-btn:active{
+		color: var(--light-color) !important;
+		background: var(--dark-color) !important;
+	}
 
 	.notes-container{
 		flex-direction: row;

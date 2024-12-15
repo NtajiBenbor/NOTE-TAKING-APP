@@ -128,12 +128,12 @@ body.dark-mode .card-head-wrapper{
 
 /**** FORM INPUT SECTION ****/
 /* the note title text input */
-body.dark-mode .title-input,
+/* body.dark-mode .title-input,
 body.dark-mode .note-input{
 	background-color: var(--dark);
 	color: var(--bodyTextColorWhite);
 	border: 1px solid var(--accent) !important;
-}
+} */
 
 
 /* focus state for the input and textarea elements */
@@ -143,10 +143,6 @@ body.dark-mode .note-input:focus{
 	color: #000;
 }
 
-/* the note text area */
-body.dark-mode .title-input{
-  margin-bottom: .5rem !important;
-}
 
 
 /**** BUTTONS ****/
@@ -177,14 +173,16 @@ body.dark-mode .app-btns:hover{
 }
 
 
-body.dark-mode .nav-toggle-btn:hover,
 body.dark-mode .nav-toggle-btn:focus{
 	background-color: var(--accent);
 	border-color: var(--medium);
 }
 
-body.dark-mode .nav-toggle-btn:focus i,
 body.dark-mode .nav-toggle-btn:hover i{ 
+	color: var(--accent)!important;
+}
+
+body.dark-mode .nav-toggle-btn:focus i{ 
 	color: var(--dark)!important;
 }
 
