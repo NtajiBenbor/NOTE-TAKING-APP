@@ -38,12 +38,17 @@ function initApp() {
   const navToggle = document.querySelector(".nav-toggle-btn");
   const offCanvas = document.querySelector(".nav-off-canvas");
   const form = document.getElementById("form");
+  
 
   /***** EVENT LISTENERS ******/
-  // Displays/hide the Form inputs
-  // dynamically updates the create note btn icon when the button is clicked
-  showInputsBtn.addEventListener("click", (event)=>
-    toggleInputsContainer(event));
+  // Displays the Form inputs modal
+  showInputsBtn.addEventListener("click", (event)=>{
+    const addBtn = document.querySelector(".show-inputs-btn");
+    const formModal = document.querySelector(".form-modal");
+    showModals(event, formModal, "show-inputs-btn");
+    toggleBtnIcons(addBtn);
+    resetAll();
+  });
 
   // Creates a note when the user submits the form.
   form.addEventListener("submit", createNewNote);
@@ -98,6 +103,7 @@ function createNewNote(event) {
   const mainAlerts = document.querySelector(".main-alerts-display");
   const feedBackTxt = document.querySelector(".feedback-text");
   const emptyNotesPlaceHolder = document.querySelector(".note-place-holder");
+  const formModal = document.querySelector(".form-modal");
   const weekDays = ["Sun", "Mon", "Tue", "Wed", "Thur", "Fri", "Sat"];
   const months = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
   let alrtMsg;
@@ -150,6 +156,9 @@ function createNewNote(event) {
     }
     // save note data to storageand the create a note card on UI
     buildNoteCardUI(noteData, saveNoteDataToLocalStorage, id);
+    // remove hide the note creation page 
+    hideModals(formModal);
+    resetAll()
     // alert that note has been created
     alrtMsg =
       `<p>Note created  <span>
@@ -275,24 +284,31 @@ function manageClearAllNotes() {
   }
 }
 
-// TOGGLE INPUT CONTAINER FUNC
-//  The function `toggleInputsContainer` toggles the visibility 
-// of the form and buttons when triggered by a click event.
-function toggleInputsContainer(event) {
+
   // TODO:  
   // TODO: Dynamically create and remove the input boxes
   // TODO: add an alert for when a note gets aded or removed from favs
   // TODO: update ui when user is in fav and removes or adds a note accordingly
   // TODO: add animations to card when they are appended, and when the layout is adjusted
   // TODO: undo areas where you changed toggleInputsContaine() to comments back to code
-	const addBtn = document.querySelector(".show-inputs-btn");
-  const formContainer = document.querySelector(".form-modal");
-  // console.log(event.currentTarget);
-  // let curEvent = event.currentTarget
-  showModals(event, formContainer, "show-inputs-btn");
-  toggleBtnIcons(addBtn);
-  resetAll();
-}
+
+// TOGGLE INPUT CONTAINER FUNC
+//  The function `toggleInputsContainer` toggles the visibility 
+// of the form and buttons when triggered by a click event.
+// function toggleInputsContainer(event) {
+//   // TODO:  
+//   // TODO: Dynamically create and remove the input boxes
+//   // TODO: add an alert for when a note gets aded or removed from favs
+//   // TODO: update ui when user is in fav and removes or adds a note accordingly
+//   // TODO: add animations to card when they are appended, and when the layout is adjusted
+//   // TODO: undo areas where you changed toggleInputsContaine() to comments back to code
+// 	// const addBtn = document.querySelector(".show-inputs-btn");
+//   // const formContainer = document.querySelector(".form-modal");
+
+//   // showModals(event, formContainer, "show-inputs-btn");
+//   // toggleBtnIcons(addBtn);
+//   // resetAll();
+// }
 
 // TOGGLE BUTTON ICONS
 function toggleBtnIcons(btn){

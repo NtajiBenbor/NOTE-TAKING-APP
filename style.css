@@ -464,10 +464,19 @@ img.cover-img{
 	padding: 0;
 }
 
+textarea.note-input{
+	border-bottom-left-radius: 5px;
+	border-bottom-right-radius: 5px;
+	height:500px !important;	
+	resize: none;
+	
+}
+
 /* the note title text input  */
  .title-input{
 	height: 32px;
-	width: 100%;
+	border-top-left-radius: 5px;
+	border-top-right-radius: 5px;
 	border: 0;
 }
 
