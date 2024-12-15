@@ -42,13 +42,15 @@ function initApp() {
   /***** EVENT LISTENERS ******/
   // Displays/hide the Form inputs
   // dynamically updates the create note btn icon when the button is clicked
-  showInputsBtn.addEventListener("click", toggleInputsContainer);
+  showInputsBtn.addEventListener("click", (event)=>
+    toggleInputsContainer(event));
 
   // Creates a note when the user submits the form.
   form.addEventListener("submit", createNewNote);
 
   // Opens the cover image modal when the "add-cover-img-btn" is clicked,
   //  allowing the user to add a cover image to their note.
+  // todo:rewrite this comment to be suitable
   form.addEventListener("click",(event)=>{
     showModals(event,coverImageModal,"add-cover-img-btn");
   });
@@ -196,7 +198,6 @@ function loadNoteDataOnPageLoad() {
     // to give visual feedback to users.
 
     feedbackObj.fbText = "All Notes"
-    console.log(feedbackObj )
     notesContainerFeedback(feedbackObj);
   }
   else if (notesArray.length <= 0){
@@ -277,14 +278,18 @@ function manageClearAllNotes() {
 // TOGGLE INPUT CONTAINER FUNC
 //  The function `toggleInputsContainer` toggles the visibility 
 // of the form and buttons when triggered by a click event.
-function toggleInputsContainer() {
-  // TODO LIST
+function toggleInputsContainer(event) {
+  // TODO:  
   // TODO: Dynamically create and remove the input boxes
   // TODO: add an alert for when a note gets aded or removed from favs
-  // TODO:  update ui when user is in fav and removes or adds a note accordingly
-  // TODO:  add animations to card when they are appended, and when the layout is adjusted
+  // TODO: update ui when user is in fav and removes or adds a note accordingly
+  // TODO: add animations to card when they are appended, and when the layout is adjusted
+  // TODO: undo areas where you changed toggleInputsContaine() to comments back to code
 	const addBtn = document.querySelector(".show-inputs-btn");
-  form.classList.toggle("show");
+  const formContainer = document.querySelector(".form-modal");
+  // console.log(event.currentTarget);
+  // let curEvent = event.currentTarget
+  showModals(event, formContainer, "show-inputs-btn");
   toggleBtnIcons(addBtn);
   resetAll();
 }
@@ -295,8 +300,7 @@ function toggleBtnIcons(btn){
 }
 
 // SHOW MODALS FUNC
-// This function selects the modal element that allows the user to
-// add images to their notes.
+// this function shows modal elements
 // it also controls the animated behiour of the modal
 function showModals(event, modalElement, closestElmnt) {
   if (event.target.closest(`.${closestElmnt}`)) {
@@ -632,7 +636,7 @@ function buildNoteCardUI(...noteDetails) {
     if (!editFlag) {
       reOrderCards("newest")
     }
-    toggleInputsContainer();
+    // toggleInputsContainer();
     if (form.classList.contains("show")) {
       toggleBtnIcons(addBtn);
       form.classList.remove("show");
@@ -705,7 +709,7 @@ function UpdateEditedCards(...cardDetails){
           editInLocalStorage(noteData,cardId);
           updateNoteBtn.textContent = "Create note";
           // hide form inputs and reset the app
-          toggleInputsContainer();
+          // toggleInputsContainer();
       })();
 
       async function retriveImageData() {
@@ -719,7 +723,7 @@ function UpdateEditedCards(...cardDetails){
     editInLocalStorage(noteData,cardId);
     updateNoteBtn.textContent = "Create note";
     // hide form inputs and reset the app
-    toggleInputsContainer();
+    // toggleInputsContainer();
   }
 }
 

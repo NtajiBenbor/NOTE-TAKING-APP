@@ -46,7 +46,7 @@
         <div class="d-flex justify-content-between align-items-center">
             <!-- dark mode toggle START(From Uiverse.io by Emil190313) -->
             <div class="w-auto dark-mode-toggle">
-                <label for="switch" class="toggle">
+                <label for="switch" title="dark mode toggle" class="toggle">
                     <input type="checkbox" class="input" id="switch" />
                     <div class="icon icon--moon">
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="32"
@@ -68,7 +68,7 @@
             </div><!-- dark mode toggle END-->
 
             <div class="nav-toggle"><!-- NAV toggle START -->
-                <button type="button" class="nav-toggle-btn">
+                <button type="button" title="nav toggle" class="nav-toggle-btn">
                     <span class=" primary-btn-icon">
                         <i class="fa-solid fa-bars"></i>
                     </span>
@@ -135,13 +135,13 @@
    <!--MAIN container -->
    <main class="container">
        <!-- FORM SECTION START-->
-       <section class="container px-0">
+       <section class="px-0">
            <!-- Main alerts display -->
            <div class="main-alerts-display container">
 
            </div>
            <!-- create/back note button wrapper start-->
-           <div class="mt-auto">
+           <div class="mt-auto mb-3">
                <button type="button" role="button" class="app-btns show-inputs-btn">
                    <!-- add icon -->
                    <span class="primary-btn-icon">
@@ -154,87 +154,101 @@
                </button>
            </div><!-- create/back note button wrapper end-->
 
-           <!-- FORM ELEMENT START -->
-           <form id="form" class="mt-2"><!-- FORM SECTION START -->
-               <section class="form-center mb-5">
-                   <!-- COVER IMAGE & NOTE TITLE START -->
-                   <div>
-                       <!-- add cover photo button -->
-                       <div class="d-flex my-0 py-0 mx-0 px-0">
-                           <button type="button" title="add a cover image" class=" mb-2 add-cover-img-btn">
-                               <i class="fa-regular fa-image fa-lg"></i>
-                           </button>
-                       </div>
-                       <!-- note title -->
-                       <div class="row mb-1 mb-md-2">
-                           <div class="col-12 col-md-4">
-                               <label for="note_title" class="sr-only">Title</label>
-                               <input type="text" class="note-input title-input py-1 py-md-2 px-1" id="note_title"
-                                   name="note_title" placeholder="Title">
-                           </div>
-                       </div>
-                   </div><!-- COVER IMAGE & NOTE TITLE END -->
-
-                   <!--  COVER IMAGE MODAL START -->
-                   <div class="modal-bg">
-                       <!-- MODAL background -->
-                       <article class="cover-img-modal">
-                           <!-- MODAL CENTER  -->
-                           <div class="modal-center">
-                               <!-- close-modal btn -->
-                               <button type="button" class="close-modal-btn">
-                                   <i class="fa-solid fa-xmark"></i>
-                               </button>
-                               <div>
-                                   <p class="mt-4">Click the button below to add a cover image to your note.</p>
-                                   <!-- select cover image btn -->
-                                   <label for="cover-photo-input" class="cover-img-label app-btns mb-3 mt-0"
-                                       aria-roledescription="button">
-                                       <i class="fa-solid fa-plus"></i>
-                                   </label>
-                                   <!-- cover image input field -->
-                                   <input type="file" name="cover_photo_input" id="cover-photo-input" size="100"
-                                       value="upload" accept="image/jpeg, image/png">
-                               </div>
-                               <!-- image preview wrapper -->
-                               <div class="cover-img-wrapper">
-                                   <!-- place holder image for preview image -->
-                                   <i>
-                                       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor"
-                                           class="size-4">
-                                           <path fill-rule="evenodd"
-                                               d="M2 4a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V4Zm10.5 5.707a.5.5 0 0 0-.146-.353l-1-1a.5.5 0 0 0-.708 0L9.354 9.646a.5.5 0 0 1-.708 0L6.354 7.354a.5.5 0 0 0-.708 0l-2 2a.5.5 0 0 0-.146.353V12a.5.5 0 0 0 .5.5h8a.5.5 0 0 0 .5-.5V9.707ZM12 5a1 1 0 1 1-2 0 1 1 0 0 1 2 0Z"
-                                               clip-rule="evenodd" />
-                                       </svg>
-                                   </i>
-                               </div>
-                               <!-- error alert -->
-                               <div class="alerts py-1 my-0 caption"></div>
-                               <p class="caption img-preview-caption">image preview</p>
-                               <!-- upload cover img btn -->
-                               <div>
-                                   <button type="button" class="mt-2 app-btns done-btn">Done</button>
-                               </div>
-                           </div>
-                           <!-- MODAL CENTER  End-->
-                       </article>
-                   </div><!-- COVER IMAGE MODAL END-->
-
-                   <!-- NOTE INPUT START -->
-                   <div class="form-row input-txt-area-container mt-1">
-                       <div class="form-group col">
-                           <label for="note" class="sr-only">Note</label>
-                           <textarea name="note" id="note" class="note-input" cols="30" rows="4"
-                               placeholder="Add new note"></textarea>
-                       </div>
-                   </div><!-- NOTE INPUT END -->
-
-                   <!--SUBMIT FORM BTN -->
-                   <div class="col my-1  d-flex justify-content-center">
-                       <button type="submit" class="app-btns create-note-btn">Create Note</button>
-                   </div>
-               </section>
-           </form> <!-- FORM ELEMENT END -->
+           <!-- FORM MODAL START-->
+           <div class="form-modal">
+            <!-- FORM ELEMENT START -->
+               <form id="form" class="mt-1"><!-- FORM SECTION START -->
+                    <section class="form-center">
+                        <!-- FORM NAV -->
+                        <div class="form-nav justify-content-between d-flex mb-4">
+                            <!-- Form buttons -->
+                            <div class="w-50 py-0 my-0 mx-0 px-0">
+                                <!-- CLOSE FORM IMG BTN  -->
+                                <button type="button" title="add a cover image" class="app-btns show-inputs-btn">
+                                    <i class="fa-solid fa-x"></i>
+                                </button>
+                            </div>
+                            <!-- Form buttons -->
+                            <div class="d-flex justify-content-end my-0 py-0 mx-0 w-50">
+                                <!-- ADD COVER IMG BTN  -->
+                                <button type="button" title="add a cover image" class=" app-btns add-cover-img-btn me-2">
+                                    <i class="fa-solid fa-image"></i>
+                                </button>
+                                <!--SUBMIT FORM BTN -->
+                                <button type="submit" title="save note" class="app-btns create-note-btn">
+                                    <i class="fas fa-save"></i>
+                                </button>
+                            </div>
+                        </div>
+                    
+                        <!--  COVER IMAGE MODAL START -->
+                        <div class="modal-bg">
+                            <!-- MODAL background -->
+                            <article class="cover-img-modal">
+                                <!-- MODAL CENTER  -->
+                                <div class="modal-center">
+                                    <!-- close-modal btn -->
+                                    <button type="button" class="close-modal-btn">
+                                        <i class="fa-solid fa-xmark"></i>
+                                    </button>
+                                    <div>
+                                        <p class="mt-4">Click the button below to add a cover image to your note.</p>
+                                        <!-- select cover image btn -->
+                                        <label for="cover-photo-input" class="cover-img-label app-btns mb-3 mt-0"
+                                            aria-roledescription="button">
+                                            <i class="fa-solid fa-plus"></i>
+                                        </label>
+                                        <!-- cover image input field -->
+                                        <input type="file" name="cover_photo_input" id="cover-photo-input" size="100" value="upload"
+                                            accept="image/jpeg, image/png">
+                                    </div>
+                                    <!-- image preview wrapper -->
+                                    <div class="cover-img-wrapper">
+                                        <!-- place holder image for preview image -->
+                                        <i>
+                                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" class="size-4">
+                                                <path fill-rule="evenodd"
+                                                    d="M2 4a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V4Zm10.5 5.707a.5.5 0 0 0-.146-.353l-1-1a.5.5 0 0 0-.708 0L9.354 9.646a.5.5 0 0 1-.708 0L6.354 7.354a.5.5 0 0 0-.708 0l-2 2a.5.5 0 0 0-.146.353V12a.5.5 0 0 0 .5.5h8a.5.5 0 0 0 .5-.5V9.707ZM12 5a1 1 0 1 1-2 0 1 1 0 0 1 2 0Z"
+                                                    clip-rule="evenodd" />
+                                            </svg>
+                                        </i>
+                                    </div>
+                                    <!-- error alert -->
+                                    <div class="alerts py-1 my-0 caption"></div>
+                                    <p class="caption img-preview-caption">image preview</p>
+                                    <!-- upload cover img btn -->
+                                    <div>
+                                        <button type="button" class="mt-2 app-btns done-btn">Done</button>
+                                    </div>
+                                </div>
+                                <!-- MODAL CENTER  End-->
+                            </article>
+                        </div><!-- COVER IMAGE MODAL END-->
+                    
+                        <!-- NOTE TITLE START -->
+                        <div class=" my-0 py-0">
+                            <!-- note title input -->
+                            <div class="row ">
+                                <div class="col-12 col-md-4">
+                                    <label for="note_title" class="sr-only">Title</label>
+                                    <input type="text" class="note-input title-input py-1 py-md-2 px-2" id="note_title" name="note_title"
+                                        placeholder="Title">
+                                </div>
+                            </div>
+                        </div><!-- NOTE TITLE END -->
+                    
+                        <!-- NOTE INPUT START -->
+                        <div class="form-row input-txt-area-container my-0 py-0">
+                            <div class="form-group col">
+                                <label for="note" class="sr-only">Note</label>
+                                <textarea name="note" id="note" class="note-input py-1 py-md-2 px-2" cols="30" rows="4" placeholder="Add new note"></textarea>
+                            </div>
+                        </div><!-- NOTE INPUT END -->
+                    
+                    
+                    </section>
+               </form> <!-- FORM ELEMENT END -->
+           </div><!-- FORM MODAL END -->
        </section>
        <!-- FORM SECTION END -->
 
