@@ -79,9 +79,8 @@ function initApp() {
 
   //Manages the actions of the Navbar Toggle Button
   navToggle.addEventListener("click",()=>{
-    this.toggleBtnIcons(navToggle);
-    offCanvas.classList.toggle("show-nav-off-canvas")
-   
+    this.toggleNav();
+    offCanvas.classList.toggle("show-nav-off-canvas");
   })
 
   //Handles User actions on the Nav Off Canvas Element
@@ -299,30 +298,18 @@ function manageClearAllNotes() {
   // TODO: add animations to card when they are appended, and when the layout is adjusted
   // TODO: undo areas where you changed toggleInputsContaine() to comments back to code
   // TODO: Make app buttons responsive especially on mobile displays.
-  // TODO: Relocate nightmode btn to nav off canvas on mobile displays
-  
+  // TODO: Create a Utils.js file and the use exports.
 
-// TOGGLE INPUT CONTAINER FUNC
-//  The function `toggleInputsContainer` toggles the visibility 
-// of the form and buttons when triggered by a click event.
-// function toggleInputsContainer(event) {
-//   // TODO:  
-//   // TODO: Dynamically create and remove the input boxes
-//   // TODO: add an alert for when a note gets aded or removed from favs
-//   // TODO: update ui when user is in fav and removes or adds a note accordingly
-//   // TODO: add animations to card when they are appended, and when the layout is adjusted
-//   // TODO: undo areas where you changed toggleInputsContaine() to comments back to code
-// 	// const addBtn = document.querySelector(".show-inputs-btn");
-//   // const formContainer = document.querySelector(".form-modal");
 
-//   // showModals(event, formContainer, "show-inputs-btn");
-//   // toggleBtnIcons(addBtn);
-//   // resetAll();
-// }
 
 // TOGGLE BUTTON ICONS
 function toggleBtnIcons(btn){
   btn.classList.toggle("show");
+}
+
+function toggleNav(){
+  const navToggle = document.querySelector(".nav-toggle-btn");
+  navToggle.classList.toggle("show");
 }
 
 // SHOW MODALS FUNC
@@ -468,7 +455,7 @@ function manageNavOffCanvas(event){
 
   if(event.target.closest(".close-canvas-btn") || event.target.closest(".clear-btn")){
     // handles cases where the close button or delete element is clicked
-    toggleBtnIcons(navToggle);
+    toggleNav();
     offCanvas.classList.remove("show-nav-off-canvas");
   }
   else if(event.target.closest(".fav")){
@@ -504,7 +491,7 @@ function manageNavOffCanvas(event){
       // If the place holder element is there then remove it
       placeholderElement && placeholderElement.remove();
     }
-    toggleBtnIcons(navToggle);
+    navToggle.classList.remove("show");
     offCanvas.classList.remove("show-nav-off-canvas")
   }
   else if(event.target.closest(".sort")){

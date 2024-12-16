@@ -270,23 +270,50 @@ button.show-inputs-btn{
 	display: none;
 }
 
+
 /*nav toggle btn  */
-.nav-toggle button{
-	font-size: 1rem;
-	color: var(--dark-color);
-	width: 50px;
-	padding: 0px 8px;
-	outline: 0;
+.nav-toggle-btn{
 	border: 3px solid transparent;
+	outline:0;
+	background:transparent; 
+	width:45px;
+	padding-bottom:0.5rem;
+	cursor:pointer;
 	border-radius: 5px;
-	background: transparent;
-	transition: all 300ms linear;
+}
+
+/* elements within the nav toggle */
+.nav-toggle-btn .bars{
+	width: 30px;
+	height:0;
+	border: 1.5px solid black;
+	margin-top: 6px;
+	transform-origin: center;
+	margin-left:auto;
+	transition: transform 200ms 100ms,
+	 opacity 300ms linear,
+	 width 300ms linear;
+	
+}
+
+
+.nav-toggle-btn > div{
+	width: max-content;
+	transform: translate(-1px,1.5px);
+}
+
+.nav-toggle-btn .fa-bars-2{
+	width: 25px;
+}
+
+.nav-toggle-btn .fa-bars-3{
+	width: 20px;
+	margin-bottom: 0;
 }
 
 
 .nav-toggle-btn:focus{
-	background-color: #e5e2e2;
-	border: 3px solid #808080;
+	border: 3px solid #9d9d9d;
 }
 
 /* nav off canvas btn */
@@ -314,7 +341,7 @@ button.show-inputs-btn{
 
 /* dark mode toggle btn */
 div.nav-center .dark-mode-toggle{
-	transform: scale(0.6) translate(35px, -3px);
+	transform: scale(0.6) translate(25px, -3px);
 }
 
 /* button for adding notes */
@@ -451,7 +478,6 @@ img.cover-img{
 	border: 4px solid var(--dark-color);
 	padding: .2rem;
 }
-
 
 /* the note text area */
 .note-input{
@@ -695,6 +721,23 @@ padding-left: 20px;
 	width: 50%;
   }
 
+/*individual transforms applied by JS to each element within
+ the nav-toggle btn */
+ .show .fa-bars-1{
+	transform: translateY(7px) rotate(45deg);
+}
+
+.show .fa-bars-2{
+	transform: translateX(10px);
+	opacity: 0;
+}
+
+.show .fa-bars-3{
+	transform: translateY(-10px) rotate(-45deg);
+	width: 30px;
+}
+
+
 /* this class hides the create note btn plus icon */
 .show .primary-btn-icon{
 	display: none;
@@ -729,11 +772,9 @@ padding-left: 20px;
 	visibility: visible;
 }
 
-
 /* class that are applied when a note is being edited */
 .editable-card{
 	background-color: skyblue !important;
-	
 }
 /*styling to indicate that this cards are disabled when the edit class has been applied to 
 the card being edited */
@@ -863,7 +904,7 @@ the card being edited */
 		position: relative;
 		right: unset;
 		top: unset;
-		border-radius: 0;
+		border-radius: 2px;
 		box-shadow: none;
 		background: linear-gradient(90deg,rgb(255, 234, 0) 45%,rgb(255, 255, 0));
 		border: 3px solid var(--dark-color);

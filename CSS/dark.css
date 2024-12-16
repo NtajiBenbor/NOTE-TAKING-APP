@@ -178,12 +178,12 @@ body.dark-mode .nav-toggle-btn:focus{
 	border-color: var(--medium);
 }
 
-body.dark-mode .nav-toggle-btn:hover i{ 
-	color: var(--accent)!important;
+body.dark-mode .nav-toggle-btn:hover .bars{ 
+	border:1.5px solid var(--accent)!important;
 }
 
-body.dark-mode .nav-toggle-btn:focus i{ 
-	color: var(--dark)!important;
+body.dark-mode .nav-toggle-btn:focus .bars{ 
+	border:1.5px solid var(--dark)!important;
 }
 
 
