@@ -169,7 +169,7 @@ function createNewNote(event) {
     alrtMsg =
       `<p>Note created  <span>
       <i class="fa-solid fa-circle-check"></i></span></p>`;
-    displayAlert(mainAlerts, alrtMsg, "show-main-alert", 4000);
+    displayAlert(mainAlerts, alrtMsg, "show-main-alert", 6000);
   } 
   else if (title && body && editFlag) {
     const editedCardElement = document.querySelector(".editable-card");
@@ -177,26 +177,17 @@ function createNewNote(event) {
     noteData.id = cardId;
     // Update the UI to reflect changes made to the currently edited card
     UpdateEditedCards(noteData, editedCardElement, cardId);
-    // apply this scroll effect only on mobile display
-    // if (window.matchMedia("(max-width: 767px)").matches) {
-    //   let position = editedCardElement.getBoundingClientRect().bottom;
-    //   window.scrollTo({
-    //     top: position,
-    //     left: 0,
-    //     behavior: "smooth",
-    //   });
-    // }
     // display alert
     alrtMsg =
       `<p>Note Updated <span class="pl-1"> 
       <i class="fa-solid fa-circle-exclamation"></i></span></p>`;
-    displayAlert(mainAlerts, alrtMsg, "show-main-alert", 4000);
+    displayAlert(mainAlerts, alrtMsg, "show-main-alert", 6000);
   } 
   else {
     // display error alert
     alrtMsg = `<p>Error! you can not create a blank note. 
     <span class="pl-1"> <i class="fa-solid fa-circle-exclamation"></i></span></p>`;
-    displayAlert(mainAlerts, alrtMsg, "show-main-alert", 4000);
+    displayAlert(mainAlerts, alrtMsg, "show-main-alert", 6000);
     // reset program
     resetAll();
   }
@@ -274,7 +265,7 @@ function manageClearAllNotes() {
     localStorage.removeItem("noteEntries");
     // clear all fav data from Local storage
     localStorage.removeItem("favNotes");
-    displayAlert(mainAlerts, alrtMsg, "show-main-alert", 4000);
+    displayAlert(mainAlerts, alrtMsg, "show-main-alert", 6000);
     //iterate and delete each card
     noteCards.forEach((note) => {
       note.remove();
@@ -291,13 +282,11 @@ function manageClearAllNotes() {
 }
 
 
-  // TODO:  
-  // TODO: add an alert for when a note gets aded or removed from favs
-  // TODO: work on how alerts are displayed on larger screens
-  // TODO: update ui when user is in fav and removes or adds a note accordingly
+  // TODO: Read every function and adjust comment to suit describe salient points in code 
   // TODO: add animations to card when they are appended, and when the layout is adjusted
   // TODO: Make app buttons responsive especially on mobile displays.
   // TODO: Create a Utils.js file and the use exports.
+ 
 
 
 
@@ -413,26 +402,40 @@ function manageFileInputModal(event) {
 // or deleting a note based on user interactions.
 // @param modalElement -parameter is a reference to the modal element.
 function manageNoteDisplayModal(event,modalElement){
-  if(event.target.closest(".back-btn")){
+  const mainAlerts = document.querySelector(".main-alerts-display");
+  const noteDisplayBtnsWrapper = document.querySelector(".note-controls");
+  if (event.target.closest(".back-btn")) {
+    // handles cases where the user closes the Modal by pressing the back btn
     hideModals(modalElement);
-    setTimeout(()=>{
+    setTimeout(() => {
       resetNoteDisplayModal();
-    },1000);
-		// delete the note id from display modal
+    }, 1000);
+    // delete the note id from display modal
     delete modalElement.dataset.noteId;
-  }else if(event.target.closest(".edit-btn")){
-    const formModal = document.querySelector(".form-modal")
-     editNote();
-     showModals(event,formModal,"edit-btn");
-		 setTimeout(()=>{
+  } else if (event.target.closest(".edit-btn")) {
+    // handles cases where the user click on the edit button
+    const formModal = document.querySelector(".form-modal");
+    editNote();
+    showModals(event, formModal, "edit-btn");
+    setTimeout(() => {
       resetNoteDisplayModal();
-    },1000);
-  }else if(event.target.closest(".del-btn")){
-     deleteNote();
-		 setTimeout(()=>{
+    }, 1000);
+  } else if (event.target.closest(".del-btn")) {
+    // handles cases where the user clicks on the delete button
+    deleteNote();
+    setTimeout(() => {
       resetNoteDisplayModal();
-    },1000);
-  }else if(event.target.closest(".add-to-fav-btn")){
+    }, 1000);
+  } else if (event.target.closest(".add-to-fav-btn")) {
+    // handles cases where the user addes the note being displayed to favourites
+    // display an alert
+    let alrtMsg ;
+    !noteDisplayBtnsWrapper.classList.contains("show")
+      ? alrtMsg = `<p>Added to favourites. 
+        <span class="pl-1"> <i class="fa-solid fa-heart"></i></span></p>`
+      : alrtMsg = `<p>Removed from favourites.</p>`
+    displayAlert(mainAlerts, alrtMsg, "show-main-alert", 6000);
+    // added note that is being displayed to favourites list
     let id = modalElement.dataset.noteId;
     addToFavourites(id);
   }
@@ -947,7 +950,7 @@ function deleteNote(){
   // display alert
   alrtMsg =
     '<p>Note Deleted <span class="pl-1"><i class="fa-solid fa-circle-xmark"></i></span></p>';
-  displayAlert(mainAlerts, alrtMsg, "show-main-alert", 4000);
+  displayAlert(mainAlerts, alrtMsg, "show-main-alert", 6000);
   deleteNoteFromLocalStorage(id);
   resetAll();
 
