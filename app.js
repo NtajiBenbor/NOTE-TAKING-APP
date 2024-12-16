@@ -178,14 +178,14 @@ function createNewNote(event) {
     // Update the UI to reflect changes made to the currently edited card
     UpdateEditedCards(noteData, editedCardElement, cardId);
     // apply this scroll effect only on mobile display
-    if (window.matchMedia("(max-width: 767px)").matches) {
-      let position = editedCardElement.getBoundingClientRect().bottom;
-      window.scrollTo({
-        top: position,
-        left: 0,
-        behavior: "smooth",
-      });
-    }
+    // if (window.matchMedia("(max-width: 767px)").matches) {
+    //   let position = editedCardElement.getBoundingClientRect().bottom;
+    //   window.scrollTo({
+    //     top: position,
+    //     left: 0,
+    //     behavior: "smooth",
+    //   });
+    // }
     // display alert
     alrtMsg =
       `<p>Note Updated <span class="pl-1"> 
@@ -292,11 +292,10 @@ function manageClearAllNotes() {
 
 
   // TODO:  
-  // TODO: Dynamically create and remove the input boxes
   // TODO: add an alert for when a note gets aded or removed from favs
+  // TODO: work on how alerts are displayed on larger screens
   // TODO: update ui when user is in fav and removes or adds a note accordingly
   // TODO: add animations to card when they are appended, and when the layout is adjusted
-  // TODO: undo areas where you changed toggleInputsContaine() to comments back to code
   // TODO: Make app buttons responsive especially on mobile displays.
   // TODO: Create a Utils.js file and the use exports.
 
@@ -307,6 +306,7 @@ function toggleBtnIcons(btn){
   btn.classList.toggle("show");
 }
 
+// NAV TOGGLE FUNC
 function toggleNav(){
   const navToggle = document.querySelector(".nav-toggle-btn");
   navToggle.classList.toggle("show");
@@ -421,7 +421,9 @@ function manageNoteDisplayModal(event,modalElement){
 		// delete the note id from display modal
     delete modalElement.dataset.noteId;
   }else if(event.target.closest(".edit-btn")){
+    const formModal = document.querySelector(".form-modal")
      editNote();
+     showModals(event,formModal,"edit-btn");
 		 setTimeout(()=>{
       resetNoteDisplayModal();
     },1000);
@@ -616,7 +618,6 @@ function generateCardHTMLTemplates(...cardDetails) {
 // the data is used to build cards in the UI when the user create a note entry or when the app is initialized.
 function buildNoteCardUI(...noteDetails) {
   const [noteData, saveNoteDataFunc, id] = noteDetails;
-  const addBtn = document.querySelector(".show-inputs-btn");
   // handles card creation when the user creates a new note
   if (saveNoteDataFunc && noteData) {
     readNoteData();
@@ -649,11 +650,7 @@ function buildNoteCardUI(...noteDetails) {
     if (!editFlag) {
       reOrderCards("newest")
     }
-    // toggleInputsContainer();
-    if (form.classList.contains("show")) {
-      toggleBtnIcons(addBtn);
-      form.classList.remove("show");
-    }
+    resetAll()
     // sets up the functionality to clear notes
     if (notesContainer.childElementCount > 0) {
       manageClearAllNotes();
@@ -711,6 +708,7 @@ function makeCardsClickable() {
 function UpdateEditedCards(...cardDetails){
   const [noteData,element,cardId]= cardDetails;
   const updateNoteBtn = document.querySelector(".create-note-btn");
+  const formModal = document.querySelector(".form-modal");
 	// trim note body text for the card UI
 	let cardText = trimUiCardText(noteData.body);
 	if (editFlag && (coverImgObj || coverImgFlag)) {
@@ -720,15 +718,11 @@ function UpdateEditedCards(...cardDetails){
           noteData.image = processedImg;
           element.innerHTML = generateCardHTMLTemplates( "Edited",noteData,cardText);
           editInLocalStorage(noteData,cardId);
-          updateNoteBtn.textContent = "Create note";
           // hide form inputs and reset the app
-          // toggleInputsContainer();
+          hideModals(formModal);
+          resetAll()
       })();
 
-      async function retriveImageData() {
-        let data = await initImageProcessing(noteData);
-        return data;
-      }
   } 
 	else if (editFlag && (!coverImgObj || !coverImgFlag)) {
 		// handles cases where the user edits the note and does not includes a cover image
@@ -736,7 +730,12 @@ function UpdateEditedCards(...cardDetails){
     editInLocalStorage(noteData,cardId);
     updateNoteBtn.textContent = "Create note";
     // hide form inputs and reset the app
-    // toggleInputsContainer();
+    resetAll()
+  }
+  // RETRIVE PROCCESSED IMG DATA FUNC
+  async function retriveImageData() {
+    let data = await initImageProcessing(noteData);
+    return data;
   }
 }
 
@@ -966,25 +965,18 @@ function deleteNote(){
 function editNote(){
   const noteDisplayModal = document.querySelector(".display-note-modal");
   const noteCards = document.querySelectorAll(".notes-card");
-  const notesContainer = document.querySelector(".notes-container");
-  const updateNoteBtn = document.querySelector(".create-note-btn");
   const form = document.getElementById("form");
-	const addBtn = document.querySelector(".show-inputs-btn");
-	const createNoteBtn = document.querySelector(".create-note-btn");
- 
   // get the current note id from the note modal dispaly
   let id = noteDisplayModal.dataset.noteId;
   editFlag = true;
-  let notesElement = retriveFromLocalStorage();
+  let notesArray = retriveFromLocalStorage();
   hideModals(noteDisplayModal);
-  updateNoteBtn.textContent = "Update note";
 // using the card id to implement a test,
 // iterate through the cards on the UI
 // apply styles to give visual cue to the user based on these test
 // showing which card is being edited and disabling the rest of the cards
  noteCards.forEach(card =>{
     if(card.dataset.noteId !== id){
-      notesContainer.classList.add("disabled-cards");
       card.setAttribute("inert","");
     }
 
@@ -995,27 +987,16 @@ function editNote(){
 
     // search for a match with the card id from the array 
 		// of objects gotten from local storage
-    notesElement = notesElement.filter( note =>{
+    notesArray = notesArray.filter( note =>{
         if(note.id === id){
           return note;
         }
     })
 
-    notesElement = notesElement.pop();
+    notesArray = notesArray.pop();
     // update the values of the form inputs with values from note object.
-    form.elements.note_title.value = notesElement.title;
-    form.elements.note.value = notesElement.body;
-
-		form.classList.add("show");
-		addBtn.classList.add("show");
-		createNoteBtn.classList.add("show");
-
-		let position = form.getBoundingClientRect().top;
-		window.scrollTo({
-				top:position,
-				left:0,
-				behavior:"smooth"
-			})
+    form.elements.note_title.value = notesArray.title;
+    form.elements.note.value = notesArray.body;
 }
 
 // ADD TO FAVOURITES FUNC

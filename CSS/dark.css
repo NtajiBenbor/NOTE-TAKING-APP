@@ -178,6 +178,10 @@ body.dark-mode .nav-toggle-btn:focus{
 	border-color: var(--medium);
 }
 
+body.dark-mode .nav-toggle-btn .bars{ 
+	border:1.5px solid var(--bodyTextColorWhite)!important;
+}
+
 body.dark-mode .nav-toggle-btn:hover .bars{ 
 	border:1.5px solid var(--accent)!important;
 }
