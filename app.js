@@ -288,8 +288,6 @@ function manageClearAllNotes() {
   // TODO: Create a Utils.js file and the use exports.
  
 
-
-
 // TOGGLE BUTTON ICONS
 function toggleBtnIcons(btn){
   btn.classList.toggle("show");
@@ -404,41 +402,84 @@ function manageFileInputModal(event) {
 function manageNoteDisplayModal(event,modalElement){
   const mainAlerts = document.querySelector(".main-alerts-display");
   const noteDisplayBtnsWrapper = document.querySelector(".note-controls");
-  if (event.target.closest(".back-btn")) {
-    // handles cases where the user closes the Modal by pressing the back btn
-    hideModals(modalElement);
-    setTimeout(() => {
-      resetNoteDisplayModal();
-    }, 1000);
-    // delete the note id from display modal
-    delete modalElement.dataset.noteId;
-  } else if (event.target.closest(".edit-btn")) {
-    // handles cases where the user click on the edit button
-    const formModal = document.querySelector(".form-modal");
-    editNote();
-    showModals(event, formModal, "edit-btn");
-    setTimeout(() => {
-      resetNoteDisplayModal();
-    }, 1000);
-  } else if (event.target.closest(".del-btn")) {
-    // handles cases where the user clicks on the delete button
-    deleteNote();
-    setTimeout(() => {
-      resetNoteDisplayModal();
-    }, 1000);
-  } else if (event.target.closest(".add-to-fav-btn")) {
-    // handles cases where the user addes the note being displayed to favourites
-    // display an alert
-    let alrtMsg ;
-    !noteDisplayBtnsWrapper.classList.contains("show")
-      ? alrtMsg = `<p>Added to favourites. 
-        <span class="pl-1"> <i class="fa-solid fa-heart"></i></span></p>`
-      : alrtMsg = `<p>Removed from favourites.</p>`
-    displayAlert(mainAlerts, alrtMsg, "show-main-alert", 6000);
-    // added note that is being displayed to favourites list
-    let id = modalElement.dataset.noteId;
-    addToFavourites(id);
+  
+  switch (event) {
+    case event.target.closest(".back-btn"):
+        // handles cases where the user closes the Modal by pressing the back btn
+        hideModals(modalElement);
+        setTimeout(() => {
+          resetNoteDisplayModal();
+        }, 1000);
+        // delete the note id from display modal
+        delete modalElement.dataset.noteId;
+      break;
+    case event.target.closest(".edit-btn"):
+        // handles cases where the user click on the edit button
+        const formModal = document.querySelector(".form-modal");
+        editNote();
+        showModals(event, formModal, "edit-btn");
+        setTimeout(() => {
+          resetNoteDisplayModal();
+        }, 1000);
+      break;  
+    case event.target.closest(".del-btn"):
+        // handles cases where the user clicks on the delete button
+        deleteNote();
+        setTimeout(() => {
+          resetNoteDisplayModal();
+        }, 1000);
+      break;
+    case event.target.closest(".add-to-fav-btn"):
+        // handles cases where the user addes the note being displayed to favourites
+        // display an alert
+        let alrtMsg ;
+        !noteDisplayBtnsWrapper.classList.contains("show")
+          ? alrtMsg = `<p>Added to favourites. 
+            <span class="pl-1"> <i class="fa-solid fa-heart"></i></span></p>`
+          : alrtMsg = `<p>Removed from favourites.</p>`
+        displayAlert(mainAlerts, alrtMsg, "show-main-alert", 6000);
+        // added note that is being displayed to favourites list
+        let id = modalElement.dataset.noteId;
+        addToFavourites(id);
+        break;
+    // default:
+    //   break;
   }
+  // if (event.target.closest(".back-btn")) {
+  //   // handles cases where the user closes the Modal by pressing the back btn
+  //   hideModals(modalElement);
+  //   setTimeout(() => {
+  //     resetNoteDisplayModal();
+  //   }, 1000);
+  //   // delete the note id from display modal
+  //   delete modalElement.dataset.noteId;
+  // } else if (event.target.closest(".edit-btn")) {
+  //   // handles cases where the user click on the edit button
+  //   const formModal = document.querySelector(".form-modal");
+  //   editNote();
+  //   showModals(event, formModal, "edit-btn");
+  //   setTimeout(() => {
+  //     resetNoteDisplayModal();
+  //   }, 1000);
+  // } else if (event.target.closest(".del-btn")) {
+  //   // handles cases where the user clicks on the delete button
+  //   deleteNote();
+  //   setTimeout(() => {
+  //     resetNoteDisplayModal();
+  //   }, 1000);
+  // } else if (event.target.closest(".add-to-fav-btn")) {
+  //   // handles cases where the user addes the note being displayed to favourites
+  //   // display an alert
+  //   let alrtMsg ;
+  //   !noteDisplayBtnsWrapper.classList.contains("show")
+  //     ? alrtMsg = `<p>Added to favourites. 
+  //       <span class="pl-1"> <i class="fa-solid fa-heart"></i></span></p>`
+  //     : alrtMsg = `<p>Removed from favourites.</p>`
+  //   displayAlert(mainAlerts, alrtMsg, "show-main-alert", 6000);
+  //   // added note that is being displayed to favourites list
+  //   let id = modalElement.dataset.noteId;
+  //   addToFavourites(id);
+  // }
 }
 
 // MANAGE NAV OFF CANVAS FUNC
