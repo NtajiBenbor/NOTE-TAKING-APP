@@ -433,9 +433,9 @@ div.nav-center .dark-mode-toggle{
 	animation: rotateBtn 500ms 500ms linear 1;
 }
 
-.nav-off-canvas:hover button{
+/* .nav-off-canvas:hover button{
 	animation: rotateBtn 500ms 500ms linear 1;
-}
+} */
 
 /* modal file input */
 input[type="file"]{
