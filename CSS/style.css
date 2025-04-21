@@ -1,0 +1,1095 @@
+/***** CSS variables *****/
+:root{
+	--heading-font:"Oswald";
+	--body-font:"Roboto";
+	--light-color: #fafdf6;
+	--dark-color:#000000;
+	--light-text:rgb(39, 37, 74);
+	--light-accent:#ffffff; 
+}
+
+/* ======= CSS RESET ======== */
+/*
+  1. Use a more-intuitive box-sizing model.
+*/
+*, *::before, *::after {
+	box-sizing: border-box;
+  }
+  
+  /*
+	2. Remove default margin
+  */
+  * {
+	margin: 0;
+  }
+  
+  /*
+	Typographic tweaks!
+	3. Add accessible line-height
+	4. Improve text rendering
+  */
+  body {
+	line-height: 1.5;
+	-webkit-font-smoothing: antialiased;
+  }
+  
+  /*
+	5. Improve media defaults
+  */
+  img, picture, video, canvas, svg {
+	display: block;
+	max-width: 100%;
+  }
+  
+  /*
+	6. Remove built-in form typography styles
+  */
+  input, button, textarea, select {
+	font: inherit;
+  }
+  
+  /*
+	7. Avoid text overflows
+  */
+  p, h1, h2, h3, h4, h5, h6 {
+	overflow-wrap: break-word;
+  }
+  
+  /*
+	8. Create a root stacking context
+  */
+  #root, #__next {
+	isolation: isolate;
+  }
+
+   /*
+	9. Remove lists default styling
+  */
+  li,ul{
+	list-style: none;
+	padding: 0;
+	margin: 0;
+	font-family: var(--body-font);
+  }
+
+    /*
+	10. Remove default padding from font awesome icons default styling
+  */
+
+i{
+	padding: 0;
+	margin: 0;
+}
+
+/***** UTILITY CLASSES *****/
+.light-txt{
+	color: var(--light-text) !important;
+	font-size: 85%;
+}
+
+.dark-txt{
+	color: var(--dark-color) !important;
+}
+
+.word-spacing{
+	word-spacing: 7px;
+}
+
+.line-h{
+	line-height: 1.1;
+}
+
+span{
+	font-style: inherit;
+}
+/* controls how img on the note cards are renderd */
+img{
+	display: block;
+	min-width: 100%;
+	height: 100% !important;
+	object-fit: fill ;
+}
+
+/***** LABEL ACCESSIBILTY *****/
+/* hide labels, but keep them accessible to screen readers */
+.sr-only {
+	position: absolute;
+	width: 1px;
+	height: 1px;
+	padding: 0;
+	margin: -1px;
+	overflow: hidden;
+	clip: rect(0, 0, 0, 0);
+	border: 0;
+  }
+
+/***** TYPOGRAPHY *****/
+h1,h2,h3,h4,h5,h6{
+	font-family: var(--heading-font),sans-serif;
+	font-weight:800;
+}
+
+h6{
+	font-weight:400;
+	font-style: italic;	
+}
+
+textarea, input{
+	font-family: var(--body-font),sans-serif;
+	font-weight: 700;
+}
+
+label{
+	font-family: var(--heading-font),sans-serif;
+}
+
+.card-text{
+	font-weight: 400 !important;
+}
+
+.card-subtitle{
+	font-weight: 600;
+}
+
+/* styling for smaller text */
+.caption{
+	font-weight: 500;
+	font-family: var(--body-font);
+	color: #363636;
+	font-size: 80%;
+	padding: 0;
+	height: 19px;
+	margin: 0;
+}
+
+/***** LAYOUT *****/
+/* header element that contains the site title and dark mode toggle */
+body{
+	width: 100%;
+	min-height: 100vh;
+}
+
+header{
+    background-color: var(--light-color);
+    padding-top: .3rem;
+    width: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.1);
+    -webkit-box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.1);
+    -moz-box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.1);
+	z-index: 100;
+    transition: all 300ms linear;
+  }
+
+/* the main section of the page */
+  main{
+	margin-top: 5em;
+	position: relative;
+  }
+
+/*element that displays the alerts on the main page(does not display on the modals)  */
+.main-alerts-display{
+	width: 0;
+	height: 23px;
+	background: var(--dark-color);
+	color: var(--light-color);
+	font-family: var(--heading-font);
+	text-align: center;
+	border-radius:5px;
+	font-weight: 400;
+	color: var(--light-color);
+	position: sticky;
+	top: 60px;
+	transform: translateY(5px);
+	z-index: -100;
+	visibility: hidden;
+	transition: all 400ms 400ms linear;
+  }
+
+.main-alerts-display p{
+	padding: 0;
+	width: 0;
+	margin: 0 auto;
+  }
+
+  /* Alerts styles for photo modal */
+.alerts{
+	visibility: hidden;
+	background-color: transparent;
+	color: red !important;
+	transform: translateY(-1px) !important;
+	height: 27px;
+	transition: all 300ms linear;
+}
+
+
+/***** BUTTONS STYLES *****/
+/* base style for all btns */
+.app-btns{
+	border: 3px solid var(--dark-color);
+	box-shadow: 1px 1px 0px 1px rgba(0,0,0,1);
+	-webkit-box-shadow: 1px 1px 0px 1px rgba(0,0,0,1);
+	-moz-box-shadow: 1px 1px 0px 1px rgba(0,0,0,1);
+	font-weight: 800;
+	font-size: clamp(5px,5vw,1rem);
+	padding: .2em .6em;
+	background: linear-gradient(90deg,rgb(255, 234, 0) 45%,rgb(255, 255, 0));
+	border-radius: 0%;
+	transition: all 300ms ease-in-out;
+}
+
+/* click effect styling on the btns */
+.app-btns:active{
+	color: var(--dark-color);
+	background:var(--light-color);
+}
+
+/* hover effect styling on the btns */
+.app-btns:hover{
+	color: var(--light-color);
+	background: var(--dark-color);
+}
+
+/* style for btn that displays the input field when clicked */
+button.show-inputs-btn{
+	font-size: 150%;
+	padding: .1em .5em;
+}
+
+/* default style for secondary-btn icon */
+.primary-btn-icon,
+.primary-btn-icon{
+	display: inline-block;
+}
+
+/* default style for primary-btn icon */
+.secondary-btn-icon,
+.secondary-btn-icon{
+	display: none;
+}
+
+
+/*nav toggle btn  */
+.nav-toggle-btn{
+	border: 3px solid transparent;
+	outline:0;
+	background:transparent; 
+	width:45px;
+	padding-bottom:0.5rem;
+	cursor:pointer;
+	border-radius: 5px;
+}
+
+/* elements within the nav toggle */
+.nav-toggle-btn .bars{
+	width: 30px;
+	height:0;
+	border: 1.5px solid black;
+	margin-top: 6px;
+	transform-origin: center;
+	margin-left:auto;
+	transition: transform 200ms 100ms,
+	 opacity 300ms linear,
+	 width 300ms linear;
+}
+
+.nav-toggle-btn > div{
+	width: max-content;
+	transform: translate(-1px,1.5px);
+}
+
+.nav-toggle-btn .fa-bars-2{
+	width: 25px;
+}
+
+.nav-toggle-btn .fa-bars-3{
+	width: 20px;
+	margin-bottom: 0;
+}
+
+.nav-toggle-btn:focus{
+	border: 3px solid #9d9d9d;
+}
+
+/* nav off canvas btn */
+.nav-off-canvas button{
+	color: rgb(255, 234, 0);
+	padding: 0;
+	background: transparent;
+	outline: 0;
+	border: 0;
+	transform: scale(0.9);
+}
+
+
+/* add to favourites btn */
+.add-to-fav-btn{
+	border: none;
+	color: lightslategray;
+	background: transparent;
+}
+
+.add-to-fav-btn i{
+	font-size: 1.5rem;
+}
+
+
+/* dark mode toggle btn */
+div.nav-center .dark-mode-toggle{
+	transform: scale(0.7) translate(20px, 3px);
+}
+
+/* button for adding notes */
+.show-inputs-btn{
+	position: fixed;
+	right: 10px;
+	top: 80%;
+	z-index: 10;
+	border-radius: 50%;
+	box-shadow: 0 0 5px 1px rgba(0, 0, 0, 0.5);
+	background: linear-gradient(90deg,rgb(255, 234, 0) 45%,rgb(255, 255, 0));
+	border: 0;
+}
+
+/***** COVER IMAGE MODAL *****/
+/* Cover image/form modal background */
+.modal-bg,.form-modal{
+	width: 100vw;
+	height: 100vh;
+	height: 100dvh;
+	display: none;
+	place-content: center;
+	background-color: color-mix(in srgb, rgba(0, 0, 0, 0.7) 80%, transparent 20%);
+	backdrop-filter: blur(10px);
+	position: fixed;
+	top: 0;
+	left: 0;
+	right: 0;
+	visibility: hidden;
+	z-index: -1000;
+	
+}
+
+/*the main area of the cover image modal*/
+.cover-img-modal{
+	width: 350px;
+	border: 4px solid var(--dark-color);
+	background-color: var(--light-color);
+	box-shadow: 1px 1px 0px 1px rgba(0,0,0,1);
+	-webkit-box-shadow: 1px 1px 0px 1px rgba(0,0,0,1);
+	-moz-box-shadow: 1px 1px 0px 1px rgba(0,0,0,1);
+	margin: 0 auto;
+	text-align: center;
+	padding: 1em;
+	position: relative;
+}
+
+/*file input label styled like a button */
+.cover-img-label{
+	width: 50px;
+	display: inline-block;
+	padding: .1em;
+	cursor: pointer;
+	color: #000;
+	font-weight: 800;
+	font-size: 130%;
+	background: linear-gradient(90deg,rgb(255, 234, 0) 45%,rgb(255, 255, 0));
+	animation: vibrate-1 0.3s 2s linear 2 both;
+}
+
+/* modal center */
+.modal-center{
+	width: 100%;
+	height: 100%;
+	font-family: var(--heading-font),sans-serif;
+	margin: auto auto;
+	position: relative;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+	align-items: center;
+}
+
+/* close btn on the cover img Modal */
+.close-modal-btn{
+	border: none;
+	margin-bottom: 0;
+	width: 40px;
+	background: var(--dark-color);
+	color: var(--light-color);
+	border-radius: 0;
+	font-weight: 800;
+	font-size: 120%;
+	position: absolute;
+	top: -10px;
+	right: -10px;
+}
+
+/*the x-icon within the close button on the modal  */
+.close-modal-btn:hover .fa-xmark {
+	transform-origin: 50% 50%;
+	animation: rotateBtn 500ms 500ms linear 1;
+}
+
+/* .nav-off-canvas:hover button{
+	animation: rotateBtn 500ms 500ms linear 1;
+} */
+
+/* modal file input */
+input[type="file"]{
+	display: none;
+}
+
+/* styles for the cover image preview on the modal*/
+div.cover-img-wrapper{
+	width: 120px;
+	min-height: 120px;
+	border: 4px solid var(--dark-color);
+    border-radius: 8px;
+}
+
+img.cover-img{
+	height: 100%;
+	object-position: center center;
+	object-fit: cover;
+	border-radius: 4px;
+}
+
+
+/***** FORM SECTION *****/
+/* main area of the form that holds all input elements */
+.form-modal{
+	/* border: 7px solid green; */
+	display: flex ;
+	place-content: unset;
+	width: 100%;
+}
+
+.form-center{
+	margin: 0 auto;
+	width: 95% ;
+	height: 99%;
+	background-color: var(--light-color);
+	border: 4px solid var(--dark-color);
+	padding: .2rem;
+}
+
+/* the note text area */
+.note-input{
+	width: 100%;
+	height: auto;
+	border: 0;
+	border-radius: 0%;
+	outline: 0;
+	padding: 0;
+}
+
+textarea.note-input{
+	border-bottom-left-radius: 5px;
+	border-bottom-right-radius: 5px;
+	height:500px !important;	
+	resize: none;
+	
+}
+
+/* the note title text input  */
+ .title-input{
+	height: 32px;
+	border-top-left-radius: 5px;
+	border-top-right-radius: 5px;
+	border: 0;
+}
+
+/* focus state for the input and textarea elements */
+.title-input:focus,
+.note-input:focus{
+	background-color: rgba(243, 245, 247, 0.9);
+}
+
+/***** NOTE CARD  *****/
+.notes-section{
+	position: relative;
+	z-index: 5;
+	background-color: var(--light-accent);
+}
+
+/* this show the feed back text on the notes container */
+.note-fb-section{
+	color: var(--dark-color);
+	font-weight: 800 !important;
+}
+
+/* place holder text on the notes container section */
+.note-place-holder{
+	position: absolute;
+	width: 100%;
+	top: 25vh;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	font-weight: 400;
+	font-size: clamp(16px, 5vw, 1.5rem);
+	font-style: italic;
+	animation: slide-in-fwd-top 600ms 100ms cubic-bezier(0.215, 0.610, 0.355, 1) forwards;
+}
+
+/* wrapper element that contains the card element */
+.notes-container{
+	display: flex;
+	width: 100%;
+	justify-content: center;
+	align-items: center;
+	gap: 1.5em;
+	flex-direction: column;
+	flex-wrap: wrap;
+	background-color: var(--light-accent);
+}
+
+/* card element */
+.notes-card{
+	min-height: 175px;
+	width: 100%;
+	padding: 0;
+	border-radius: 0%;
+	border: 1px solid var(--dark-color);
+	border-right: 4px solid var(--dark-color);
+	border-bottom: 4px solid var(--dark-color);
+	box-shadow: 1px 1px 0px 1px rgba(0,0,0,1);
+	-webkit-box-shadow: 1px 1px 0px 1px rgba(0,0,0,1);
+	-moz-box-shadow: 1px 1px 0px 1px rgba(0,0,0,1);
+	cursor: pointer;
+	/* animation: slide-in-fwd-top 600ms 100ms cubic-bezier(0.215, 0.610, 0.355, 1) forwards; */
+	transition: transform 300ms linear !important;
+	
+}
+
+/* flex container for the card text and card image */
+.note-card-center{
+	display:flex;
+	width: 100%;
+	flex-direction: column;
+}
+
+
+/** hover effect for note cards **/
+/* note btn that have arrow icons */
+.notes-card .note-btn{
+	transition: transform 300ms linear !important;
+}
+
+/* for note card button */
+.notes-card:hover .note-btn{
+	transform: translate(8px);
+}
+
+/* wrappers for the imgs on the note cards */
+.card-head-wrapper{
+	border: 3px solid black;
+	border-left: 2px solid var(--dark-color);
+	border-bottom: 2px solid var(--dark-color);
+	border-top: 2px solid var(--dark-color);
+	padding: 0;
+	margin: 0;
+	background-color: var(--light-color);
+}
+
+.card-img{
+	filter: brightness(85%);
+	border-radius: 0;
+	transition: all 300ms linear;
+}
+
+.notes-card:hover 
+.card-img{
+	filter: brightness(100%);
+}
+
+/***** DISPLAY NOTE MODAL *****/
+/* display note modal bg */
+.display-note-modal{
+	background-color: color-mix(in srgb, rgb(0, 0, 0) 90%, transparent 10%);
+	backdrop-filter: blur(10px);
+	display: none;
+	visibility: hidden;
+	place-items: center;
+	z-index: -1000;
+}
+
+/* main section of the modal that displays the note */
+.note-modal-center{
+	background-color: var(--light-color);
+	width: 80%;
+	height: fit-content;
+	border: 4px solid var(--dark-color);
+	overflow-y: hidden;
+}
+
+/* note display image wrapper */
+.note-dp-img-wrapper{
+	height: 200px;
+	border: 4px solid var(--dark-color);
+}
+
+/*wrapper element for the text section of the note display  */
+.note-txt{
+	overflow-y: auto;
+	height: 250px;
+}
+
+/* change the default styling of the scrollbar on note display modal */
+.note-txt::-webkit-scrollbar {
+    width: .7em;
+    background-color: white;
+}
+
+.note-txt::-webkit-scrollbar-thumb {
+    background-color: #808080;
+    border-radius: 10px;
+}
+
+/***** NAV OFF CANVAS *****/
+/* off Canvas background */
+.nav-off-canvas{
+	width: 0;
+	padding: 0;
+	height: 100vh;
+	height: 100dvh;
+	color: var(--light-color);
+	background-color: color-mix(in srgb, rgb(0, 0, 0) 90%, transparent 10%);
+	backdrop-filter: blur(10px);
+	position: fixed;
+	cursor: pointer;
+	top: 0;
+	z-index: 1000;
+	transition: width 300ms;
+	overflow: hidden;
+	
+}
+
+.nav-off-canvas .title,
+.nav-off-canvas .fa-x,
+.nav-toggle button{
+	font-weight: 400;
+	font-size: clamp(1rem,5vw,1.8rem);
+}
+
+.off-canvas-center{
+	width: 0;
+}
+
+.off-canvas-center li{
+	margin: .6rem 0;
+	font-weight: 800;
+	font-size: 1.1rem;
+	cursor: pointer;
+
+}
+
+
+/* nav link(li) to toggle card layout */
+ul .lay{
+	display:none !important;
+}
+
+.off-canvas-center li p{
+	padding: .5em .1rem;
+	margin: 0;
+    transition: color 300ms linear,
+	padding-left 300ms !important;
+}
+
+.off-canvas-center  li:hover p{
+color: yellow !important;
+padding-left: 20px;
+}
+
+/****JS STYLES *****/
+
+/* display alert on main page */
+.show-main-alert {
+	z-index: 1010;
+	visibility: visible;
+	width: 50%;
+  }
+
+  .show-main-alert p{
+	width: 50%;
+  }
+
+/*individual transforms applied by JS to each element within
+ the nav-toggle btn */
+ .show .fa-bars-1{
+	transform: translateY(7px) rotate(45deg);
+}
+
+.show .fa-bars-2{
+	transform: translateX(10px);
+	opacity: 0;
+}
+
+.show .fa-bars-3{
+	transform: translateY(-10px) rotate(-45deg);
+	width: 30px;
+}
+
+
+/* this class hides the create note btn plus icon */
+.show .primary-btn-icon{
+	display: none;
+}
+
+
+/* this class show the create note btn back icon */
+.show .secondary-btn-icon{
+	display: inline-block;
+}
+
+
+/* applies the visbility class to the create note */
+.show {
+	visibility: visible;
+}
+
+.show .create-note-btn:hover{
+	border: 3px solid var(--dark-color)!important;
+}
+
+/* this class is displays the cover image modal */
+.show-modal{
+	display: grid;
+	visibility: visible;
+	z-index: 1000;
+}
+
+
+/* displays alert on the cover image modal */
+.show-alert{
+	visibility: visible;
+}
+
+/* class that are applied when a note is being edited */
+.editable-card{
+	background-color: skyblue !important;
+}
+
+
+/* class that upates UI to show card has been added to favourite */
+.show .add-to-fav-btn{
+	color: red;
+}
+
+/* updates UI when fav, sort or layout icons when nav link is clicked */
+.active {
+	border-left: 4px solid yellow !important;
+}
+
+/* hides the show input button when user has click to view their important notes */
+.hide .show-inputs-btn{
+	display: none;
+}
+
+
+/*** JS animations classes ***/
+.slide-in-fwd-top {
+	-webkit-animation: slide-in-fwd-top 0.4s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
+	        animation: slide-in-fwd-top 0.4s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
+}
+
+.slide-out-fwd-top {
+	-webkit-animation: slide-out-fwd-top 0.6s cubic-bezier(0.550, 0.085, 0.680, 0.530) both;
+	        animation: slide-out-fwd-top 0.6s cubic-bezier(0.550, 0.085, 0.680, 0.530) both;
+}
+
+.shake-bottom {
+	animation: shake-bottom 0.8s cubic-bezier(0.455, 0.030, 0.515, 0.955) both;
+}
+
+/****MEDIA QUERIES****/
+
+/** TABLET screen size **/
+@media only screen and (min-width: 768px) {
+
+	img{
+		height: auto;
+		object-fit: cover;
+	}
+
+	/* general styling for all the buttons */
+	.app-btns{
+		padding: .5em .8em;
+	}
+
+	/* dark mode toggle btn */
+	div.nav-center .dark-mode-toggle{
+		transform: scale(0.9) translateY(4px);
+	}
+
+	/* main area of the cover image modal */
+	.cover-img-modal{
+		width: 500px;
+	}
+
+	/* main area of the note display modal */
+	.note-modal-center {
+		width: 50%;
+		max-height: 624px;
+	}
+
+	.show-main-alert {
+		width: 80%;
+	  }
+	
+	  .show-main-alert p{
+		width: 80%;
+	  }
+
+/** contorls the width and orientation of the note cards **/
+	.notes-container{
+		justify-content: space-between;
+		flex-direction: column;
+		gap: 1em;
+	}
+
+	/* flex container for the card text and card image */
+	.note-card-center{
+		flex-direction: row;
+		height: 100%;
+		padding-bottom: 0;
+	}
+
+	/* wrapper for the image section of the card*/
+	.note-card-center .card-head-wrapper{
+		width: 35%;
+		height: 175px !important;
+	}
+
+	/*wapper for the text section of the card  */
+	.note-card-center .card-body-wrappper{
+		width: 65%;
+		height: 175px !important;
+	}
+
+	/* hover effect for note cards */
+	/* for note card bg */
+	.notes-card:hover{
+		transform: translate(-3px,-3px) !important;
+	}
+
+
+	
+}
+
+/** LARGE and X-LARGE screens size **/
+@media only screen and (min-width: 992px) {
+	/* modal box for adding cover img */
+	.cover-img-modal{
+		width: 450px;
+	}
+
+}
+
+/** contorls the width and orientation of the note cards **/
+@media only screen and (min-width: 990px) {
+
+	.show-inputs-btn{
+		position: absolute;
+		/* right: 8%; */
+		/* top: unset; */
+		/* border-radius: 2px; */
+		/* box-shadow: none;
+		background: linear-gradient(90deg,rgb(255, 234, 0) 45%,rgb(255, 255, 0));
+		border: 3px solid var(--dark-color); */
+		transition: background 300ms linear;
+	} 
+
+	.show-inputs-btn:hover,
+	.show-inputs-btn:focus,
+	.show-inputs-btn:active{
+		color: var(--light-color) !important;
+		background: var(--dark-color) !important;
+	} 
+
+	.notes-container{
+		flex-direction: row;
+	}
+
+	/* note card elements */
+	.notes-card{
+		width: 49%;
+	}	
+
+	/* nav link(li) to toggle card layout */
+	ul .lay{
+		display: block !important;
+	}
+
+	.form-center{
+		width: 80% ;
+		padding: 1rem;
+	}
+
+}
+
+/** controls layout changes(grid/list) for the cards(Applies JS Classes) **/
+@media only screen and (min-width: 1000px){
+	/* toggle card layou from grid to rows */
+	.change-layout .notes-container{
+		flex-direction: column;
+	}
+	
+	.change-layout .notes-card{
+		width: 100%;
+	}
+}
+
+/** THE MEDIA QUERIES BELOW CONTROL THE WIDTH OF THE NAV-OFF-CANVAS AT DIFF SCREEN SIZES **/
+@media only screen and (min-width: 0) and (max-width: 767px){
+	.show-nav-off-canvas{
+		width: 350px;
+	}
+
+	.off-canvas-center{
+		width: 350px;
+	}
+	
+}
+
+@media only screen and (min-width: 768px) and (max-width: 991px){
+	.show-nav-off-canvas{
+		width: 550px;
+	}
+
+	.off-canvas-center{
+		width: 550px;
+	}
+	
+
+}
+
+@media only screen and (min-width: 992px) {
+	.show-nav-off-canvas{
+		width: 300px;
+		
+	}
+
+	.off-canvas-center{
+		width: 300px;
+	}
+	
+}
+
+/***** ANIMATIONS *****/
+/** rotate animation **/
+@keyframes rotateBtn {
+	0%{
+	   
+       transform: rotate(0deg);
+	}
+	50%{
+		transform: rotate(180deg);
+	}
+	100%{
+		transform: rotate(360deg);
+	}
+}
+
+
+/* ----------------------------------------------
+ * Generated by Animista on 2024-10-7 23:24:24
+ * Licensed under FreeBSD License.
+ * See http://animista.net/license for more info. 
+ * w: http://animista.net, t: @cssanimista
+ * ---------------------------------------------- */
+/**
+ /**
+ * ----------------------------------------
+ * animation slide-in-fwd-top
+ * ----------------------------------------
+ */
+@-webkit-keyframes slide-in-fwd-top {
+	0% {
+	  -webkit-transform: translateZ(-1400px) translateY(-800px);
+			  transform: translateZ(-1400px) translateY(-800px);
+	  opacity: 0;
+	}
+	100% {
+	  -webkit-transform: translateZ(0) translateY(0);
+			  transform: translateZ(0) translateY(0);
+	  opacity: 1;
+	}
+  }
+  @keyframes slide-in-fwd-top {
+	0% {
+	  -webkit-transform: translateZ(-1400px) translateY(-800px);
+			  transform: translateZ(-1400px) translateY(-800px);
+	  opacity: 0;
+	}
+	100% {
+	  -webkit-transform: translateZ(0) translateY(0);
+			  transform: translateZ(0) translateY(0);
+	  opacity: 1;
+	}
+  }
+  
+
+/**
+ * ----------------------------------------
+ * animation slide-out-fwd-top
+ * ----------------------------------------
+ */
+ @-webkit-keyframes slide-out-fwd-top {
+	0% {
+	  -webkit-transform: translateZ(1) translateY(0);
+			  transform: translateZ(1) translateY(0);
+	  opacity: 1;
+	}
+	100% {
+	  -webkit-transform: translateZ(600px) translateY(-300px);
+			  transform: translateZ(600px) translateY(-300px);
+	  opacity: 0;
+	}
+  }
+  @keyframes slide-out-fwd-top {
+	0% {
+	  -webkit-transform: translateZ(1) translateY(0);
+			  transform: translateZ(1) translateY(0);
+	  opacity: 1;
+	}
+	100% {
+	  -webkit-transform: translateZ(600px) translateY(-300px);
+			  transform: translateZ(600px) translateY(-300px);
+	  opacity: 0;
+	}
+  }
+  
+  
+  /**
+ * ----------------------------------------
+ * animation vibrate-1
+ * ----------------------------------------
+ */
+@keyframes vibrate-1 {
+	0% {
+	  transform: translate(0);
+	}
+	20% {
+	  transform: translate(-2px, 2px);
+	}
+	40% {
+	  transform: translate(-2px, -2px);
+	}
+	60% {
+	  transform: translate(2px, 2px);
+	}
+	80% {
+	  transform: translate(2px, -2px);
+	}
+	100% {
+	  transform: translate(0);
+	}
+  }
+  
+  
+
