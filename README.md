@@ -11,9 +11,9 @@
 
 
 ## 1. Project Overview :smile:
-Mindnotez is a note-taking app built with HTML, CSS, and JavaScript.Designed with both functionality and user experience in mind, it allows users to create, edit, delete, and organize notes effortlessly. Beyond plain text, users can also attach images to their notes, making it perfect for both quick memos and visual reminders.
+Mindnotez is a note-taking app built with HTML, CSS, and JavaScript. Designed with both functionality and user experience in mind, it allows users to create, edit, delete, and organize notes effortlessly. Beyond plain text, users can also attach images to their notes, making it perfect for both quick memos and visual reminders.
 
-The app features a vibrant and intuitive UI complete with light and dark modes, smooth animations and transitions. otes can be categorized into favourites, displayed in either a column or row layout, and even ordered in ascending or descending order.
+The app features a vibrant and intuitive UI complete with light and dark modes, smooth animations and transitions. Notes can be categorized into favourites, displayed in either a column or row layout, and even ordered in ascending or descending order.
 
 Whether you're organizing ideas, managing tasks, or saving creative inspirations, Mindnotez is built to make note-taking both efficient and enjoyable.
 
@@ -54,8 +54,8 @@ The following tools and resources where utilized in building this project.
 
 
 ## Author :pen:
-Hi I'm Benedict, I'm learning to become a frontend developer. check out my blog where I'll be sharing my learning experiences, projects, and tips. 
+Hi I'm Benedict, I'm learning to become a fullstack developer. check out my blog where I'll be sharing my learning experiences, projects, and tips. 
 - Checkout it [here](https://benneythedev.hashnode.dev/) :link: 
 
-You can also connect with me on x.com
+You can also connect with me on x.com(twitter)
 - [Follow me](https://www.x.com/CodewithNtaji) :link: 
